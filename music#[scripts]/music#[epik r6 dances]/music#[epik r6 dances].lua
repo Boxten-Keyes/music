@@ -1,9 +1,9 @@
 --[[---------------------------------------------------------------------------------------------------------------------------
-  ______     ______   __     __  __        ______     ______       _____     ______     __   __     ______     ______     ______    
- /\  ___\   /\  __ \ /\ \   /\ \/ /       /\  __ \   /\  ___\     /\  __-.  /\  __ \   /\ "-.\ \   /\  ___\   /\  ___\   /\  ___\   
- \ \  ___\  \ \  __/ \ \ \  \ \  _"-.     \ \  __<   \ \  __ \    \ \ \/\ \ \ \  __ \  \ \ \-.  \  \ \ \____  \ \  ___\  \ \___  \  
-  \ \_____\  \ \_\    \ \_\  \ \_\ \_\     \ \_\ \_\  \ \_____\    \ \____-  \ \_\ \_\  \ \_\\"\_\  \ \_____\  \ \_____\  \/\_____\ 
-   \/_____/   \/_/     \/_/   \/_/\/_/      \/_/ /_/   \/_____/     \/____/   \/_/\/_/   \/_/ \/_/   \/_____/   \/_____/   \/_____/ 
+  ______     ______   __     __  __        ______     ______        _____     ______     __   __     ______     ______     ______    
+ /\  ___\   /\  __ \ /\ \   /\ \/ /       /\  __ \   /\  ___\      /\  __-.  /\  __ \   /\ "-.\ \   /\  ___\   /\  ___\   /\  ___\   
+ \ \  ___\  \ \  __/ \ \ \  \ \  _"-.     \ \  __<   \ \  __ \     \ \ \/\ \ \ \  __ \  \ \ \-.  \  \ \ \____  \ \  ___\  \ \___  \  
+  \ \_____\  \ \_\    \ \_\  \ \_\ \_\     \ \_\ \_\  \ \_____\     \ \____-  \ \_\ \_\  \ \_\\"\_\  \ \_____\  \ \_____\  \/\_____\ 
+   \/_____/   \/_/     \/_/   \/_/\/_/      \/_/ /_/   \/_____/      \/____/   \/_/\/_/   \/_/ \/_/   \/_____/   \/_____/   \/_____/ 
    
    Made by gObl00x - Edited by Team Noxious
 
@@ -11,6 +11,22 @@
 
 local player = game.Players.LocalPlayer
 local backpack = player:WaitForChild("Backpack")
+
+function hi()
+	task.spawn(function()
+		local c = player.Character or player.CharacterAdded:Wait()
+		local h = c and c:WaitForChild("Humanoid", 15)
+		local a = c and c:WaitForChild("Animate", 15)
+
+		if a then
+			a.Disabled = true
+			for _, v in ipairs(h:GetPlayingAnimationTracks()) do
+				v:Stop()
+			end
+			a.Disabled = false
+		end
+	end)
+end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
@@ -27,7 +43,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 133160365635320)
@@ -70,7 +86,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 137845929482571)
@@ -113,7 +129,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 84447598378239)
@@ -156,7 +172,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 89761302048916)
@@ -200,7 +216,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 132886479585903)
@@ -244,7 +260,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 139483347792972)
@@ -288,7 +304,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 137456359844967)
@@ -332,7 +348,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 124074233795203)
@@ -379,7 +395,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 18986687692)
@@ -422,7 +438,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 15231364673)
@@ -465,7 +481,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 124210157097622)
@@ -508,7 +524,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 137721173051346)
@@ -551,7 +567,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 130485792890829)
@@ -594,7 +610,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 18985726113)
@@ -637,7 +653,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 92699725136780)
@@ -684,7 +700,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 13579968035)
@@ -727,7 +743,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 13357063395)
@@ -770,7 +786,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 7828640127)
@@ -813,7 +829,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 100136360352723)
@@ -856,7 +872,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 72460213504303)
@@ -899,7 +915,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 121535445943256)
@@ -942,7 +958,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 78991327797272)
@@ -985,7 +1001,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 139889845987864)
@@ -1032,7 +1048,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 131559207454945)
@@ -1079,7 +1095,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 114160464579438)
@@ -1122,7 +1138,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 120262284704633)
@@ -1165,7 +1181,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 98916367562022)
@@ -1208,7 +1224,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 80641587562132)
@@ -1251,7 +1267,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 135424282094138)
@@ -1294,7 +1310,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 14887006269)
@@ -1337,7 +1353,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 131562546189485)
@@ -1380,7 +1396,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 131539514978219)
@@ -1423,7 +1439,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 75148929064618)
@@ -1466,7 +1482,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 16240038168)
@@ -1509,7 +1525,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 118452043589079)
@@ -1552,7 +1568,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 121768360244671)
@@ -1595,7 +1611,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 132979558739339)
@@ -1638,7 +1654,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 132026285699359)
@@ -1681,7 +1697,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 125962207089467)
@@ -1724,7 +1740,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 77773358394206)
@@ -1767,7 +1783,7 @@ end
 local Anim = nil
 local sound = nil
 
-tool.Equipped:Connect(function()
+tool.Equipped:Connect(function() hi() task.wait()
 	local character = player.Character
 	if character then
 		Anim = Animator.new(character, 77909248721162)
