@@ -1,3 +1,14 @@
+--[[---------------------------------------------------------------------------------------------------------------------------
+  ______     ______   __     __  __        ______     ______       _____     ______     __   __     ______     ______     ______    
+ /\  ___\   /\  __ \ /\ \   /\ \/ /       /\  __ \   /\  ___\     /\  __-.  /\  __ \   /\ "-.\ \   /\  ___\   /\  ___\   /\  ___\   
+ \ \  ___\  \ \  __/ \ \ \  \ \  _"-.     \ \  __<   \ \  __ \    \ \ \/\ \ \ \  __ \  \ \ \-.  \  \ \ \____  \ \  ___\  \ \___  \  
+  \ \_____\  \ \_\    \ \_\  \ \_\ \_\     \ \_\ \_\  \ \_____\    \ \____-  \ \_\ \_\  \ \_\\"\_\  \ \_____\  \ \_____\  \/\_____\ 
+   \/_____/   \/_/     \/_/   \/_/\/_/      \/_/ /_/   \/_____/     \/____/   \/_/\/_/   \/_/ \/_/   \/_____/   \/_____/   \/_____/ 
+   
+   Edited by Team Noxious -- Epik R6 Dances
+
+---------------------------------------------------------------------------------------------------------------------------]]--
+
 --// Settings
 local settings = _G
 
@@ -22,7 +33,7 @@ settings["Names to exclude from transparency"] = {
 local finished = false
 
 task.spawn(function()
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/CurrentAngleV2/refs/heads/main/v2"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bcurrent%20angle%20v2%5D.lua"))()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bepik%20r6%20dances%5D.lua"))()
 end)
 
