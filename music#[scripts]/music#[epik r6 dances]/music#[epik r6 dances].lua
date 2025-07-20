@@ -1544,8 +1544,7 @@ tool.Name = "California Girls"
 tool.RequiresHandle = false
 tool.Parent = backpack
 
--- TODO: replace this with the actual emote id
--- writefile("California Girls.mp3", game:HttpGet("aaa"))
+writefile("California Girls.mp3", game:HttpGet("https://files.catbox.moe/sku8e7.mp3"))
 if not getgenv()["Animator"] then
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/xhayper/Animator/main/Source/Main.lua"))()
 end
@@ -1562,7 +1561,222 @@ tool.Equipped:Connect(function()
 			Anim:Play()
 		end)
 		sound = Instance.new("Sound")
-		sound.SoundId = getcustomasset("Pretty Princess Theme.mp3")
+		sound.SoundId = getcustomasset("California Girls.mp3")
+		sound.Volume = 2
+		sound.Looped = true
+		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
+		sound:Play()
+	end
+end)
+
+tool.Unequipped:Connect(function()
+	if Anim then
+		Anim:Stop()
+		Anim:Destroy()
+	end
+	if sound then
+		sound:Stop()
+		sound:Destroy()
+	end
+end)
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+local tool = Instance.new("Tool")
+tool.Name = "Emotional Prism"
+tool.RequiresHandle = false
+tool.Parent = backpack
+
+writefile("Emotional Prism.mp3", game:HttpGet("https://files.catbox.moe/28vmzm.mp3"))
+if not getgenv()["Animator"] then
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/xhayper/Animator/main/Source/Main.lua"))()
+end
+
+local Anim = nil
+local sound = nil
+
+tool.Equipped:Connect(function()
+	local character = player.Character
+	if character then
+		Anim = Animator.new(character, 132979558739339)
+		Anim:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		end)
+		sound = Instance.new("Sound")
+		sound.SoundId = getcustomasset("Emotional Prism.mp3")
+		sound.Volume = 2
+		sound.Looped = true
+		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
+		sound:Play()
+	end
+end)
+
+tool.Unequipped:Connect(function()
+	if Anim then
+		Anim:Stop()
+		Anim:Destroy()
+	end
+	if sound then
+		sound:Stop()
+		sound:Destroy()
+	end
+end)
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+local tool = Instance.new("Tool")
+tool.Name = "#BrooklynBloodPop!"
+tool.RequiresHandle = false
+tool.Parent = backpack
+
+writefile("#BrooklynBloodPop!.mp3", game:HttpGet("https://files.catbox.moe/22t1zn.mp3"))
+if not getgenv()["Animator"] then
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/xhayper/Animator/main/Source/Main.lua"))()
+end
+
+local Anim = nil
+local sound = nil
+
+tool.Equipped:Connect(function()
+	local character = player.Character
+	if character then
+		Anim = Animator.new(character, 132026285699359)
+		Anim:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		end)
+		sound = Instance.new("Sound")
+		sound.SoundId = getcustomasset("#BrooklynBloodPop!.mp3")
+		sound.Volume = 2
+		sound.Looped = true
+		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
+		sound:Play()
+	end
+end)
+
+tool.Unequipped:Connect(function()
+	if Anim then
+		Anim:Stop()
+		Anim:Destroy()
+	end
+	if sound then
+		sound:Stop()
+		sound:Destroy()
+	end
+end)
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+local tool = Instance.new("Tool")
+tool.Name = "Billy Bounce"
+tool.RequiresHandle = false
+tool.Parent = backpack
+
+writefile("Billy Bounce.mp3", game:HttpGet("https://files.catbox.moe/0ytll6.mp3"))
+if not getgenv()["Animator"] then
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/xhayper/Animator/main/Source/Main.lua"))()
+end
+
+local Anim = nil
+local sound = nil
+
+tool.Equipped:Connect(function()
+	local character = player.Character
+	if character then
+		Anim = Animator.new(character, 125962207089467)
+		Anim:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		end)
+		sound = Instance.new("Sound")
+		sound.SoundId = getcustomasset("Billy Bounce.mp3")
+		sound.Volume = 2
+		sound.Looped = true
+		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
+		sound:Play()
+	end
+end)
+
+tool.Unequipped:Connect(function()
+	if Anim then
+		Anim:Stop()
+		Anim:Destroy()
+	end
+	if sound then
+		sound:Stop()
+		sound:Destroy()
+	end
+end)
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+local tool = Instance.new("Tool")
+tool.Name = "Get Sturdy"
+tool.RequiresHandle = false
+tool.Parent = backpack
+
+writefile("Get Sturdy.mp3", game:HttpGet("https://files.catbox.moe/k5o95k.mp3"))
+if not getgenv()["Animator"] then
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/xhayper/Animator/main/Source/Main.lua"))()
+end
+
+local Anim = nil
+local sound = nil
+
+tool.Equipped:Connect(function()
+	local character = player.Character
+	if character then
+		Anim = Animator.new(character, 77773358394206)
+		Anim:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		end)
+		sound = Instance.new("Sound")
+		sound.SoundId = getcustomasset("Get Sturdy.mp3")
+		sound.Volume = 2
+		sound.Looped = true
+		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
+		sound:Play()
+	end
+end)
+
+tool.Unequipped:Connect(function()
+	if Anim then
+		Anim:Stop()
+		Anim:Destroy()
+	end
+	if sound then
+		sound:Stop()
+		sound:Destroy()
+	end
+end)
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+local tool = Instance.new("Tool")
+tool.Name = "Soda Pop"
+tool.RequiresHandle = false
+tool.Parent = backpack
+
+writefile("Soda Pop.mp3", game:HttpGet("https://files.catbox.moe/ap73us.mp3"))
+if not getgenv()["Animator"] then
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/xhayper/Animator/main/Source/Main.lua"))()
+end
+
+local Anim = nil
+local sound = nil
+
+tool.Equipped:Connect(function()
+	local character = player.Character
+	if character then
+		Anim = Animator.new(character, 77909248721162)
+		Anim:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		end)
+		sound = Instance.new("Sound")
+		sound.SoundId = getcustomasset("Soda Pop.mp3")
 		sound.Volume = 2
 		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
