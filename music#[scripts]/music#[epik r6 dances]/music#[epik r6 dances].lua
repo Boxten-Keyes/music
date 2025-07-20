@@ -1630,7 +1630,7 @@ tool.Name = "#BrooklynBloodPop!"
 tool.RequiresHandle = false
 tool.Parent = backpack
 
-writefile("#BrooklynBloodPop!.mp3", game:HttpGet("https://files.catbox.moe/22t1zn.mp3"))
+writefile("#BrooklynBloodPop.mp3", game:HttpGet("https://files.catbox.moe/22t1zn.mp3"))
 if not getgenv()["Animator"] then
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/xhayper/Animator/main/Source/Main.lua"))()
 end
@@ -1647,7 +1647,7 @@ tool.Equipped:Connect(function()
 			Anim:Play()
 		end)
 		sound = Instance.new("Sound")
-		sound.SoundId = getcustomasset("#BrooklynBloodPop!.mp3")
+		sound.SoundId = getcustomasset("#BrooklynBloodPop.mp3")
 		sound.Volume = 2
 		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
