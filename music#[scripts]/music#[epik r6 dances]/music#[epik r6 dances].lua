@@ -1545,7 +1545,7 @@ tool.RequiresHandle = false
 tool.Parent = backpack
 
 -- TODO: replace this with the actual emote id
-writefile("California Girls.mp3", game:HttpGet("aaa"))
+-- writefile("California Girls.mp3", game:HttpGet("aaa"))
 if not getgenv()["Animator"] then
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/xhayper/Animator/main/Source/Main.lua"))()
 end
