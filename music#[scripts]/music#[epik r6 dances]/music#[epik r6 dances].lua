@@ -5,7 +5,7 @@
   \ \_____\  \ \_\    \ \_\  \ \_\ \_\     \ \_\ \_\  \ \_____\    \ \____-  \ \_\ \_\  \ \_\\"\_\  \ \_____\  \ \_____\  \/\_____\ 
    \/_____/   \/_/     \/_/   \/_/\/_/      \/_/ /_/   \/_____/     \/____/   \/_/\/_/   \/_/ \/_/   \/_____/   \/_____/   \/_____/ 
    
-   Made by gObl00x, Edited by Team Noxious -- Epik R6 Dances
+   Made by gObl00x - Edited by Team Noxious
 
 ---------------------------------------------------------------------------------------------------------------------------]]--
 
@@ -21,7 +21,7 @@ tool.Parent = backpack
 
 writefile("The Hero.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/The%20Hero.mp3"))     
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -64,7 +64,7 @@ tool.Parent = backpack
 
 writefile("Two.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Two.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -107,7 +107,7 @@ tool.Parent = backpack
 
 writefile("The Flop.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/The%20Flop.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -150,7 +150,7 @@ tool.Parent = backpack
 
 writefile("Club Penguin.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Club%20Penguin.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -194,7 +194,7 @@ tool.Parent = backpack
 writefile("Breakdance.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Breakdance.mp3"))
 
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -238,7 +238,7 @@ tool.Parent = backpack
 writefile("Insanity.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Insanity.mp3"))
 
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -282,7 +282,7 @@ tool.Parent = backpack
 writefile("Mannrobics.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Mannrobics.mp3"))
 
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -326,7 +326,7 @@ tool.Parent = backpack
 writefile("Step.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Step.mp3"))
 
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -373,7 +373,7 @@ tool.Parent = backpack
 writefile("Poke Dance.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Poke%20Dance.mp3"))
 
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -416,7 +416,7 @@ tool.Parent = backpack
 
 writefile("Spooky Month.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Spooky%20Month.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -459,7 +459,7 @@ tool.Parent = backpack
 
 writefile("Chinese Dance.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Chinese%20Dance.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -502,7 +502,7 @@ tool.Parent = backpack
 
 writefile("Doodle.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Doodle.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -545,7 +545,7 @@ tool.Parent = backpack
 
 writefile("Shinji Meme.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Shinji%20Meme.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -588,7 +588,7 @@ tool.Parent = backpack
 
 writefile("Rakuten Lemonade.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Rakuten%20Lemonade.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -631,7 +631,7 @@ tool.Parent = backpack
 
 writefile("Lonely Lonely.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Lonely%20Lonely.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -678,7 +678,7 @@ tool.Parent = backpack
 
 writefile("Boppin.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Boppin.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -721,7 +721,7 @@ tool.Parent = backpack
 
 writefile("Hey Ya.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Hey%20Ya.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -764,7 +764,7 @@ tool.Parent = backpack
 
 writefile("Goopie.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Goopie.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -807,7 +807,7 @@ tool.Parent = backpack
 
 writefile("Prince Of Egypt.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Prince%20Of%20Egypt.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -850,7 +850,7 @@ tool.Parent = backpack
 
 writefile("Wipe me Down.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Wipe%20me%20Down.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -893,7 +893,7 @@ tool.Parent = backpack
 
 writefile("Shoo Whop.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Shoo%20Whop.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -936,7 +936,7 @@ tool.Parent = backpack
 
 writefile("PoPiPo.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/PoPiPo.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -979,7 +979,7 @@ tool.Parent = backpack
 
 writefile("Monoko.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Monoko.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -1026,7 +1026,7 @@ tool.Parent = backpack
 
 writefile("Lagtrain.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Lagtrain.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -1073,7 +1073,7 @@ tool.Parent = backpack
 
 writefile("In My Head.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/In%20My%20Head.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -1116,7 +1116,7 @@ tool.Parent = backpack
 
 writefile("LMC.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/LMC.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -1159,7 +1159,7 @@ tool.Parent = backpack
 
 writefile("Get Down.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Get%20Down.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -1202,7 +1202,7 @@ tool.Parent = backpack
 
 writefile("Dia Delicia.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Dia%20Delicia.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -1245,7 +1245,7 @@ tool.Parent = backpack
 
 writefile("Epik.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Epik.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -1288,7 +1288,7 @@ tool.Parent = backpack
 
 writefile("Loli Dance.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Loli%20Dance.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -1331,7 +1331,7 @@ tool.Parent = backpack
 
 writefile("IWRA.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/IWRA.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -1374,7 +1374,7 @@ tool.Parent = backpack
 
 writefile("WhatsApp Meme.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/WhatsApp%20Meme.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -1417,7 +1417,7 @@ tool.Parent = backpack
 
 writefile("Goofy Song.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Goofy%20Song.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -1460,7 +1460,7 @@ tool.Parent = backpack
 
 writefile("WCIBN.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/WCIBN.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -1503,7 +1503,7 @@ tool.Parent = backpack
 
 writefile("Pretty Princess Theme.mp3", game:HttpGet("https://github.com/gObl00x/Epik-Musics/raw/refs/heads/main/Pretty%20Princess%20Theme.mp3"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
@@ -1547,7 +1547,7 @@ tool.Parent = backpack
 -- TODO: replace this with the actual emote id
 writefile("California Girls.mp3", game:HttpGet("aaa"))
 if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 end
 
 local Anim = nil
