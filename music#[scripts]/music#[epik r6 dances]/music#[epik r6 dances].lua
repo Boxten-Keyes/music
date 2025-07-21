@@ -1663,7 +1663,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 			Anim:Play()
 		end)
 		sound = Instance.new("Sound")
-		sound.SoundId = getcustomasset("#rooklynBloodPop.mp3")
+		sound.SoundId = "rbxassetid://94595048670347"
 		sound.Volume = 2
 		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
