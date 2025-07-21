@@ -306,7 +306,7 @@ local signaldiedbackend = LocalPlayer.ConnectDiedSignalBackend
 local signalkill = LocalPlayer.Kill
 
 if respawncharacter then
-	LoadUi(game:GetService("Players").RespawnTime)
+	-- LoadUi(game:GetService("Players").RespawnTime)
 	if instantrespawn then
 		if replicatesignal then
 			replicatesignal(signaldiedbackend)
@@ -424,7 +424,6 @@ local function stepReanimate()
 	end
 
 	--// YES it is unstable. im working on optimizing (later)
-
 	newcharRoot.Velocity = vector3zero
 	newcharRoot.Velocity = vector3zero
 
