@@ -54,9 +54,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("The Hero.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -97,9 +100,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Two.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -140,9 +146,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("The Flop.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -183,9 +192,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Club Penguin.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -227,9 +239,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Breakdance.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -271,9 +286,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Insanity.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -315,9 +333,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Mannrobics.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -359,9 +380,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Step.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 
 	player.Character.Humanoid.WalkSpeed = 3
@@ -406,9 +430,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Poke Dance.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -449,9 +476,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Spooky Month.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -492,9 +522,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Chinese Dance.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -535,9 +568,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Doodle.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -578,9 +614,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Shinji Meme.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -621,9 +660,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Rakuten Lemonade.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -664,9 +706,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Lonely Lonely.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 
 	player.Character.Humanoid.WalkSpeed = 10
@@ -711,9 +756,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Boppin.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -754,9 +802,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Hey Ya.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -797,9 +848,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Goopie.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -840,9 +894,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Prince Of Egypt.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -883,9 +940,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Wipe me Down.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -926,9 +986,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Shoo Whop.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -969,9 +1032,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("PoPiPo.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -1012,9 +1078,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Monoko.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 
 	player.Character.Humanoid.WalkSpeed = 8
@@ -1059,9 +1128,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Lagtrain.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 
 	player.Character.Humanoid.WalkSpeed = 20
@@ -1106,9 +1178,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("In My Head.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -1149,9 +1224,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("LMC.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -1192,9 +1270,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Get Down.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -1235,9 +1316,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Dia Delicia.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -1278,9 +1362,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Epik.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -1321,9 +1408,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Loli Dance.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -1364,9 +1454,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("IWRA.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -1407,9 +1500,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("WhatsApp Meme.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -1450,9 +1546,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Goofy Song.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -1493,9 +1592,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("WCIBN.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -1536,9 +1638,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Pretty Princess Theme.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -1579,9 +1684,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("California Girls.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -1622,9 +1730,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Emotional Prism.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -1665,9 +1776,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("BrooklynBloodPop.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -1708,9 +1822,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Billy Bounce.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -1751,9 +1868,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Get Sturdy.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -1794,9 +1914,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Soda Pop.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -1837,9 +1960,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Ksuuvi.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -1880,9 +2006,12 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Mesmerizer.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -1917,15 +2046,15 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 76975616044095)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Locked.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
@@ -1960,15 +2089,15 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 103226195057859)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Chegou 3.mp3")
 		sound.Volume = 2
-		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+  Anim.Stopped:Connect(function()
+			Anim:Play()
+		 sound:Play()
+		end)
 	end
 end)
 
