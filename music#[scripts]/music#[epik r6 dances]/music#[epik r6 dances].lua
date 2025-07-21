@@ -48,9 +48,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 133160365635320)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("The Hero.mp3")
 		sound.Volume = 2
@@ -94,9 +92,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 137845929482571)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Two.mp3")
 		sound.Volume = 2
@@ -140,9 +136,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 84447598378239)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("The Flop.mp3")
 		sound.Volume = 2
@@ -186,9 +180,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 89761302048916)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Club Penguin.mp3")
 		sound.Volume = 2
@@ -233,9 +225,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 132886479585903)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Breakdance.mp3")
 		sound.Volume = 2
@@ -280,9 +270,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 139483347792972)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Insanity.mp3")
 		sound.Volume = 2
@@ -327,9 +315,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 137456359844967)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Mannrobics.mp3")
 		sound.Volume = 2
@@ -374,9 +360,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 124074233795203)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Step.mp3")
 		sound.Volume = 2
@@ -424,9 +408,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 18986687692)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Poke Dance.mp3")
 		sound.Volume = 2
@@ -470,9 +452,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 15231364673)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Spooky Month.mp3")
 		sound.Volume = 2
@@ -516,9 +496,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 124210157097622)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Chinese Dance.mp3")
 		sound.Volume = 2
@@ -562,9 +540,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 137721173051346)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Doodle.mp3")
 		sound.Volume = 2
@@ -608,9 +584,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 130485792890829)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Shinji Meme.mp3")
 		sound.Volume = 2
@@ -654,9 +628,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 18985726113)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Rakuten Lemonade.mp3")
 		sound.Volume = 2
@@ -700,9 +672,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 92699725136780)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Lonely Lonely.mp3")
 		sound.Volume = 2
@@ -750,9 +720,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 13579968035)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Boppin.mp3")
 		sound.Volume = 2
@@ -796,9 +764,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 13357063395)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Hey Ya.mp3")
 		sound.Volume = 2
@@ -842,9 +808,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 7828640127)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Goopie.mp3")
 		sound.Volume = 2
@@ -888,9 +852,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 100136360352723)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Prince Of Egypt.mp3")
 		sound.Volume = 2
@@ -934,9 +896,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 72460213504303)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Wipe me Down.mp3")
 		sound.Volume = 2
@@ -980,9 +940,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 121535445943256)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Shoo Whop.mp3")
 		sound.Volume = 2
@@ -1026,9 +984,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 78991327797272)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("PoPiPo.mp3")
 		sound.Volume = 2
@@ -1072,9 +1028,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 139889845987864)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Monoko.mp3")
 		sound.Volume = 2
@@ -1122,9 +1076,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 131559207454945)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Lagtrain.mp3")
 		sound.Volume = 2
@@ -1172,9 +1124,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 114160464579438)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+		Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("In My Head.mp3")
 		sound.Volume = 2
@@ -1218,9 +1168,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 120262284704633)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+  Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("LMC.mp3")
 		sound.Volume = 2
@@ -1264,9 +1212,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 98916367562022)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+  Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Get Down.mp3")
 		sound.Volume = 2
@@ -1310,9 +1256,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 80641587562132)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+  Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Dia Delicia.mp3")
 		sound.Volume = 2
@@ -1356,9 +1300,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 135424282094138)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+  Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Epik.mp3")
 		sound.Volume = 2
@@ -1402,9 +1344,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 14887006269)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+  Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Loli Dance.mp3")
 		sound.Volume = 2
@@ -1448,9 +1388,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 131562546189485)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+  Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("IWRA.mp3")
 		sound.Volume = 2
@@ -1494,9 +1432,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 131539514978219)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+  Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("WhatsApp Meme.mp3")
 		sound.Volume = 2
@@ -1540,9 +1476,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 75148929064618)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+  Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Goofy Song.mp3")
 		sound.Volume = 2
@@ -1586,9 +1520,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 16240038168)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+  Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("WCIBN.mp3")
 		sound.Volume = 2
@@ -1632,9 +1564,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 118452043589079)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+  Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Pretty Princess Theme.mp3")
 		sound.Volume = 2
@@ -1678,9 +1608,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 121768360244671)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+  Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("California Girls.mp3")
 		sound.Volume = 2
@@ -1724,9 +1652,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 132979558739339)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+  Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Emotional Prism.mp3")
 		sound.Volume = 2
@@ -1770,9 +1696,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 132026285699359)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+  Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("BrooklynBloodPop.mp3")
 		sound.Volume = 2
@@ -1816,9 +1740,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 125962207089467)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+  Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Billy Bounce.mp3")
 		sound.Volume = 2
@@ -1862,9 +1784,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 77773358394206)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+  Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Get Sturdy.mp3")
 		sound.Volume = 2
@@ -1908,9 +1828,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 77909248721162)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+  Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Soda Pop.mp3")
 		sound.Volume = 2
@@ -1954,9 +1872,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 87138990788698)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+  Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Ksuuvi.mp3")
 		sound.Volume = 2
@@ -2000,9 +1916,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 107578737342278)
 		Anim:Play()
-		Anim.Stopped:Connect(function()
-			Anim:Play()
-		end)
+  Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Mesmerizer.mp3")
 		sound.Volume = 2
@@ -2046,6 +1960,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 76975616044095)
 		Anim:Play()
+  Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Locked.mp3")
 		sound.Volume = 2
@@ -2089,6 +2004,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 103226195057859)
 		Anim:Play()
+  Anim.Looped = false
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Chegou 3.mp3")
 		sound.Volume = 2
