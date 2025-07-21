@@ -1872,12 +1872,13 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 87138990788698)
 		Anim:Play()
-  Anim.Looped = false
+  Anim.Looped = true
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Ksuuvi.mp3")
 		sound.Volume = 2
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+  sound.Looped = true
 		Anim.Stopped:Connect(function()
 			Anim:Play()
 		 sound:Play()
@@ -1960,57 +1961,14 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 76975616044095)
 		Anim:Play()
-  Anim.Looped = false
+  Anim.Looped = true
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Locked.mp3")
 		sound.Volume = 2
+  sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
 		Anim.Stopped:Connect(function()
-			Anim:Play()
-		 sound:Play()
-		end)
-	end
-end)
-
-tool.Unequipped:Connect(function()
-	if Anim then
-		Anim:Stop()
-		Anim:Destroy()
-	end
-	if sound then
-		sound:Stop()
-		sound:Destroy()
-	end
-end)
-
--------------------------------------------------------------------------------------------------------------------------------
-
-local tool = Instance.new("Tool")
-tool.Name = "Chegou 3"
-tool.RequiresHandle = false
-tool.Parent = backpack
-
-writefile("Chegou 3.mp3", game:HttpGet("https://files.catbox.moe/1k5nax.mp3"))
-if not getgenv()["Animator"] then
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/xhayper/Animator/main/Source/Main.lua"))()
-end
-
-local Anim = nil
-local sound = nil
-
-tool.Equipped:Connect(function() hi() task.wait()
-	local character = player.Character
-	if character then
-		Anim = Animator.new(character, 103226195057859)
-		Anim:Play()
-  Anim.Looped = false
-		sound = Instance.new("Sound")
-		sound.SoundId = getcustomasset("Chegou 3.mp3")
-		sound.Volume = 2
-		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
-		sound:Play()
-  Anim.Stopped:Connect(function()
 			Anim:Play()
 		 sound:Play()
 		end)
