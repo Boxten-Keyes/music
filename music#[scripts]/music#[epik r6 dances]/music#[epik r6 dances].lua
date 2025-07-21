@@ -1663,7 +1663,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 			Anim:Play()
 		end)
 		sound = Instance.new("Sound")
-		sound.SoundId = "rbxassetid://94595048670347"
+		sound.SoundId = getcustomasset("BrooklynBloodPop.mp3")
 		sound.Volume = 2
 		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
@@ -1793,6 +1793,135 @@ tool.Equipped:Connect(function() hi() task.wait()
 		end)
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Soda Pop.mp3")
+		sound.Volume = 2
+		sound.Looped = true
+		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
+		sound:Play()
+	end
+end)
+
+tool.Unequipped:Connect(function()
+	if Anim then
+		Anim:Stop()
+		Anim:Destroy()
+	end
+	if sound then
+		sound:Stop()
+		sound:Destroy()
+	end
+end)
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+local tool = Instance.new("Tool")
+tool.Name = "Ksuuvi Stomp"
+tool.RequiresHandle = false
+tool.Parent = backpack
+
+writefile("Ksuuvi.mp3", game:HttpGet("https://files.catbox.moe/dw9sfh.mp3"))
+if not getgenv()["Animator"] then
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/xhayper/Animator/main/Source/Main.lua"))()
+end
+
+local Anim = nil
+local sound = nil
+
+tool.Equipped:Connect(function() hi() task.wait()
+	local character = player.Character
+	if character then
+		Anim = Animator.new(character, 87138990788698)
+		Anim:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		end)
+		sound = Instance.new("Sound")
+		sound.SoundId = getcustomasset("Ksuuvi.mp3")
+		sound.Volume = 2
+		sound.Looped = true
+		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
+		sound:Play()
+	end
+end)
+
+tool.Unequipped:Connect(function()
+	if Anim then
+		Anim:Stop()
+		Anim:Destroy()
+	end
+	if sound then
+		sound:Stop()
+		sound:Destroy()
+	end
+end)
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+local tool = Instance.new("Tool")
+tool.Name = "Mesmerizer"
+tool.RequiresHandle = false
+tool.Parent = backpack
+
+writefile("Mesmerizer.mp3", game:HttpGet("https://files.catbox.moe/m8guv5.mp3"))
+if not getgenv()["Animator"] then
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/xhayper/Animator/main/Source/Main.lua"))()
+end
+
+local Anim = nil
+local sound = nil
+
+tool.Equipped:Connect(function() hi() task.wait()
+	local character = player.Character
+	if character then
+		Anim = Animator.new(character, 107578737342278)
+		Anim:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		end)
+		sound = Instance.new("Sound")
+		sound.SoundId = getcustomasset("Mesmerizer.mp3")
+		sound.Volume = 2
+		sound.Looped = true
+		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
+		sound:Play()
+	end
+end)
+
+tool.Unequipped:Connect(function()
+	if Anim then
+		Anim:Stop()
+		Anim:Destroy()
+	end
+	if sound then
+		sound:Stop()
+		sound:Destroy()
+	end
+end)
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+local tool = Instance.new("Tool")
+tool.Name = "Locked"
+tool.RequiresHandle = false
+tool.Parent = backpack
+
+writefile("Locked.mp3", game:HttpGet("https://files.catbox.moe/ap73us.mp3"))
+if not getgenv()["Animator"] then
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/xhayper/Animator/main/Source/Main.lua"))()
+end
+
+local Anim = nil
+local sound = nil
+
+tool.Equipped:Connect(function() hi() task.wait()
+	local character = player.Character
+	if character then
+		Anim = Animator.new(character, 76975616044095)
+		Anim:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		end)
+		sound = Instance.new("Sound")
+		sound.SoundId = getcustomasset("Locked.mp3")
 		sound.Volume = 2
 		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
