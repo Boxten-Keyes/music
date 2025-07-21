@@ -1904,7 +1904,7 @@ tool.Name = "Locked"
 tool.RequiresHandle = false
 tool.Parent = backpack
 
-writefile("Locked.mp3", game:HttpGet("https://files.catbox.moe/ap73us.mp3"))
+writefile("Locked.mp3", game:HttpGet("https://files.catbox.moe/5vxthn.mp3"))
 if not getgenv()["Animator"] then
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/xhayper/Animator/main/Source/Main.lua"))()
 end
@@ -1922,6 +1922,49 @@ tool.Equipped:Connect(function() hi() task.wait()
 		end)
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Goofy Song.mp3")
+		sound.Volume = 2
+		sound.Looped = true
+		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
+		sound:Play()
+	end
+end)
+
+tool.Unequipped:Connect(function()
+	if Anim then
+		Anim:Stop()
+		Anim:Destroy()
+	end
+	if sound then
+		sound:Stop()
+		sound:Destroy()
+	end
+end)
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+local tool = Instance.new("Tool")
+tool.Name = "Chegou 3"
+tool.RequiresHandle = false
+tool.Parent = backpack
+
+writefile("Chegou 3.mp3", game:HttpGet("https://files.catbox.moe/1k5nax.mp3"))
+if not getgenv()["Animator"] then
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/xhayper/Animator/main/Source/Main.lua"))()
+end
+
+local Anim = nil
+local sound = nil
+
+tool.Equipped:Connect(function() hi() task.wait()
+	local character = player.Character
+	if character then
+		Anim = Animator.new(character, 76975616044095)
+		Anim:Play()
+		Anim.Stopped:Connect(function()
+			Anim:Play()
+		end)
+		sound = Instance.new("Sound")
+		sound.SoundId = getcustomasset("Chegou 3.mp3")
 		sound.Volume = 2
 		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
