@@ -632,6 +632,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Rakuten Lemonade.mp3")
 		sound.Volume = 2
+  sound.TimePosition = 0.7
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
 		Anim.Stopped:Connect(function()
@@ -672,12 +673,13 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 92699725136780)
 		Anim:Play()
-		Anim.Looped = false
+		Anim.Looped = true
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("Lonely Lonely.mp3")
 		sound.Volume = 2
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+  sound.Looped = true
 		Anim.Stopped:Connect(function()
 			Anim:Play()
 		 sound:Play()
@@ -1696,12 +1698,13 @@ tool.Equipped:Connect(function() hi() task.wait()
 	if character then
 		Anim = Animator.new(character, 132026285699359)
 		Anim:Play()
-  Anim.Looped = false
+  Anim.Looped = true
 		sound = Instance.new("Sound")
 		sound.SoundId = getcustomasset("BrooklynBloodPop.mp3")
 		sound.Volume = 2
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
 		sound:Play()
+  sound.Looped = true
 		Anim.Stopped:Connect(function()
 			Anim:Play()
 		 sound:Play()
