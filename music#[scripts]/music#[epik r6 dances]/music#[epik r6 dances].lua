@@ -1921,7 +1921,7 @@ tool.Equipped:Connect(function() hi() task.wait()
 			Anim:Play()
 		end)
 		sound = Instance.new("Sound")
-		sound.SoundId = getcustomasset("Locked.mp3")
+		sound.SoundId = getcustomasset("Goofy Song.mp3")
 		sound.Volume = 2
 		sound.Looped = true
 		sound.Parent = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
