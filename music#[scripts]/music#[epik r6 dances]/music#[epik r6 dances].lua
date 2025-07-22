@@ -30,7 +30,7 @@ function makeanim(name, song, animid)
 	ER6D["animation tool"]["Parent"] = ER6D["backpack"]
 	
 	ER6D["song file name"] = tostring(name) .. ".mp3"
-	writefile(ER6D["song file name"], game:HttpGet(tostring(song)))   
+	if song ~= nil then writefile(ER6D["song file name"], game:HttpGet(tostring(song))) end
 	
 	if not ER6D["in studio"] then
 		if not getgenv()["Animator"] then
