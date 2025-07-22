@@ -38,7 +38,7 @@ function makeanim(name, song, animid)
 	t["Parent"] = ER6D["backpack"]
 	
 	s = tostring(name) .. ".mp3"
-	if song ~= nil then writefile(ER6D["song file name"], game:HttpGet(tostring(song))) end
+	if song ~= nil then writefile(s, game:HttpGet(tostring(song))) end
 
 	t["Equipped"]:Connect(function()
 		if a then
