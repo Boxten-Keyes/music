@@ -9,74 +9,59 @@
 
 ---------------------------------------------------------------------------------------------------------------------------]]--
 
-if not game:IsLoaded() then game["Loaded"]:Wait() end ER6D = {}
+if not game:IsLoaded() then game["Loaded"]:Wait() end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-ER6D["local player"] = game["Players"]["LocalPlayer"]
-ER6D["character"] = ER6D["local player"]["Character"]
-ER6D["backpack"] = ER6D["local player"]:WaitForChild("Backpack")
+local lp = game["Players"]["LocalPlayer"]
+local char = lp["Character"]
+local bp = lp:WaitForChild("Backpack")
 
-ER6D["run service"] = game["Run Service"]
-ER6D["in studio"] = ER6D["run service"]:IsStudio()
+local instud = game["Run Service"]:IsStudio()
 
 -------------------------------------------------------------------------------------------------------------------------------
 
 local a, s = nil, nil
-
-if not ER6D["in studio"] then
-	if not getgenv()["Animator"] then
-		loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
-	end
-end
 
 -- credits to MrY7zz & xhayper
 function makeanim(name, song, animid)
 	local t = Instance.new("Tool")
 	t["Name"] = tostring(name)
 	t["RequiresHandle"] = false
-	t["Parent"] = ER6D["backpack"]
+	t["Parent"] = bp
 	
 	s = tostring(name) .. ".mp3"
 	if song ~= nil then writefile(s, game:HttpGet(tostring(song))) end
+	
+	if not instud then
+		if not getgenv()["Animator"] then
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+		end
+	end
 
 	t["Equipped"]:Connect(function()
-		if a then
-			a:Stop()
-			a:Destroy()
-		end
-		
-		if s then
-			s:Stop()
-			s:Destroy()
-		end
+		if a then a:Stop() a:Destroy() end
+		if s then s:Stop() s:Destroy() end
 		
 		task.wait()
 				
-		if ER6D["character"] then
-			a = Animator.new(ER6D["character"], tonumber(animid))
+		if char then
+			a = Animator.new(char, tonumber(animid))
 			a:Play()
 			a["Looped"] = true
 			
 			s = Instance.new("Sound")
-			s["SoundId"] = getcustomasset(ER6D["song file name"])
+			s["SoundId"] = getcustomasset(s)
 			s["Volume"] = 2
-			s["Parent"] = ER6D["character"]:WaitForChild("HumanoidRootPart")
+			s["Parent"] = char:WaitForChild("HumanoidRootPart")
 			s["Looped"] = true
 			s:Play()
 		end
 	end)
 
 	t["Unequipped"]:Connect(function()
-		if a then
-			a:Stop()
-			a:Destroy()
-		end
-		
-		if s then
-			s:Stop()
-			s:Destroy()
-		end
+		if a then a:Stop() a:Destroy() end
+		if s then s:Stop() s:Destroy() end
 	end)
 end
 
