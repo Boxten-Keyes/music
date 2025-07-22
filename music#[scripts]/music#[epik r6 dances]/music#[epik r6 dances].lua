@@ -90,53 +90,32 @@ end
 -- dance 1 (two)
 makeanim("Two", "https://files.catbox.moe/9x4a71.mp3", 137845929482571)
 
--- dance 2 (club penguin)
-makeanim("Club Penguin", nil, 89761302048916)
+-- dance 2 (chinese dance / beat da koto nai)
+makeanim("Chinese Dance", "https://files.catbox.moe/uvzvd1.mp3", 124210157097622)
 
--- dance 3 (insanity)
-makeanim("Insanity", nil, 139483347792972)
+-- dance 3 (rakuten point)
+makeanim("Rakuten Point", "https://files.catbox.moe/bn9omy.mp3", 18985726113)
 
--- dance 4 (chinese dance / beat da koto nai)
-makeanim("Chinese Dance", nil, 124210157097622)
-
--- dance 5 (rakuten lemonade)
-makeanim("Rakuten Lemonade", nil, 18985726113)
-
--- dance 6 (hakari)
-makeanim("Hakari", nil, 92699725136780)
-
--- dance 7 (goopie)
-makeanim("Goopie", nil, 7828640127)
-
--- dance 8 (prince of egypt)
-makeanim("Prince of Egypt", nil, 100136360352723)
-
--- dance 9 (dia delicia / headlock)
-makeanim("Dia Delicia", nil, 80641587562132)
-
--- dance 10 (who can it be now?)
-makeanim("Who Can It Be Now?", nil, 16240038168)
+-- dance 4 (hakari)
+makeanim("Hakari", "https://files.catbox.moe/3wworz.mp3", 92699725136780)
 
 -- dance 11 (california girls)
-makeanim("California Girls", nil, 121768360244671)
+makeanim("California Girls", "https://files.catbox.moe/s1belf.mp3", 121768360244671)
 
 -- dance 12 (emotional prism)
 makeanim("Emotional Prism", "https://files.catbox.moe/28vmzm.mp3", 132979558739339)
 
 -- dance 13 (#brooklynbloodpop)
-makeanim("#BrooklynBloodPop!", nil, 132026285699359)
-
--- dance 14 (billy bounce)
-makeanim("Billy Bounce", nil, 132026285699359)
+makeanim("#BrooklynBloodPop!", "https://files.catbox.moe/f4jsc9.mp3", 132026285699359)
 
 -- dance 15 (soda pop)
 makeanim("Soda Pop", "https://files.catbox.moe/ap73us.mp3", 77909248721162)
 
 -- dance 16 (ksuuvi stomp)
-makeanim("Ksuuvi Stomp", nil, 87138990788698)
+makeanim("Ksuuvi Stomp", "https://files.catbox.moe/300n51.mp3", 87138990788698)
 
 -- dance 17 (mesmerizer)
-makeanim("Mesmerizer", nil, 107578737342278)
+makeanim("Mesmerizer", "https://files.catbox.moe/k42abp.mp3", 107578737342278)
 
 -- dance 18 (locked)
 makeanim("Locked", "https://files.catbox.moe/5vxthn.mp3", 76975616044095)
