@@ -16,7 +16,6 @@ if not game:IsLoaded() then game["Loaded"]:Wait() end ER6D = {}
 ER6D["local player"] = game["Players"]["LocalPlayer"]
 ER6D["character"] = ER6D["local player"]["Character"]
 ER6D["backpack"] = ER6D["local player"]:WaitForChild("Backpack")
-ER6D["animator"] = nil
 
 ER6D["run service"] = game["Run Service"]
 ER6D["in studio"] = ER6D["run service"]:IsStudio()
@@ -24,57 +23,63 @@ ER6D["in studio"] = ER6D["run service"]:IsStudio()
 -------------------------------------------------------------------------------------------------------------------------------
 
 -- credits to MrY7zz & xhayper
-function makeanim(name, songUrl, animId)
-	local tool = Instance.new("Tool")
-	tool.Name = tostring(name)
-	tool.RequiresHandle = false
-	tool.Parent = ER6D["backpack"]
-
-	local songFileName = tostring(name) .. ".mp3"
-	writefile(songFileName, game:HttpGet(songUrl))
-
-	local animatorModule
-	if not ER6D["in studio"] and not getgenv().Animator then
-		loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
-	end
-	animatorModule = getgenv().Animator
-	if not animatorModule then
-		return
-	end
-
-	local animInstance, soundInstance = nil, nil
-
-	local function cleanup()
-		if animInstance then
-			animInstance:Stop()
-			animInstance:Destroy()
-			animInstance = nil
-		end
-		if soundInstance then
-			soundInstance:Stop()
-			soundInstance:Destroy()
-			soundInstance = nil
+function makeanim(name, song, animid)
+	ER6D["animation tool"] = Instance.new("Tool")
+	ER6D["animation tool"]["Name"] = tostring(name)
+	ER6D["animation tool"]["RequiresHandle"] = false
+	ER6D["animation tool"]["Parent"] = ER6D["backpack"]
+	
+	ER6D["song file name"] = tostring(name) .. ".mp3"
+	writefile(ER6D["song file name"], game:HttpGet(tostring(song)))   
+	
+	if not ER6D["in studio"] then
+		if not getgenv()["Animator"] then
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+			
+			task.wait()
 		end
 	end
 
-	tool.Equipped:Connect(function()
-		cleanup()
+	ER6D["animation"], ER6D["song"] = nil, nil
 
-		local character = ER6D["local player"].Character or ER6D["local player"].CharacterAdded:Wait()
-		local hrp = character:FindFirstChild("HumanoidRootPart") or character:WaitForChild("HumanoidRootPart")
-
-		animInstance = animatorModule.new(character, tonumber(animId))
-		animInstance:Play()
-
-		soundInstance = Instance.new("Sound")
-		soundInstance.SoundId = getcustomasset(songFileName)
-		soundInstance.Volume = 2
-		soundInstance.Looped = true
-		soundInstance.Parent = hrp
-		soundInstance:Play()
+	ER6D["animation tool"]["Equipped"]:Connect(function()
+		if ER6D["animation"] then
+			ER6D["animation"]:Stop()
+			ER6D["animation"]:Destroy()
+		end
+		
+		if ER6D["song"] then
+			ER6D["song"]:Stop()
+			ER6D["song"]:Destroy()
+		end
+		
+		task.wait()
+				
+		if ER6D["character"] then
+			ER6D["animation"] = Animator.new(ER6D["character"], tonumber(animid))
+			ER6D["animation"]:Play()
+			ER6D["animation"]["Looped"] = true
+			
+			ER6D["song"] = Instance.new("Sound")
+			ER6D["song"]["SoundId"] = getcustomasset(ER6D["song file name"])
+			ER6D["song"]["Volume"] = 2
+			ER6D["song"]["Parent"] = ER6D["character"]:WaitForChild("HumanoidRootPart")
+			ER6D["song"]["Looped"] = true
+			ER6D["song"]:Play()
+		end
 	end)
 
-	tool.Unequipped:Connect(cleanup)
+	ER6D["animation tool"]["Unequipped"]:Connect(function()
+		if ER6D["animation"] then
+			ER6D["animation"]:Stop()
+			ER6D["animation"]:Destroy()
+		end
+		
+		if ER6D["song"] then
+			ER6D["song"]:Stop()
+			ER6D["song"]:Destroy()
+		end
+	end)
 end
 
 -------------------------------------------------------------------------------------------------------------------------------
