@@ -13,22 +13,6 @@ task.wait(0.1)
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-function prang()
-	local s = Instance.new("Sound")
-	s.SoundId = "rbxassetid://8426701399"
-	s.Parent = game:GetService("SoundService")
-	s:Play()
-	s.Ended:Connect(function() s:Destroy() end)
-end
-
-function notify(te, tt, d)
-	task.spawn(function() task.spawn(prang) game:GetService("StarterGui"):SetCore("SendNotification", {Title = te, Text = tt, Duration = d}) end)
-end
-
-task.spawn(function() notify("player camlock | symphysis", "made by chatgpt. enjoy!", 4) end)
-
--------------------------------------------------------------------------------------------------------------------------------
-
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
