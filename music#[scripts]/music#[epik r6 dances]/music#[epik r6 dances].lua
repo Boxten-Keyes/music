@@ -24,6 +24,12 @@ ER6D["in studio"] = ER6D["run service"]:IsStudio()
 
 ER6D["animation"], ER6D["song"] = nil, nil
 
+if not ER6D["in studio"] then
+	if not getgenv()["Animator"] then
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	end
+end
+
 -- credits to MrY7zz & xhayper
 function makeanim(name, song, animid)
 	ER6D["animation tool"] = Instance.new("Tool")
@@ -33,14 +39,6 @@ function makeanim(name, song, animid)
 	
 	ER6D["song file name"] = tostring(name) .. ".mp3"
 	if song ~= nil then writefile(ER6D["song file name"], game:HttpGet(tostring(song))) end
-	
-	if not ER6D["in studio"] then
-		if not getgenv()["Animator"] then
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
-			
-			task.wait()
-		end
-	end
 
 	ER6D["animation tool"]["Equipped"]:Connect(function()
 		if ER6D["animation"] then
