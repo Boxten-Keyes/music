@@ -22,7 +22,7 @@ ER6D["in studio"] = ER6D["run service"]:IsStudio()
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-ER6D["animation"], ER6D["song"] = nil, nil
+local a, s = nil, nil
 
 if not ER6D["in studio"] then
 	if not getgenv()["Animator"] then
@@ -32,50 +32,50 @@ end
 
 -- credits to MrY7zz & xhayper
 function makeanim(name, song, animid)
-	ER6D["animation tool"] = Instance.new("Tool")
-	ER6D["animation tool"]["Name"] = tostring(name)
-	ER6D["animation tool"]["RequiresHandle"] = false
-	ER6D["animation tool"]["Parent"] = ER6D["backpack"]
+	local t = Instance.new("Tool")
+	t["Name"] = tostring(name)
+	t["RequiresHandle"] = false
+	t["Parent"] = ER6D["backpack"]
 	
-	ER6D["song file name"] = tostring(name) .. ".mp3"
+	s = tostring(name) .. ".mp3"
 	if song ~= nil then writefile(ER6D["song file name"], game:HttpGet(tostring(song))) end
 
-	ER6D["animation tool"]["Equipped"]:Connect(function()
-		if ER6D["animation"] then
-			ER6D["animation"]:Stop()
-			ER6D["animation"]:Destroy()
+	t["Equipped"]:Connect(function()
+		if a then
+			a:Stop()
+			a:Destroy()
 		end
 		
-		if ER6D["song"] then
-			ER6D["song"]:Stop()
-			ER6D["song"]:Destroy()
+		if s then
+			s:Stop()
+			s:Destroy()
 		end
 		
 		task.wait()
 				
 		if ER6D["character"] then
-			ER6D["animation"] = Animator.new(ER6D["character"], tonumber(animid))
-			ER6D["animation"]:Play()
-			ER6D["animation"]["Looped"] = true
+			a = Animator.new(ER6D["character"], tonumber(animid))
+			a:Play()
+			a["Looped"] = true
 			
-			ER6D["song"] = Instance.new("Sound")
-			ER6D["song"]["SoundId"] = getcustomasset(ER6D["song file name"])
-			ER6D["song"]["Volume"] = 2
-			ER6D["song"]["Parent"] = ER6D["character"]:WaitForChild("HumanoidRootPart")
-			ER6D["song"]["Looped"] = true
-			ER6D["song"]:Play()
+			s = Instance.new("Sound")
+			s["SoundId"] = getcustomasset(ER6D["song file name"])
+			s["Volume"] = 2
+			s["Parent"] = ER6D["character"]:WaitForChild("HumanoidRootPart")
+			s["Looped"] = true
+			s:Play()
 		end
 	end)
 
-	ER6D["animation tool"]["Unequipped"]:Connect(function()
-		if ER6D["animation"] then
-			ER6D["animation"]:Stop()
-			ER6D["animation"]:Destroy()
+	t["Unequipped"]:Connect(function()
+		if a then
+			a:Stop()
+			a:Destroy()
 		end
 		
-		if ER6D["song"] then
-			ER6D["song"]:Stop()
-			ER6D["song"]:Destroy()
+		if s then
+			s:Stop()
+			s:Destroy()
 		end
 	end)
 end
