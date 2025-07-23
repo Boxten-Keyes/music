@@ -1,11 +1,11 @@
 --[[---------------------------------------------------------------------------------------------------------------------------
-  ______     ______   __     __  __        ______     ______        _____     ______     __   __     ______     ______     ______    
- /\  ___\   /\  __ \ /\ \   /\ \/ /       /\  __ \   /\  ___\      /\  __-.  /\  __ \   /\ "-.\ \   /\  ___\   /\  ___\   /\  ___\   
- \ \  ___\  \ \  __/ \ \ \  \ \  _"-.     \ \  __<   \ \  __ \     \ \ \/\ \ \ \  __ \  \ \ \-.  \  \ \ \____  \ \  ___\  \ \___  \  
-  \ \_____\  \ \_\    \ \_\  \ \_\ \_\     \ \_\ \_\  \ \_____\     \ \____-  \ \_\ \_\  \ \_\\"\_\  \ \_____\  \ \_____\  \/\_____\ 
-   \/_____/   \/_/     \/_/   \/_/\/_/      \/_/ /_/   \/_____/      \/____/   \/_/\/_/   \/_/ \/_/   \/_____/   \/_____/   \/_____/ 
+  ______     ______        _____     ______     __   __     ______     ______     ______    
+ /\  __ \   /\  ___\      /\  __-.  /\  __ \   /\ "-.\ \   /\  ___\   /\  ___\   /\  ___\   
+ \ \  __<   \ \  __ \     \ \ \/\ \ \ \  __ \  \ \ \-.  \  \ \ \____  \ \  ___\  \ \___  \  
+  \ \_\ \_\  \ \_____\     \ \____-  \ \_\ \_\  \ \_\\"\_\  \ \_____\  \ \_____\  \/\_____\ 
+   \/_/ /_/   \/_____/      \/____/   \/_/\/_/   \/_/ \/_/   \/_____/   \/_____/   \/_____/ 
    
-   Made by gObl00x, Edited by Team Noxious -- Epik R6 Dances
+   Made by Team Noxious -- R6 Dances
 
 ---------------------------------------------------------------------------------------------------------------------------]]--
 
@@ -13,90 +13,89 @@ if not game:IsLoaded() then game["Loaded"]:Wait() end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-local lp = game.Players.LocalPlayer
+local lp = game["Players"]["LocalPlayer"]
 local bp = lp:WaitForChild("Backpack")
 
-local runService = game:GetService("RunService")
-local instud = runService:IsStudio()
+local rs = game["Run Service"]
+local instud = rs:IsStudio()
 
 -------------------------------------------------------------------------------------------------------------------------------
 
 -- credits to MrY7zz & xhayper
-function makeanim(name, songUrl, animid, pitch, startTime, endTime)
+function makeanim(name, song, animid, pitch, startt, endt)
 	local tool = Instance.new("Tool")
-	tool.Name = tostring(name)
-	tool.RequiresHandle = false
-	tool.Parent = bp
+	tool["Name"] = tostring(name)
+	tool["RequiresHandle"] = false
+	tool["Parent"] = bp
 
-	local fileName = tostring(name) .. ".mp3"
-	if songUrl and not instud then
-		writefile(fileName, game:HttpGet(songUrl))
+	local file = tostring(name) .. ".mp3"
+	if song and not instud then
+		writefile(file, game:HttpGet(song))
 	end
 
-	if not instud and not getgenv().Animator then
+	if not instud and not getgenv()["Animator"] then
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 	end
 
-	local animatorModule = getgenv().Animator
-	if not animatorModule then return end
+	local animator = getgenv()["Animator"]
+	if not animator then return end
 
-	local animInstance, soundInstance
-	local heartbeatConnection, endedConnection
+	local anim, sound
+	local conn, endconn
 
-	local function stopEverything()
-		if animInstance then animInstance:Stop(); animInstance:Destroy(); animInstance = nil end
-		if soundInstance then soundInstance:Stop(); soundInstance:Destroy(); soundInstance = nil end
-		if heartbeatConnection then heartbeatConnection:Disconnect(); heartbeatConnection = nil end
-		if endedConnection then endedConnection:Disconnect(); endedConnection = nil end
+	local function stop()
+		if anim then anim:Stop(); anim:Destroy(); anim = nil end
+		if sound then sound:Stop(); sound:Destroy(); sound = nil end
+		if conn then conn:Disconnect(); conn = nil end
+		if endconn then endconn:Disconnect(); endconn = nil end
 	end
 
-	tool.Equipped:Connect(function()
-		stopEverything()
+	tool["Equipped"]:Connect(function()
+		stop()
+		task.wait(0.1)
 
-		local character = lp.Character or lp.CharacterAdded:Wait()
+		local character = lp["Character"] or lp["CharacterAdded"]:Wait()
 		local hrp = character:WaitForChild("HumanoidRootPart")
 
-		animInstance = animatorModule.new(character, tonumber(animid))
-		animInstance.Looped = true
-		animInstance:Play()
+		anim = animator.new(character, tonumber(animid))
+		anim["Looped"] = true
+		anim:Play()
 
-		soundInstance = Instance.new("Sound")
-		soundInstance.SoundId = getcustomasset(fileName)
-		soundInstance.Volume = 2
-		soundInstance.Looped = false
-    soundInstance.PlaybackSpeed = tonumber(pitch)
-		soundInstance.Parent = hrp
+		sound = Instance.new("Sound")
+		sound["SoundId"] = getcustomasset(file)
+		sound["Volume"] = 2
+		sound["Looped"] = false
+		sound["PlaybackSpeed"] = tonumber(pitch)
+		sound["Parent"] = hrp
 
-		local start = startTime or 0
-		local ending = endTime -- might be nil
+		local start = startt or 0
+		local ending = endt
 
-		soundInstance:Play()
-		soundInstance.TimePosition = start
+		sound:Play()
+		sound["TimePosition"] = start
 
-		local function loopTrimmed()
-			if not soundInstance then return end
-			soundInstance.TimePosition = start
-			soundInstance:Play()
+		local function looptrimmed()
+			if not sound then return end
+			sound["TimePosition"] = start
+			sound:Play()
 		end
 
-		-- Listen for end of full song (if no custom end time)
-		endedConnection = soundInstance.Ended:Connect(function()
+		endconn = sound["Ended"]:Connect(function()
 			if not ending then
-				loopTrimmed()
+				looptrimmed()
 			end
 		end)
 
-		-- Custom end cutoff & loop manually
 		if ending and ending > start then
-			heartbeatConnection = game:GetService("RunService").Heartbeat:Connect(function()
-				if soundInstance and soundInstance.IsPlaying and soundInstance.TimePosition >= ending then
-					loopTrimmed()
+			conn = rs["Heartbeat"]:Connect(function()
+				if sound and sound["IsPlaying"] and sound["TimePosition"] >= ending then
+					looptrimmed()
 				end
 			end)
 		end
 	end)
 
-	tool.Unequipped:Connect(stopEverything)
+	tool["Unequipped"]:Connect(stop)
 end
 
 -------------------------------------------------------------------------------------------------------------------------------
