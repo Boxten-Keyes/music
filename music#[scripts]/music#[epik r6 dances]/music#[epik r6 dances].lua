@@ -13,56 +13,69 @@ if not game:IsLoaded() then game["Loaded"]:Wait() end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-local lp = game["Players"]["LocalPlayer"]
-local char = lp["Character"]
+local lp = game.Players.LocalPlayer
 local bp = lp:WaitForChild("Backpack")
 
-local instud = game["Run Service"]:IsStudio()
+local runService = game:GetService("RunService")
+local instud = runService:IsStudio()
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-local a, s = nil, nil
-
 -- credits to MrY7zz & xhayper
-function makeanim(name, song, animid)
-	local t = Instance.new("Tool")
-	t["Name"] = tostring(name)
-	t["RequiresHandle"] = false
-	t["Parent"] = bp
-	
-	s = tostring(name) .. ".mp3"
-	if song ~= nil then writefile(s, game:HttpGet(tostring(song))) end
-	
-	if not instud then
-		if not getgenv()["Animator"] then
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+function makeanim(name, songUrl, animid)
+	local tool = Instance.new("Tool")
+	tool.Name = tostring(name)
+	tool.RequiresHandle = false
+	tool.Parent = bp
+
+	local soundFileName = tostring(name) .. ".mp3"
+	if songUrl and not instud then
+		writefile(soundFileName, game:HttpGet(songUrl))
+	end
+
+	if not instud and not getgenv().Animator then
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+	end
+
+	local animatorModule = getgenv().Animator
+	if not animatorModule then return end
+
+	local animInstance = nil
+	local soundInstance = nil
+
+	local function stopEverything()
+		if animInstance then
+			animInstance:Stop()
+			animInstance:Destroy()
+			animInstance = nil
+		end
+		if soundInstance then
+			soundInstance:Stop()
+			soundInstance:Destroy()
+			soundInstance = nil
 		end
 	end
 
-	t["Equipped"]:Connect(function()
-		if a then a:Stop() a:Destroy() end
-		if s then s:Stop() s:Destroy() end
-		
-		task.wait()
-				
-		if char then
-			a = Animator.new(char, tonumber(animid))
-			a:Play()
-			a["Looped"] = true
-			
-			s = Instance.new("Sound")
-			s["SoundId"] = getcustomasset(s)
-			s["Volume"] = 2
-			s["Parent"] = char:WaitForChild("HumanoidRootPart")
-			s["Looped"] = true
-			s:Play()
-		end
+	tool.Equipped:Connect(function()
+		stopEverything()
+
+		local character = lp.Character or lp.CharacterAdded:Wait()
+		local hrp = character:WaitForChild("HumanoidRootPart")
+
+		-- Play animation
+		animInstance = animatorModule.new(character, tonumber(animid))
+		animInstance:Play()
+
+		-- Play audio
+		soundInstance = Instance.new("Sound")
+		soundInstance.SoundId = getcustomasset(soundFileName)
+		soundInstance.Volume = 2
+		soundInstance.Looped = true
+		soundInstance.Parent = hrp
+		soundInstance:Play()
 	end)
 
-	t["Unequipped"]:Connect(function()
-		if a then a:Stop() a:Destroy() end
-		if s then s:Stop() s:Destroy() end
-	end)
+	tool.Unequipped:Connect(stopEverything)
 end
 
 -------------------------------------------------------------------------------------------------------------------------------
