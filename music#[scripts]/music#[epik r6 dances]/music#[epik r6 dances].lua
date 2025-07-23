@@ -113,34 +113,34 @@ makeanim("Rakuten Point", "https://files.catbox.moe/bn9omy.mp3", 18985726113, 1,
 -- dance 4 (hakari)
 makeanim("Hakari", "https://files.catbox.moe/3wworz.mp3", 92699725136780, 1.03)
 
--- dance 11 (california girls)
+-- dance 5 (california girls)
 makeanim("California Girls", "https://files.catbox.moe/s1belf.mp3", 121768360244671, 1, 0.27)
 
--- dance 12 (emotional prism)
+-- dance 6 (emotional prism)
 makeanim("Emotional Prism", "https://files.catbox.moe/28vmzm.mp3", 132979558739339, 1)
 
--- dance 13 (#brooklynbloodpop)
-makeanim("#BrooklynBloodPop!", "https://files.catbox.moe/f4jsc9.mp3", 132026285699359, 1)
+-- dance 7 (#brooklynbloodpop)
+makeanim("BrooklynBloodPop", "https://files.catbox.moe/f4jsc9.mp3", 132026285699359, 1)
 
--- dance 15 (soda pop)
+-- dance 8 (soda pop)
 makeanim("Soda Pop", "https://files.catbox.moe/ap73us.mp3", 77909248721162, 1)
 
--- dance 16 (ksuuvi stomp)
+-- dance 9 (ksuuvi stomp)
 makeanim("Ksuuvi Stomp", "https://files.catbox.moe/300n51.mp3", 87138990788698, 1)
 
--- dance 17 (mesmerizer)
+-- dance 10 (mesmerizer)
 makeanim("Mesmerizer", "https://files.catbox.moe/k42abp.mp3", 107578737342278, 1, 0.2)
 
--- dance 18 (locked)
+-- dance 11 (locked)
 makeanim("Locked", "https://files.catbox.moe/5vxthn.mp3", 76975616044095, 1)
 
--- dance 19 (kazotsky kick)
+-- dance 12 (kazotsky kick)
 makeanim("Kazotsky Kick", "https://files.catbox.moe/3mupm8.mp3", 9158896160, 1)
 
--- dance 20 (who is you)
+-- dance 13 (who is you)
 makeanim("Who Is You", "https://files.catbox.moe/cqxyp6.mp3", 137714761719347, 1)
 
--- dance 20 (chegou 3)
+-- dance 14 (chegou 3)
 makeanim("Chegou 3", "https://files.catbox.moe/mssm2m.mp3", 89046713686252, 1)
 
 -------------------------------------------------------------------------------------------------------------------------------
