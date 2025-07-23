@@ -108,13 +108,13 @@ makeanim("Two", "https://files.catbox.moe/9x4a71.mp3", 137845929482571, 1, 0.2)
 makeanim("Chinese Dance", "https://files.catbox.moe/uvzvd1.mp3", 124210157097622, 1)
 
 -- dance 3 (rakuten point)
-makeanim("Rakuten Point", "https://files.catbox.moe/bn9omy.mp3", 18985726113, 1, 0.2)
+makeanim("Rakuten Point", "https://files.catbox.moe/bn9omy.mp3", 18985726113, 1, 0.2, 11.45)
 
 -- dance 4 (hakari)
-makeanim("Hakari", "https://files.catbox.moe/3wworz.mp3", 92699725136780, 1.1)
+makeanim("Hakari", "https://files.catbox.moe/3wworz.mp3", 92699725136780, 1.05)
 
 -- dance 11 (california girls)
-makeanim("California Girls", "https://files.catbox.moe/s1belf.mp3", 121768360244671, 1, 0.3)
+makeanim("California Girls", "https://files.catbox.moe/s1belf.mp3", 121768360244671, 1, 0.23)
 
 -- dance 12 (emotional prism)
 makeanim("Emotional Prism", "https://files.catbox.moe/28vmzm.mp3", 132979558739339, 1)
