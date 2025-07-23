@@ -34,7 +34,7 @@ local finished = false
 
 task.spawn(function()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bscripts%5D/music%23%5Br6%20dances%5D/music%23%5Bcurrent%20angle%20v2%5D.lua"))()
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bscripts%5D/music%23%5Br6%20dances%5D/music%23%5Bepik%20r6%20dances%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bscripts%5D/music%23%5Br6%20dances%5D/music%23%5Br6%20dances%5D.lua"))()
 end)
 
 repeat task.wait() until finished
