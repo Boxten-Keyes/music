@@ -22,15 +22,15 @@ local instud = runService:IsStudio()
 -------------------------------------------------------------------------------------------------------------------------------
 
 -- credits to MrY7zz & xhayper
-function makeanim(name, songUrl, animid)
+function makeanim(name, songUrl, animid, pitch, startTime, endTime)
 	local tool = Instance.new("Tool")
 	tool.Name = tostring(name)
 	tool.RequiresHandle = false
 	tool.Parent = bp
 
-	local soundFileName = tostring(name) .. ".mp3"
+	local fileName = tostring(name) .. ".mp3"
 	if songUrl and not instud then
-		writefile(soundFileName, game:HttpGet(songUrl))
+		writefile(fileName, game:HttpGet(songUrl))
 	end
 
 	if not instud and not getgenv().Animator then
@@ -40,20 +40,14 @@ function makeanim(name, songUrl, animid)
 	local animatorModule = getgenv().Animator
 	if not animatorModule then return end
 
-	local animInstance = nil
-	local soundInstance = nil
+	local animInstance, soundInstance
+	local heartbeatConnection, endedConnection
 
 	local function stopEverything()
-		if animInstance then
-			animInstance:Stop()
-			animInstance:Destroy()
-			animInstance = nil
-		end
-		if soundInstance then
-			soundInstance:Stop()
-			soundInstance:Destroy()
-			soundInstance = nil
-		end
+		if animInstance then animInstance:Stop(); animInstance:Destroy(); animInstance = nil end
+		if soundInstance then soundInstance:Stop(); soundInstance:Destroy(); soundInstance = nil end
+		if heartbeatConnection then heartbeatConnection:Disconnect(); heartbeatConnection = nil end
+		if endedConnection then endedConnection:Disconnect(); endedConnection = nil end
 	end
 
 	tool.Equipped:Connect(function()
@@ -62,17 +56,44 @@ function makeanim(name, songUrl, animid)
 		local character = lp.Character or lp.CharacterAdded:Wait()
 		local hrp = character:WaitForChild("HumanoidRootPart")
 
-		-- Play animation
 		animInstance = animatorModule.new(character, tonumber(animid))
+		animInstance.Looped = true
 		animInstance:Play()
 
-		-- Play audio
 		soundInstance = Instance.new("Sound")
-		soundInstance.SoundId = getcustomasset(soundFileName)
+		soundInstance.SoundId = getcustomasset(fileName)
 		soundInstance.Volume = 2
-		soundInstance.Looped = true
+		soundInstance.Looped = false
+    soundInstance.PlaybackSpeed = tonumber(pitch)
 		soundInstance.Parent = hrp
+
+		local start = startTime or 0
+		local ending = endTime -- might be nil
+
 		soundInstance:Play()
+		soundInstance.TimePosition = start
+
+		local function loopTrimmed()
+			if not soundInstance then return end
+			soundInstance.TimePosition = start
+			soundInstance:Play()
+		end
+
+		-- Listen for end of full song (if no custom end time)
+		endedConnection = soundInstance.Ended:Connect(function()
+			if not ending then
+				loopTrimmed()
+			end
+		end)
+
+		-- Custom end cutoff & loop manually
+		if ending and ending > start then
+			heartbeatConnection = game:GetService("RunService").Heartbeat:Connect(function()
+				if soundInstance and soundInstance.IsPlaying and soundInstance.TimePosition >= ending then
+					loopTrimmed()
+				end
+			end)
+		end
 	end)
 
 	tool.Unequipped:Connect(stopEverything)
@@ -81,36 +102,36 @@ end
 -------------------------------------------------------------------------------------------------------------------------------
 
 -- dance 1 (two)
-makeanim("Two", "https://files.catbox.moe/9x4a71.mp3", 137845929482571)
+makeanim("Two", "https://files.catbox.moe/9x4a71.mp3", 137845929482571, 1, 0.2)
 
 -- dance 2 (chinese dance / beat da koto nai)
-makeanim("Chinese Dance", "https://files.catbox.moe/uvzvd1.mp3", 124210157097622)
+makeanim("Chinese Dance", "https://files.catbox.moe/uvzvd1.mp3", 124210157097622, 1)
 
 -- dance 3 (rakuten point)
-makeanim("Rakuten Point", "https://files.catbox.moe/bn9omy.mp3", 18985726113)
+makeanim("Rakuten Point", "https://files.catbox.moe/bn9omy.mp3", 18985726113, 1, 0.2)
 
 -- dance 4 (hakari)
-makeanim("Hakari", "https://files.catbox.moe/3wworz.mp3", 92699725136780)
+makeanim("Hakari", "https://files.catbox.moe/3wworz.mp3", 92699725136780, 1.1)
 
 -- dance 11 (california girls)
-makeanim("California Girls", "https://files.catbox.moe/s1belf.mp3", 121768360244671)
+makeanim("California Girls", "https://files.catbox.moe/s1belf.mp3", 121768360244671, 1, 0.3)
 
 -- dance 12 (emotional prism)
-makeanim("Emotional Prism", "https://files.catbox.moe/28vmzm.mp3", 132979558739339)
+makeanim("Emotional Prism", "https://files.catbox.moe/28vmzm.mp3", 132979558739339, 1)
 
 -- dance 13 (#brooklynbloodpop)
-makeanim("#BrooklynBloodPop!", "https://files.catbox.moe/f4jsc9.mp3", 132026285699359)
+makeanim("#BrooklynBloodPop!", "https://files.catbox.moe/f4jsc9.mp3", 132026285699359, 1)
 
 -- dance 15 (soda pop)
-makeanim("Soda Pop", "https://files.catbox.moe/ap73us.mp3", 77909248721162)
+makeanim("Soda Pop", "https://files.catbox.moe/ap73us.mp3", 77909248721162, 1)
 
 -- dance 16 (ksuuvi stomp)
-makeanim("Ksuuvi Stomp", "https://files.catbox.moe/300n51.mp3", 87138990788698)
+makeanim("Ksuuvi Stomp", "https://files.catbox.moe/300n51.mp3", 87138990788698, 1)
 
 -- dance 17 (mesmerizer)
-makeanim("Mesmerizer", "https://files.catbox.moe/k42abp.mp3", 107578737342278)
+makeanim("Mesmerizer", "https://files.catbox.moe/k42abp.mp3", 107578737342278, 1, 0.2)
 
 -- dance 18 (locked)
-makeanim("Locked", "https://files.catbox.moe/5vxthn.mp3", 76975616044095)
+makeanim("Locked", "https://files.catbox.moe/5vxthn.mp3", 76975616044095, 1)
 
 -------------------------------------------------------------------------------------------------------------------------------
