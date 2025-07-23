@@ -15,7 +15,7 @@ local settings = _G
 settings["Use default animations"] = true
 settings["Fake character transparency level"] = 1 --// 0 to disable
 settings["Disable character scripts"] = true
-settings["Fake character should collide"] = true
+settings["Fake character should collide"] = false
 settings["Parent real character to fake character"] = false
 settings["Respawn character"] = true --// Only should be disabled if your character havent played ANY animations, otherwise it breaks the reanimate
 settings["Instant respawn"] = false --// Instant respawns the character, it will still wait the respawn time, but your character wont be dead. Requires: replicatesignal function. Enable if you want the feature
@@ -33,8 +33,8 @@ settings["Names to exclude from transparency"] = {
 local finished = false
 
 task.spawn(function()
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bcurrent%20angle%20v2%5D.lua"))()
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bscripts%5D/music%23%5Bepik%20r6%20dances%5D/music%23%5Bepik%20r6%20dances%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bscripts%5D/music%23%5Br6%20dances%5D/music%23%5Bcurrent%20angle%20v2%5D.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bscripts%5D/music%23%5Br6%20dances%5D/music%23%5Bepik%20r6%20dances%5D.lua"))()
 end)
 
 repeat task.wait() until finished
