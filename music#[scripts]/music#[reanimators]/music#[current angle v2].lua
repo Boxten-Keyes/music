@@ -356,7 +356,13 @@ if parentrealchartofakechar then
 	newChar.Parent = fakeChar
 end
 
-local newcharTorso = newChar:WaitForChild("Torso")
+local newcharTorso
+if r15rig then
+	newcharTorso = newChar:WaitForChild("UpperTorso")
+else
+	newcharTorso = newChar:WaitForChild("Torso")
+end
+
 local fakecharTorso
 if r15rig then
 	fakecharTorso = fakeChar:WaitForChild("UpperTorso")
