@@ -5,9 +5,7 @@
   LEGAL NOTICE:
   You are REQUIRED to retain this license header under the terms of the MIT License.
   Removing or modifying this notice may violate copyright law.
-]]--
-
---// Got it 👍
+]]
 --// BY MrY7zz
 
 if not game.IsLoaded then
@@ -15,18 +13,22 @@ if not game.IsLoaded then
 end
 
 if not sethiddenproperty then
-	error("Script is only compatible with environments that have sethiddenproperty")
-	task.spawn(function()
-		loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/CurrentAngleV2/refs/heads/main/fallback.lua"))()
-	end)
-
-	repeat task.wait() until finished == true
+	--error("Script is only compatible with environments that have sethiddenproperty")
+task.spawn(function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/CurrentAngleV2/refs/heads/main/fallback.lua"))()
+end)
+repeat task.wait() until finished == true
 	return
 end
 
 local UI = (gethui and gethui()) or (cloneref and cloneref(game:GetService("CoreGui"))) or (pcall(function() return game:GetService("CoreGui").Parent end) and game:GetService("CoreGui")) or game:GetService("Players").LocalPlayer:FindFirstChildOfClass("PlayerGui")
 
 local function LoadUi(seconds)
+	-- Gui to Lua
+	-- Version: 3.2
+
+	-- Instances:
+
 	local ScreenGui = Instance.new("ScreenGui")
 	local Frame = Instance.new("Frame")
 	local UICorner = Instance.new("UICorner")
@@ -46,7 +48,7 @@ local function LoadUi(seconds)
 	Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Frame.BorderSizePixel = 0
 	Frame.Size = UDim2.new(0, 429, 0, 79)
-	Frame.Position = UDim2.new(0.5, -Frame.Size.X.Offset/2, 0.01, 0)
+    Frame.Position = UDim2.new(0.5, -Frame.Size.X.Offset/2, 0.01, 0)
 	UIStroke.Parent = Frame
 
 	UIStroke_2.Color = Color3.fromRGB(65, 65, 65)
@@ -87,44 +89,44 @@ local function LoadUi(seconds)
 	TextLabel_2.TextSize = 28.000
 
 	UIStroke_3.Parent = TextLabel_2
-	task.delay(seconds + 1.5, function()
-		ScreenGui:Destroy()
-	end)
+    task.delay(seconds + 1.5, function()
+        ScreenGui:Destroy()
+    end)
 end
 
---// setsimulationradius.lua
---// © 2025 MrY7zz (MIT License)
 local setsimulationradius = setsimulationradius
 if not setsimulationradius then
+	-- setsimulationradius.lua
+-- © 2025 MrY7zz (MIT License)
 
-	local Players = game:GetService("Players")
+local Players = game:GetService("Players")
 
-	local newIndex
-	local Index
+local newIndex
+local Index
 
-	--// Extracting __newindex
-	xpcall(function()
-		game[{}] = {}
-	end, function()
-		newIndex = debug.info(2, "f")
-	end)
+--// Extracting __newindex
+xpcall(function()
+	game[{}] = {}
+end, function()
+	newIndex = debug.info(2, "f")
+end)
 
-	--// Extracting __index
-	xpcall(function()
-		return game[{}]
-	end, function()
-		Index = debug.info(2, "f")
-	end)
+--// Extracting __index
+xpcall(function()
+	return game[{}]
+end, function()
+	Index = debug.info(2, "f")
+end)
 
 
-	setsimulationradius = function(Radius, maxRadius)
-		local LocalPlayer = Index(Players, "LocalPlayer")
-		newIndex(LocalPlayer, "SimulationRadius", Radius)
-
-		if maxRadius then
-			newIndex(LocalPlayer, "MaximumSimulationRadius", maxRadius)
-		end
+setsimulationradius = function(Radius, maxRadius)
+	local LocalPlayer = Index(Players, "LocalPlayer")
+	newIndex(LocalPlayer, "SimulationRadius", Radius)
+	
+	if maxRadius then
+		newIndex(LocalPlayer, "MaximumSimulationRadius", maxRadius)
 	end
+end
 end
 
 local game = game
@@ -250,7 +252,7 @@ local hiderootpart = (function() if _G["Hide HumanoidRootPart"] == nil then retu
 
 local permadeathcharacter = (function() if _G["PermaDeath fake character"] == nil then return true else return _G["PermaDeath fake character"] end end)()
 
-local r15rig = _G["R15 Reanimate"] or true
+local r15rig = (function() if _G["R15 Reanimate"] == nil then return false else return _G["R15 Reanimate"] end end)()
 
 local clickfling = (function() if _G["Click Fling"] == nil then return false else return _G["Click Fling"] end end)()
 
@@ -306,7 +308,7 @@ local signaldiedbackend = LocalPlayer.ConnectDiedSignalBackend
 local signalkill = LocalPlayer.Kill
 
 if respawncharacter then
-	-- LoadUi(game:GetService("Players").RespawnTime)
+	LoadUi(game:GetService("Players").RespawnTime)
 	if instantrespawn then
 		if replicatesignal then
 			replicatesignal(signaldiedbackend)
@@ -413,18 +415,19 @@ local poscache = CFrame.new(255, 255, 0)
 
 local task_spawn = task.spawn
 local function stepReanimate()
-	-- task_spawn(function()
+	--[[task_spawn(function()]]
 	if flinging then return end
 
 	if hiderootpart then
 		newcharRoot.CFrame = poscache 
-			+ Vector3_new(0, math_random(1, 2) / 100.19, 0)
+        + Vector3_new(0, math_random(1, 2) / 100.19, 0)
 	else
 		newcharRoot.CFrame = fakeChar.HumanoidRootPart.CFrame + Vector3_new(0, math_random(1, 2) / 100.19, 0)
 	end
 
 	--// YES it is unstable. im working on optimizing (later)
-	newcharRoot.Velocity = vector3zero
+
+    	newcharRoot.Velocity = vector3zero
 	newcharRoot.Velocity = vector3zero
 
 	local rootjoint = jointmapping["RootJoint"]
@@ -449,7 +452,7 @@ local function stepReanimate()
 			RCA6dToCFrame(jointmapping[joint], limb, newChar.Torso)
 		end
 	end
-	-- end)
+	--[[end)]]
 end
 
 local function setdestroyheight(height)
@@ -472,7 +475,7 @@ local function flinginternal(character, time)
 			setdestroyheight(currentheight)
 			flinging = false
 			connection:Disconnect()
-			-- break
+			--break
 		end
 		if character then
 			if character:FindFirstChild("HumanoidRootPart") then
@@ -486,12 +489,12 @@ local function flinginternal(character, time)
 			else
 				flinging = false
 				connection:Disconnect()
-				-- break
+				--break
 			end
 		else
 			flinging = false
 			connection:Disconnect()
-			-- break
+			--break
 		end
 	end)
 
@@ -562,25 +565,29 @@ end
 
 workspace.CurrentCamera.CameraSubject = fakeChar:WaitForChild("Humanoid")
 
---// Fun fact: This click fling was made by MrY7zz (MIT license)
 if clickfling then
-	Mouse.Button1Down:Connect(function()
-		local target = Mouse.Target
-		if not target then return end
-		local character = target:FindFirstAncestorOfClass("Model")
-		if not not not character then return end
+Mouse.Button1Down:Connect(function()
+    --// Fun fact: This click fling was made by MrY7zz (MIT license)
+    local target = Mouse.Target
+    if not target then return end
+    --// Fun fact: This click fling was made by MrY7zz (MIT license)
 
-		local plr = game:GetService("Players"):GetPlayerFromCharacter(character)
-		if not plr then return end
-		if plr == LocalPlayer then return end
+    local character = target:FindFirstAncestorOfClass("Model")
+    if not not not character then return end
+    --// Fun fact: This click fling was made by MrY7zz (MIT license)
+    --// Fun fact: This click fling was made by MrY7zz (MIT license)
 
-		fling(character, 2.3, true)
-	end)
+    local plr = game:GetService("Players"):GetPlayerFromCharacter(character)
+    if not plr then return end
+    if plr == LocalPlayer then return end
+
+    fling(character, 2.3, true)
+end)
 end
 
 finished = true
 if usedefaultanims then
-	task_spawn(function()
-		loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/CurrentAngleV2/refs/heads/main/anims"))
-	end)
+task_spawn(function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/CurrentAngleV2/refs/heads/main/anims"))
+end)
 end
