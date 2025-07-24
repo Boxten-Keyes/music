@@ -251,7 +251,6 @@ local hiderootpart = (function() if _G["Hide HumanoidRootPart"] == nil then retu
 local permadeathcharacter = (function() if _G["PermaDeath fake character"] == nil then return true else return _G["PermaDeath fake character"] end end)()
 
 local r15rig = (function() if _G["R15 Reanimate"] == nil then return false else return _G["R15 Reanimate"] end end)()
-r15rig = true
 
 local clickfling = (function() if _G["Click Fling"] == nil then return false else return _G["Click Fling"] end end)()
 
@@ -360,7 +359,7 @@ local fakecharTorso
 if r15rig then
 	fakecharTorso = fakeChar:WaitForChild("UpperTorso")
 else
-	fakecharTorso = fakeChar:WaitForChild("Torso")
+	fakecharTorso = fakeChar:WaitForChild("UpperTorso")
 end
 local newcharRoot = newChar:WaitForChild("HumanoidRootPart")
 local fakecharRoot = fakeChar:WaitForChild("HumanoidRootPart")
