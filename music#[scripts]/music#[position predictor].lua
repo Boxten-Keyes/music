@@ -1,16 +1,13 @@
 if not Game:IsLoaded() then Game.Loaded:Wait() end
 
---// Game - Services \\--
 local Players = Game:GetService("Players")
 local RunService = Game:GetService("RunService")
 local Stats = Game:GetService("Stats")
 
---// Stats - Items \\--
 local NetworkStats = Stats:FindFirstChild("Network", false) or Stats:WaitForChild("Network", 60)
 local ServerStatsItem = NetworkStats:FindFirstChild("ServerStatsItem", false) or NetworkStats:WaitForChild("ServerStatsItem", 60)
 local DataPing = ServerStatsItem:FindFirstChild("Data Ping", false) or ServerStatsItem:WaitForChild("Data Ping", 60)
 
---// Players - LocalPlayer \\-- 
 local LocalPlayer = Players.LocalPlayer
 local LocalCharacter = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 local LocalHumanoid = LocalCharacter:FindFirstChildWhichIsA("Humanoid", false) or LocalCharacter:WaitForChild("Humanoid", 60)
@@ -21,7 +18,6 @@ local PingDivisionFactor = 500 -- 500 for the server and 1000 for the client
 local Connections = {}
 local PoseHistory = {}
 
---// Creates A LocalCharacter Clone | CreateCharacterClone - Function \\--
 local function CreateCharacterClone()
 	if LocalCharacterClone then
 		LocalCharacterClone:Destroy()
@@ -35,14 +31,12 @@ local function CreateCharacterClone()
 	LocalCharacterClone.Parent = LocalCharacter.Parent
 	LocalCharacter.Archivable = false
 
-	-- Disable Motor6Ds
 	for _, descendant in LocalCharacterClone:GetDescendants() do
 		if descendant:IsA("Motor6D") then
 			descendant.Enabled = false
 		end
 	end
 
-	-- Remove any BillboardGuis
 	for _, descendant in LocalCharacterClone:GetDescendants() do
 		if descendant:IsA("BillboardGui") then
 			descendant:Destroy()
@@ -50,7 +44,6 @@ local function CreateCharacterClone()
 	end
 end
 
---// Records LocalCharacter Body Part Positions | RecordPose - Function \\--
 local function RecordPose(DeltaTime)
 	if not LocalCharacter or not LocalRootPart then return end
 	local CurrentTime = tick()
@@ -72,7 +65,6 @@ local function RecordPose(DeltaTime)
 	end
 end
 
---// Updates LocalCharacter Clone Position And Body Parts | UpdateClonePose - Function \\--
 local function UpdateClonePose()
 	if not (LocalCharacterClone and LocalCharacter) then return end
 
@@ -100,7 +92,6 @@ local function UpdateClonePose()
 	end
 end
 
---// Predicts LocalPlayer Character Server Position | RunService - BindToRenderStep \\--
 RunService:BindToRenderStep("Server Position Predictor", 1, function(DeltaTime)
 	RecordPose(DeltaTime)
 	UpdateClonePose()
@@ -127,7 +118,6 @@ RunService:BindToRenderStep("Server Position Predictor", 1, function(DeltaTime)
 	end
 end)
 
---// LocalPlayer Respawn Handler | LocalPlayer - CharacterAdded \\--
 LocalPlayer.CharacterAdded:Connect(function(Character)
 	LocalCharacter = Character
 	LocalHumanoid = LocalCharacter:FindFirstChildWhichIsA("Humanoid", false) or LocalCharacter:WaitForChild("Humanoid", 60)
@@ -135,7 +125,6 @@ LocalPlayer.CharacterAdded:Connect(function(Character)
 	CreateCharacterClone()
 end)
 
---// LocalPlayer Character Remover Handler | LocalPlayer - CharacterRemoving \\--
 LocalPlayer.CharacterRemoving:Connect(function()
 	LocalCharacter = nil
 	LocalHumanoid = nil
