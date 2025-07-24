@@ -95,7 +95,7 @@ end
 
 dragbutton()
 
-repos(button, 0, 140, 40)
+repos(button, 0, 48, 48)
 
 local screenGui = Instance.new("ScreenGui")
 screenGui.ResetOnSpawn = false
