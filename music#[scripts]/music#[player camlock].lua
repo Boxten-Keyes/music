@@ -43,7 +43,7 @@ button.Active = true
 button.Draggable = true
 
 local buttonpad = Instance.new("UIPadding")
-buttonpad.PaddingTop = UDim.new(0, -3)
+buttonpad.PaddingTop = UDim.new(0, -2)
 buttonpad.Parent = button
 
 local clik = Instance.new"Sound"
