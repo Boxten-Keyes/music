@@ -140,7 +140,7 @@ RunService.RenderStepped:Connect(function()
 			local newLookVector = (target.Position - camPos).Unit
 			local newCF = CFrame.new(camPos, camPos + newLookVector)
 
-			local alpha = 0.3
+			local alpha = 0.2
 			local easedAlpha
 			if alpha < 0.5 then
 				easedAlpha = 2 * alpha * alpha
