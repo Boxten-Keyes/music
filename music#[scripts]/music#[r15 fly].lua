@@ -41,6 +41,8 @@ button.TextColor3 = Color3.new(1, 1, 1)
 button.TextSize = 20
 button.Font = Enum.Font.RobotoMono
 button.TextWrapped = true
+button.Active = true
+button.Draggable = true
 
 local buttonpad = Instance.new("UIPadding")
 buttonpad.PaddingTop = UDim.new(0, -3)
@@ -58,44 +60,6 @@ function playclicksound()
 	newSound:Play()
 	newSound.Ended:Connect(function() newSound:Destroy() end)
 end
-
-function dragbutton()
-	local frame = button
-	local dragToggle 	
-	local dragSpeed = 0.25
-	local dragStart 	
-	local startPos 
-
-	local function updatebuttoninput(input)
-		local delta = input.Position - dragStart
-		local position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
-			startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-		game["TweenService"]:Create(frame, TweenInfo.new(dragSpeed), {Position = position}):Play()
-	end
-
-	frame.InputBegan:Connect(function(input)
-		if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then 
-			dragToggle = true
-			dragStart = input.Position
-			startPos = frame.Position
-			input.Changed:Connect(function()
-				if input.UserInputState == Enum.UserInputState.End then
-					dragToggle = false
-				end
-			end)
-		end
-	end)
-
-	game["UserInputService"].InputChanged:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-			if dragToggle then
-				updatebuttoninput(input)
-			end
-		end
-	end)
-end
-
-dragbutton()
 
 repos(button, 0, 48, 48)
 
