@@ -250,7 +250,7 @@ local hiderootpart = (function() if _G["Hide HumanoidRootPart"] == nil then retu
 
 local permadeathcharacter = (function() if _G["PermaDeath fake character"] == nil then return true else return _G["PermaDeath fake character"] end end)()
 
-local r15rig = (function() if _G["R15 Reanimate"] == nil then return false else return _G["R15 Reanimate"] end end)()
+local r15rig = _G["R15 Reanimate"] or true
 
 local clickfling = (function() if _G["Click Fling"] == nil then return false else return _G["Click Fling"] end end)()
 
