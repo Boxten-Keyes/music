@@ -15,7 +15,7 @@ if not game.IsLoaded then
 end
 
 if not sethiddenproperty then
-	-- error("Script is only compatible with environments that have sethiddenproperty")
+	error("Script is only compatible with environments that have sethiddenproperty")
 	task.spawn(function()
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/CurrentAngleV2/refs/heads/main/fallback.lua"))()
 	end)
