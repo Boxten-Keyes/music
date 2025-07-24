@@ -359,7 +359,7 @@ local fakecharTorso
 if r15rig then
 	fakecharTorso = fakeChar:WaitForChild("UpperTorso")
 else
-	fakecharTorso = fakeChar:WaitForChild("UpperTorso")
+	fakecharTorso = fakeChar:WaitForChild("Torso")
 end
 local newcharRoot = newChar:WaitForChild("HumanoidRootPart")
 local fakecharRoot = fakeChar:WaitForChild("HumanoidRootPart")
