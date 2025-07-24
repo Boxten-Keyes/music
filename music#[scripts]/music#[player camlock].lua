@@ -98,12 +98,30 @@ local function getClosestVisibleEnemyPart()
 						if distFromCenter <= 200 then
 							local rayDir = (targetPart.Position - camera.CFrame.Position)
 							local ray = Ray.new(camera.CFrame.Position, rayDir.Unit * rayDir.Magnitude)
-							local hit = workspace:FindPartOnRayWithIgnoreList(ray, {player.Character, camera})
-							if hit and hit:IsDescendantOf(char) then
-								if distFromCenter < minDist then
-									minDist = distFromCenter
-									closest = targetPart
-								end
+local function isObstructing(part)
+	if not part then return false end
+	if part.Transparency >= 1 then return false end
+	if not part.CanCollide then return false end
+	if part:IsDescendantOf(player.Character) or part:IsDescendantOf(camera) then return false end
+	return true
+end
+
+local ray = Ray.new(camera.CFrame.Position, rayDir.Unit * rayDir.Magnitude)
+local hit, pos = workspace:FindPartOnRayWithIgnoreList(ray, {player.Character, camera})
+
+while hit and not hit:IsDescendantOf(char) and not isObstructing(hit) do
+	local newIgnoreList = {player.Character, camera, hit}
+	ray = Ray.new(camera.CFrame.Position, rayDir.Unit * rayDir.Magnitude)
+	hit, pos = workspace:FindPartOnRayWithIgnoreList(ray, newIgnoreList)
+end
+
+if hit and hit:IsDescendantOf(char) then
+	-- Target is visible (or behind non-obstructing stuff)
+	if distFromCenter < minDist then
+		minDist = distFromCenter
+		closest = targetPart
+	end
+end
 							end
 						end
 					end
