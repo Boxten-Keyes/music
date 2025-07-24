@@ -101,24 +101,21 @@ end
 -------------------------------------------------------------------------------------------------------------------------------
 
 -- dance 1 (dia delicia)
-makeanim("Dia Delicia", "https://files.catbox.moe/9x4a71.mp3", 113510757669180, 1, 0)
+makeanim("Dia Delicia", "https://files.catbox.moe/udrs5f.mp3", 113510757669180, 1, 2.6, 16.2)
 
 -- dance 2 (who can it be now)
-makeanim("Who Can It Be Now", "https://files.catbox.moe/uvzvd1.mp3", 130496945823800, 1)
+makeanim("Who Can It Be Now", "https://files.catbox.moe/qi9hiv.mp3", 130496945823800, 1, 1, 16)
 
--- dance 3 (rakuten point)
-makeanim("Rakuten Point", "https://files.catbox.moe/bn9omy.mp3", 18985726113, 1, 0.2, 11.47)
+-- dance 3 (caramelldansen)
+makeanim("Caramelldansen", "https://files.catbox.moe/h0kdz1.mp3", 115289059988164, 1, 0.3, 6.1)
 
--- dance 4 (caramelldansen)
-makeanim("Caramelldansen", "https://files.catbox.moe/3wworz.mp3", 115289059988164, 1.03)
-
--- dance 5 (california girls)
+-- dance 4 (california girls)
 makeanim("California Girls", "https://files.catbox.moe/s1belf.mp3", 123486263490186, 1, 0.27)
 
--- dance 8 (soda pop)
+-- dance 5 (soda pop)
 makeanim("Soda Pop", "https://files.catbox.moe/ap73us.mp3", 99232423242037, 1)
 
--- dance 13 (who is you)
+-- dance 6 (who is you)
 makeanim("Who Is You", "https://files.catbox.moe/cqxyp6.mp3", 125113429514020, 1)
 
 -------------------------------------------------------------------------------------------------------------------------------
