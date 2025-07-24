@@ -407,7 +407,7 @@ jointmapping = {
 else
 jointmapping = {
 	Neck = newChar:WaitForChild("Head"):WaitForChild("Neck"),
-	RootJoint = newChar.HumanoidRootPart:WaitForChild("RootJoint"),
+	RootJoint = newChar.HumanoidRootPart:WaitForChild("RootAttachment"),
 	["Left Shoulder"] = newcharTorso:WaitForChild("Left Shoulder"),
 	["Right Shoulder"] = newcharTorso:WaitForChild("Right Shoulder"),
 	["Left Hip"] = newcharTorso:WaitForChild("Left Hip"),
