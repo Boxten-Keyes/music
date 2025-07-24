@@ -34,7 +34,7 @@ function makeanim(name, song, animid, pitch, startt, endt)
 	end
 
 	if not instud and not getgenv()["Animator"] then
-		loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bscripts%5D/music%23%5Br6%20dances%5D/music%23%5Bxhayper%20animator%5D.lua"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxten-Keyes/music/refs/heads/main/music%23%5Bscripts%5D/music%23%5Breanimators%5D/music%23%5Bxhayper%20animator%5D.lua"))()
 	end
 
 	local animator = getgenv()["Animator"]
