@@ -1,8 +1,113 @@
+task.wait(1)
+
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local plr = Players.LocalPlayer
 local mouse = plr:GetMouse()
+local camera = workspace.CurrentCamera
+
+function repos(ui, t, w, h)
+	if not t then t = 0.5 end
+
+	local screenWidth = game:GetService("Workspace").CurrentCamera.ViewportSize.X
+	local screenHeight = game:GetService("Workspace").CurrentCamera.ViewportSize.Y
+
+	local frameWidth = w
+	local frameHeight = h
+	local negative = 56
+
+	local centerX = (screenWidth - frameWidth) / 2
+	local centerY = (screenHeight - frameHeight) / 2 - negative
+	local tweenInfo = TweenInfo.new(t, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
+
+	local tween = game:GetService("TweenService"):Create(
+		ui,
+		tweenInfo,
+		{Position = UDim2.new(0, centerX, 0, centerY)}
+	)
+
+	tween:Play()
+end
+
+local toggle = false
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0, 48, 0, 48)
+button.Position = UDim2.new(0, 20, 0, 80)
+button.Text = "F:X"
+button.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+button.BorderColor3 = Color3.new(1, 1, 1)
+button.TextColor3 = Color3.new(1, 1, 1)
+button.TextSize = 20
+button.Font = Enum.Font.RobotoMono
+button.TextWrapped = true
+
+local buttonpad = Instance.new("UIPadding")
+buttonpad.PaddingTop = UDim.new(0, -3)
+buttonpad.Parent = button
+
+local clik = Instance.new"Sound"
+clik.SoundId = "rbxassetid://226892749"
+clik.Parent = game.Workspace
+clik.Name = "canttouchthis"
+clik.Volume = 0.4
+
+function playclicksound()
+	local newSound = clik:Clone()
+	newSound.Parent = clik.Parent
+	newSound:Play()
+	newSound.Ended:Connect(function() newSound:Destroy() end)
+end
+
+function dragbutton()
+	local frame = button
+	local dragToggle 	
+	local dragSpeed = 0.25
+	local dragStart 	
+	local startPos 
+
+	local function updatebuttoninput(input)
+		local delta = input.Position - dragStart
+		local position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
+			startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+		game["TweenService"]:Create(frame, TweenInfo.new(dragSpeed), {Position = position}):Play()
+	end
+
+	frame.InputBegan:Connect(function(input)
+		if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then 
+			dragToggle = true
+			dragStart = input.Position
+			startPos = frame.Position
+			input.Changed:Connect(function()
+				if input.UserInputState == Enum.UserInputState.End then
+					dragToggle = false
+				end
+			end)
+		end
+	end)
+
+	game["UserInputService"].InputChanged:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+			if dragToggle then
+				updatebuttoninput(input)
+			end
+		end
+	end)
+end
+
+dragbutton()
+
+repos(button, 0, 48, 48)
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.ResetOnSpawn = false
+button.Parent = screenGui
+
+if RunService:IsStudio() then
+	screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+else
+	screenGui.Parent = gethui and gethui() or game:GetService("CoreGui")
+end
 
 local FlySpeed = 200
 local Backpack = plr:WaitForChild("Backpack")
@@ -221,40 +326,17 @@ local function stopFlying()
 	resetanims()
 end
 
-local function createTool(name, callback)
-	local tool = Instance.new("Tool")
-	tool.RequiresHandle = false
-	tool.Name = name
-	tool.Parent = Backpack
-	tool.Equipped:Connect(function()
-		callback()
-		plr.Character:FindFirstChildOfClass("Humanoid"):UnequipTools()
-	end)
-end
-
-local function setupCharacter()
-	local character = Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()
-	local humanoid = character:FindFirstChildWhichIsA("Humanoid")
-
-	if humanoid then
-		humanoid.Died:Connect(function()
-			stopFlying()
-			StopAnim()
-		end)
-	end
-end
-
-Players.LocalPlayer.CharacterAdded:Connect(function()
-	spawn(setupCharacter)
-	createTool("fly", startFlying)
-	createTool("unfly", stopFlying)
+button.MouseButton1Click:Connect(function()
+	playclicksound()
+	toggle = not toggle
+	if toggle then startFlying() else stopFlying() end
+	button.Text = toggle and "F:O" or "F:X"
+	button.BackgroundColor3 = toggle and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(0, 0, 0)
 end)
 
-if Players.LocalPlayer.Character then
-	setupCharacter()
-end
-
-createTool("fly", startFlying)
-createTool("unfly", stopFlying)
-
-game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
+Players.LocalPlayer.Character:FindFirstChild("Humanoid").Died:Connect(function()
+	toggle = false
+	stopFlying()
+	button.Text = "F:X"
+	button.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+end)
