@@ -21,6 +21,7 @@ settings["Respawn character"] = true --// Only should be disabled if your charac
 settings["Instant respawn"] = false --// Instant respawns the character, it will still wait the respawn time, but your character wont be dead. Requires: replicatesignal function. Enable if you want the feature
 settings["Hide HumanoidRootPart"] = false --// Enabled by default. when enabled, your chat bubble or name tag will not appear above your character, but you will have your character immortal in the Fencing arena.
 settings["PermaDeath fake character"] = false --// When enabled, when you die when the reanimate is on, you wont respawn. If you want respawn, set it to false
+settings["R15 Reanimate"] = true
 
 settings["Names to exclude from transparency"] = {
     --[[ Example:
