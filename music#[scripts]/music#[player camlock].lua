@@ -71,10 +71,20 @@ else
 	screenGui.Parent = gethui and gethui() or game:GetService("CoreGui")
 end
 
+-- Helper function to check if a part should be considered obstructing
+local function isObstructing(part)
+	if not part then return false end
+	if part.Transparency >= 1 then return false end
+	if not part.CanCollide then return false end
+	if part:IsDescendantOf(player.Character) or part:IsDescendantOf(camera) then return false end
+	return true
+end
+
+-- Main targeting function
 local function getClosestVisibleEnemyPart()
 	local closest = nil
 	local minDist = math.huge
-	local screenCenter = Vector2.new(camera.ViewportSize.X/2, camera.ViewportSize.Y/2)
+	local screenCenter = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
 
 	for _, p in ipairs(Players:GetPlayers()) do
 		if p ~= player and p.Team ~= player.Team and p.Character and not p.Character:IsDescendantOf(camera) then
@@ -84,44 +94,32 @@ local function getClosestVisibleEnemyPart()
 			local humanoid = char:FindFirstChildOfClass("Humanoid")
 
 			if head and torso and humanoid and humanoid.Health > 0 then
-				-- Decide whether to target head or torso
 				local targetPart = math.random() < 0.3 and head or torso
-
-				-- Check visibility
 				local camLook = camera.CFrame.LookVector
 				local toTarget = (targetPart.Position - camera.CFrame.Position).Unit
+
 				if camLook:Dot(toTarget) > 0.5 then
 					local screenPos, onScreen = camera:WorldToViewportPoint(targetPart.Position)
 					if onScreen then
 						local screenPoint = Vector2.new(screenPos.X, screenPos.Y)
 						local distFromCenter = (screenPoint - screenCenter).Magnitude
+
 						if distFromCenter <= 200 then
-							local rayDir = (targetPart.Position - camera.CFrame.Position)
-							local ray = Ray.new(camera.CFrame.Position, rayDir.Unit * rayDir.Magnitude)
-local function isObstructing(part)
-	if not part then return false end
-	if part.Transparency >= 1 then return false end
-	if not part.CanCollide then return false end
-	if part:IsDescendantOf(player.Character) or part:IsDescendantOf(camera) then return false end
-	return true
-end
+							local rayOrigin = camera.CFrame.Position
+							local rayDir = (targetPart.Position - rayOrigin)
+							local ignoreList = {player.Character, camera}
+							local hit, _ = workspace:FindPartOnRayWithIgnoreList(Ray.new(rayOrigin, rayDir.Unit * rayDir.Magnitude), ignoreList)
 
-local ray = Ray.new(camera.CFrame.Position, rayDir.Unit * rayDir.Magnitude)
-local hit, pos = workspace:FindPartOnRayWithIgnoreList(ray, {player.Character, camera})
+							while hit and not hit:IsDescendantOf(char) and not isObstructing(hit) do
+								table.insert(ignoreList, hit)
+								hit, _ = workspace:FindPartOnRayWithIgnoreList(Ray.new(rayOrigin, rayDir.Unit * rayDir.Magnitude), ignoreList)
+							end
 
-while hit and not hit:IsDescendantOf(char) and not isObstructing(hit) do
-	local newIgnoreList = {player.Character, camera, hit}
-	ray = Ray.new(camera.CFrame.Position, rayDir.Unit * rayDir.Magnitude)
-	hit, pos = workspace:FindPartOnRayWithIgnoreList(ray, newIgnoreList)
-end
-
-if hit and hit:IsDescendantOf(char) then
-	-- Target is visible (or behind non-obstructing stuff)
-	if distFromCenter < minDist then
-		minDist = distFromCenter
-		closest = targetPart
-	end
-end
+							if hit and hit:IsDescendantOf(char) then
+								if distFromCenter < minDist then
+									minDist = distFromCenter
+									closest = targetPart
+								end
 							end
 						end
 					end
@@ -133,6 +131,7 @@ end
 	return closest
 end
 
+-- Camera locking loop
 RunService.RenderStepped:Connect(function()
 	if toggle then
 		local target = getClosestVisibleEnemyPart()
@@ -141,7 +140,7 @@ RunService.RenderStepped:Connect(function()
 			local newLookVector = (target.Position - camPos).Unit
 			local newCF = CFrame.new(camPos, camPos + newLookVector)
 
-			local alpha = 0.2
+			local alpha = 0.3
 			local easedAlpha
 			if alpha < 0.5 then
 				easedAlpha = 2 * alpha * alpha
