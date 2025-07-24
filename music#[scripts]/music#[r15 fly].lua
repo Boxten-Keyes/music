@@ -1,18 +1,3 @@
---[[---------------------------------------------------------------------------------------------------------------------------
-  ______     ______   ______     __   __     ______     __    
- /\  __ \   /\  __ \ /\  ___\   /\ "-.\ \   /\  __ \   /\ \   
- \ \ \/\ \  \ \  __/ \ \  __\   \ \ \-.  \  \ \  __ \  \ \ \  
-  \ \_____\  \ \_\    \ \_____\  \ \_\\"\_\  \ \_\ \_\  \ \_\ 
-   \/_____/   \/_/     \/_____/   \/_/ \/_/   \/_/\/_/   \/_/ 
-                                                                                                       
-   Made by ChatGPT - R15 Fly
-   
----------------------------------------------------------------------------------------------------------------------------]]--
-
-task.wait(0.1)
-
--------------------------------------------------------------------------------------------------------------------------------
-
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
@@ -209,6 +194,23 @@ local function startFlying()
 	end)()
 end
 
+function resetanims()
+	task.wait()
+	task.spawn(function()
+		local Char = Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()
+		local Human = Char and Char:WaitForChild("Humanoid", 15)
+		local Animate = Char and Char:WaitForChild("Animate", 15)
+
+		if Animate then
+			Animate.Disabled = true
+			for _, v in ipairs(Human:GetPlayingAnimationTracks()) do
+				v:Stop()
+			end
+			Animate.Disabled = false
+		end
+	end)
+end
+
 local function stopFlying()
 	if not flying then return end
 	flying = false
@@ -216,6 +218,7 @@ local function stopFlying()
 	if KeyDownFunction then KeyDownFunction:Disconnect() end
 	if KeyUpFunction then KeyUpFunction:Disconnect() end
 	StopAnim()
+	resetanims()
 end
 
 local function createTool(name, callback)
@@ -229,11 +232,29 @@ local function createTool(name, callback)
 	end)
 end
 
--------------------------------------------------------------------------------------------------------------------------------
+local function setupCharacter()
+	local character = Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()
+	local humanoid = character:FindFirstChildWhichIsA("Humanoid")
+
+	if humanoid then
+		humanoid.Died:Connect(function()
+			stopFlying()
+			StopAnim()
+		end)
+	end
+end
+
+Players.LocalPlayer.CharacterAdded:Connect(function()
+	spawn(setupCharacter)
+	createTool("fly", startFlying)
+	createTool("unfly", stopFlying)
+end)
+
+if Players.LocalPlayer.Character then
+	setupCharacter()
+end
 
 createTool("fly", startFlying)
 createTool("unfly", stopFlying)
 
 game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
-
--------------------------------------------------------------------------------------------------------------------------------
