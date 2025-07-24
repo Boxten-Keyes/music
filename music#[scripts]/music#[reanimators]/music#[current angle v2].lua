@@ -394,7 +394,9 @@ else
 	}
 end 
 
-local jointmapping = {
+local jointmapping
+if not r15rig then
+jointmapping = {
 	Neck = newcharTorso:WaitForChild("Neck"),
 	RootJoint = newChar.HumanoidRootPart:WaitForChild("RootJoint"),
 	["Left Shoulder"] = newcharTorso:WaitForChild("Left Shoulder"),
@@ -402,6 +404,16 @@ local jointmapping = {
 	["Left Hip"] = newcharTorso:WaitForChild("Left Hip"),
 	["Right Hip"] = newcharTorso:WaitForChild("Right Hip")
 }
+else
+jointmapping = {
+	Neck = newChar:WaitForChild("Head"):WaitForChild("Neck"),
+	RootJoint = newChar.HumanoidRootPart:WaitForChild("RootJoint"),
+	["Left Shoulder"] = newcharTorso:WaitForChild("Left Shoulder"),
+	["Right Shoulder"] = newcharTorso:WaitForChild("Right Shoulder"),
+	["Left Hip"] = newcharTorso:WaitForChild("Left Hip"),
+	["Right Hip"] = newcharTorso:WaitForChild("Right Hip")
+}
+end 
 
 local Inverse = emptyCFrame.Inverse
 local ToAxisAngle = emptyCFrame.ToAxisAngle
