@@ -1,127 +1,104 @@
-task.wait(1)
+local players = game["Players"]
+local player = players["LocalPlayer"]
+local runservice = game["Run Service"]
+local userinputservice = game["UserInputService"]
+local mouse = player:GetMouse()
+local camera = workspace["CurrentCamera"]
 
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
-local TweenService = game:GetService("TweenService")
+local screengui = Instance.new("ScreenGui")
+screengui["ResetOnSpawn"] = false
+if runservice:IsStudio() then screengui["Parent"] = player:WaitForChild("PlayerGui") else screengui["Parent"] = gethui and gethui() or game:GetService("CoreGui") end
 
-local plr = Players.LocalPlayer
-local mouse = plr:GetMouse()
-local camera = workspace.CurrentCamera
-
-local function repos(ui, t, w, h)
-	if not t then t = 0.5 end
-
-	local screenWidth = camera.ViewportSize.X
-	local screenHeight = camera.ViewportSize.Y
-
-	local centerX = (screenWidth - w) / 2
-	local centerY = (screenHeight - h) / 2 - 56
-	local tweenInfo = TweenInfo.new(t, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
-
-	local tween = TweenService:Create(ui, tweenInfo, {
-		Position = UDim2.new(0, centerX, 0, centerY)
-	})
-	tween:Play()
+function repos(ui, w, h)
+	local sw, sh = camera["ViewportSize"]["X"], camera["ViewportSize"]["Y"]
+	local cx, cy = (sw - w) / 2, (sh - h) / 2 - 56
+	ui["Position"] = UDim2.new(0, cx, 0, cy)
 end
 
-local toggle = false
 local button = Instance.new("TextButton")
-button.Size = UDim2.new(0, 48, 0, 48)
-button.Position = UDim2.new(0, 20, 0, 80)
-button.Text = "F:X"
-button.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-button.BorderColor3 = Color3.new(1, 1, 1)
-button.TextColor3 = Color3.new(1, 1, 1)
-button.TextSize = 20
-button.Font = Enum.Font.RobotoMono
-button.TextWrapped = true
-button.Active = true
-button.Draggable = true
+button["Size"] = UDim2.new(0, 48, 0, 48)
+repos(button, 48, 48)
+button["Text"] = "F:X"
+button["BackgroundColor3"] = Color3.fromRGB(0, 0, 0)
+button["BorderColor3"] = Color3.new(1, 1, 1)
+button["TextColor3"] = Color3.new(1, 1, 1)
+button["TextSize"] = 20
+button["Font"] = Enum.Font.RobotoMono
+button["TextWrapped"] = true
+button["Active"] = true
+button["Draggable"] = true
+button["Parent"] = screengui
 
 local buttonpad = Instance.new("UIPadding")
-buttonpad.PaddingTop = UDim.new(0, -2)
-buttonpad.Parent = button
+buttonpad["PaddingTop"] = UDim.new(0, -2)
+buttonpad["Parent"] = button
 
 local clik = Instance.new("Sound")
-clik.SoundId = "rbxassetid://226892749"
-clik.Parent = workspace
-clik.Name = "canttouchthis"
-clik.Volume = 0.4
+clik["SoundId"] = "rbxassetid://226892749"
+clik["Parent"] = workspace
+clik["Name"] = "canttouchthis"
+clik["Volume"] = 0.4
 
-local function playclicksound()
-	local newSound = clik:Clone()
-	newSound.Parent = clik.Parent
-	newSound:Play()
-	newSound.Ended:Connect(function() newSound:Destroy() end)
+function playclicksound()
+	local newsound = clik:Clone()
+	newsound["Parent"] = clik["Parent"]
+	newsound:Play()
+	newsound["Ended"]:Connect(function() newsound:Destroy() end)
 end
 
-repos(button, 0, 48, 48)
-
-local screenGui = Instance.new("ScreenGui")
-screenGui.ResetOnSpawn = false
-button.Parent = screenGui
-
-if RunService:IsStudio() then
-	screenGui.Parent = plr:WaitForChild("PlayerGui")
-else
-	screenGui.Parent = gethui and gethui() or game:GetService("CoreGui")
-end
-
-local FlySpeed = 200
+local flytoggle = false
+local flyspeed = 200
 local flying = false
 local ctrl = {f = 0, b = 0, l = 0, r = 0}
 local lastctrl = {f = 0, b = 0, l = 0, r = 0}
-local KeyDownFunction, KeyUpFunction
+local keydownfunction, keyupfunction
 
-local function PlayAnim(id, time, speed)
+function playanim(id, time, speed)
 	pcall(function()
-		local char = plr.Character or plr.CharacterAdded:Wait()
-		char.Animate.Disabled = false
+		local char = player["Character"] or player["CharacterAdded"]:Wait()
+		char["Animate"]["Disabled"] = false
 		local hum = char:WaitForChild("Humanoid")
-		for _, track in pairs(hum:GetPlayingAnimationTracks()) do
-			track:Stop()
-		end
-		char.Animate.Disabled = true
+		for _, track in pairs(hum:GetPlayingAnimationTracks()) do track:Stop() end
+		char["Animate"]["Disabled"] = true
 		local anim = Instance.new("Animation")
-		anim.AnimationId = "rbxassetid://" .. id
+		anim["AnimationId"] = "rbxassetid://" .. id
 		local loaded = hum:LoadAnimation(anim)
 		loaded:Play()
-		loaded.TimePosition = time
+		loaded["TimePosition"] = time
 		loaded:AdjustSpeed(speed)
 	end)
 end
 
-local function StopAnim()
-	local char = plr.Character or plr.CharacterAdded:Wait()
-	char.Animate.Disabled = false
+function stopanim()
+	local char = player["Character"] or player["CharacterAdded"]:Wait()
+	char["Animate"]["Disabled"] = false
 	for _, track in pairs(char:WaitForChild("Humanoid"):GetPlayingAnimationTracks()) do
 		track:Stop()
 	end
 end
 
-local function resetanims()
+function resetanims()
 	task.wait()
 	task.spawn(function()
-		local Char = plr.Character or plr.CharacterAdded:Wait()
-		local Human = Char and Char:WaitForChild("Humanoid", 15)
-		local Animate = Char and Char:WaitForChild("Animate", 15)
+		local char = player["Character"] or player["CharacterAdded"]:Wait()
+		local human = char and char:WaitForChild("Humanoid", 15)
+		local animate = char and char:WaitForChild("Animate", 15)
 
-		if Animate then
-			Animate.Disabled = true
-			for _, v in ipairs(Human:GetPlayingAnimationTracks()) do
+		if animate then
+			animate["Disabled"] = true
+			for _, v in ipairs(human:GetPlayingAnimationTracks()) do
 				v:Stop()
 			end
-			Animate.Disabled = false
+			animate["Disabled"] = false
 		end
 	end)
 end
 
-local function getMoveDirectionAnim(dir)
-	if dir.Magnitude < 0.1 then return "idle" end
-	local cam = workspace.CurrentCamera
-	local look = cam.CFrame.LookVector
-	local right = cam.CFrame.RightVector
+function getmovedirectionanim(dir)
+	if dir["Magnitude"] < 0.1 then return "idle" end
+	local cam = workspace["CurrentCamera"]
+	local look = cam["CFrame"]["LookVector"]
+	local right = cam["CFrame"]["RightVector"]
 
 	local forward = look:Dot(dir)
 	local sideways = right:Dot(dir)
@@ -133,172 +110,163 @@ local function getMoveDirectionAnim(dir)
 	end
 end
 
-local function startFlying()
+function startflying()
 	if flying then return end
 	flying = true
 
-	local char = plr.Character or plr.CharacterAdded:Wait()
-	local UpperTorso = char:FindFirstChild("UpperTorso") or char:FindFirstChild("Torso") or char:WaitForChild("HumanoidRootPart")
+	local char = player["Character"] or player["CharacterAdded"]:Wait()
+	local uppertorso = char:FindFirstChild("UpperTorso") or char:FindFirstChild("Torso") or char:WaitForChild("HumanoidRootPart")
 	local speed = 0
 
-	local bg = Instance.new("BodyGyro", UpperTorso)
-	bg.P = 9e4
-	bg.maxTorque = Vector3.new(9e9, 9e9, 9e9)
-	bg.cframe = UpperTorso.CFrame
+	local bg = Instance.new("BodyGyro", uppertorso)
+	bg["P"] = 9e4
+	bg["maxTorque"] = Vector3.new(9e9, 9e9, 9e9)
+	bg["cframe"] = uppertorso["CFrame"]
 
-	local bv = Instance.new("BodyVelocity", UpperTorso)
-	bv.velocity = Vector3.new(0, 0.1, 0)
-	bv.maxForce = Vector3.new(9e9, 9e9, 9e9)
+	local bv = Instance.new("BodyVelocity", uppertorso)
+	bv["velocity"] = Vector3.new(0, 0.1, 0)
+	bv["maxForce"] = Vector3.new(9e9, 9e9, 9e9)
 
-	PlayAnim(10714347256, 4, 0) -- idle fly
+	playanim(10714347256, 4, 0)
 
-	KeyDownFunction = mouse.KeyDown:Connect(function(key)
+	keydownfunction = mouse["KeyDown"]:Connect(function(key)
 		local k = key:lower()
-		if k == "w" then ctrl.f = 1 PlayAnim(10714177846, 4.65, 0)
-		elseif k == "s" then ctrl.b = -1 PlayAnim(10147823318, 4.11, 0)
-		elseif k == "a" then ctrl.l = -1 PlayAnim(10147823318, 3.55, 0)
-		elseif k == "d" then ctrl.r = 1 PlayAnim(10147823318, 4.81, 0)
+		if k == "w" then ctrl.f = 1 playanim(10714177846, 4.65, 0)
+		elseif k == "s" then ctrl.b = -1 playanim(10147823318, 4.11, 0)
+		elseif k == "a" then ctrl.l = -1 playanim(10147823318, 3.55, 0)
+		elseif k == "d" then ctrl.r = 1 playanim(10147823318, 4.81, 0)
 		end
 	end)
 
-	KeyUpFunction = mouse.KeyUp:Connect(function(key)
+	keyupfunction = mouse["KeyUp"]:Connect(function(key)
 		local k = key:lower()
 		if k == "w" then ctrl.f = 0
 		elseif k == "s" then ctrl.b = 0
 		elseif k == "a" then ctrl.l = 0
 		elseif k == "d" then ctrl.r = 0
 		end
-		PlayAnim(10714347256, 4, 0)
+		playanim(10714347256, 4, 0)
 	end)
 
-	local lastDir = nil
+	local lastdir = nil
 
-coroutine.wrap(function()
-	local lastDir = nil
-	while flying and char and char.Parent do
-		RunService.RenderStepped:Wait()
-		char.Humanoid.PlatformStand = true
+	coroutine.wrap(function()
+		local lastdir = nil
+		while flying and char and char["Parent"] do
+			runservice["RenderStepped"]:Wait()
+			char["Humanoid"]["PlatformStand"] = true
 
-local moveVec = char.Humanoid.MoveDirection
-local hasInput = moveVec.Magnitude > 0.1
-local camLook = camera.CFrame.LookVector
+			local movevec = char["Humanoid"]["MoveDirection"]
+			local hasinput = movevec["Magnitude"] > 0.1
+			local camlook = camera["CFrame"]["LookVector"]
 
-local flatCamLook = Vector3.new(camLook.X, 0, camLook.Z).Unit
-local forwardDot = hasInput and flatCamLook:Dot(moveVec.Unit) or 0
+			local flatcamlook = Vector3.new(camlook["X"], 0, camlook["Z"])["Unit"]
+			local forwarddot = hasinput and flatcamlook:Dot(movevec["Unit"]) or 0
 
-local verticalY = 0
-if math.abs(forwardDot) > 0.7 then
-    -- Flip vertical Y when moving backward
-    if forwardDot < 0 then
-        verticalY = -camLook.Y * moveVec.Magnitude
-    else
-        verticalY = camLook.Y * moveVec.Magnitude
-    end
-end
-
-local flyDir = hasInput and Vector3.new(moveVec.X, verticalY, moveVec.Z).Unit or Vector3.new(0, 0.1, 0)
-
-		-- Determine animation direction
-		local animDir
-		if hasInput then
-			local forward = camera.CFrame.LookVector:Dot(moveVec)
-			local right = camera.CFrame.RightVector:Dot(moveVec)
-
-			if math.abs(forward) > math.abs(right) then
-				animDir = forward > 0 and "w" or "s"
-			else
-				animDir = right > 0 and "d" or "a"
+			local verticaly = 0
+			if math.abs(forwarddot) > 0.7 then
+				if forwarddot < 0 then
+					verticaly = -camlook["Y"] * movevec["Magnitude"]
+				else
+					verticaly = camlook["Y"] * movevec["Magnitude"]
+				end
 			end
-		else
-			animDir = "idle"
-		end
 
-		-- Animation play
-		if animDir ~= lastDir then
-			lastDir = animDir
-			if animDir == "w" then
-				PlayAnim(10714177846, 4.65, 0)
-			elseif animDir == "s" then
-				PlayAnim(10147823318, 4.11, 0)
-			elseif animDir == "a" then
-				PlayAnim(10147823318, 3.55, 0)
-			elseif animDir == "d" then
-				PlayAnim(10147823318, 4.81, 0)
+			local flydir = hasinput and Vector3.new(movevec["X"], verticaly, movevec["Z"])["Unit"] or Vector3.new(0, 0.1, 0)
+
+			local animdir
+			if hasinput then
+				local forward = camera["CFrame"]["LookVector"]:Dot(movevec)
+				local right = camera["CFrame"]["RightVector"]:Dot(movevec)
+
+				if math.abs(forward) > math.abs(right) then
+					animdir = forward > 0 and "w" or "s"
+				else
+					animdir = right > 0 and "d" or "a"
+				end
 			else
-				PlayAnim(10714347256, 4, 0)
+				animdir = "idle"
 			end
+
+			if animdir ~= lastdir then
+				lastdir = animdir
+				if animdir == "w" then
+					playanim(10714177846, 4.65, 0)
+				elseif animdir == "s" then
+					playanim(10147823318, 4.11, 0)
+				elseif animdir == "a" then
+					playanim(10147823318, 3.55, 0)
+				elseif animdir == "d" then
+					playanim(10147823318, 4.81, 0)
+				else
+					playanim(10714347256, 4, 0)
+				end
+			end
+
+			if hasinput then
+				speed += flyspeed * 0.1
+				if speed > flyspeed then speed = flyspeed end
+			elseif speed > 0 then
+				speed -= flyspeed * 0.1
+				if speed < 0 then speed = 0 end
+			end
+
+			bv["velocity"] = flydir * speed
+
+			local movevec = char["Humanoid"]["MoveDirection"]
+			local camlook = camera["CFrame"]["LookVector"]
+			local flatcamlook = Vector3.new(camlook["X"], 0, camlook["Z"])["Unit"]
+			local forwarddot = (movevec["Magnitude"] > 0 and flatcamlook:Dot(movevec["Unit"])) or 0
+
+			local tiltangle = 0
+
+			if forwarddot > 0.7 then
+				tiltangle = -math.rad(50 * speed / flyspeed)
+			elseif forwarddot < -0.7 then
+				tiltangle = math.rad(25 * speed / flyspeed)
+			else
+				tiltangle = 0
+			end
+
+			bg["CFrame"] = camera["CFrame"] * CFrame.Angles(tiltangle, 0, 0)
 		end
 
-		-- Speed management
-		if hasInput then
-			speed += FlySpeed * 0.1
-			if speed > FlySpeed then speed = FlySpeed end
-		elseif speed > 0 then
-			speed -= FlySpeed * 0.1
-			if speed < 0 then speed = 0 end
+		ctrl = {f = 0, b = 0, l = 0, r = 0}
+		lastctrl = {f = 0, b = 0, l = 0, r = 0}
+		speed = 0
+		bg:Destroy()
+		bv:Destroy()
+
+		if char and char:FindFirstChild("Humanoid") then
+			char["Humanoid"]["PlatformStand"] = false
 		end
-
-		-- Apply velocity
-		bv.velocity = flyDir * speed
-
-		-- Camera tilt for effect
-local moveVec = char.Humanoid.MoveDirection
-local camLook = camera.CFrame.LookVector
-local flatCamLook = Vector3.new(camLook.X, 0, camLook.Z).Unit
-local forwardDot = (moveVec.Magnitude > 0 and flatCamLook:Dot(moveVec.Unit)) or 0
-
-local tiltAngle = 0
-
-if forwardDot > 0.7 then
-    -- Tilt forward when flying forward
-    tiltAngle = -math.rad(50 * speed / FlySpeed)
-elseif forwardDot < -0.7 then
-    -- Tilt backward when flying backward (smaller angle)
-    tiltAngle = math.rad(25 * speed / FlySpeed)
-else
-    -- No tilt otherwise
-    tiltAngle = 0
+	end)()
 end
 
-bg.CFrame = camera.CFrame * CFrame.Angles(tiltAngle, 0, 0)
-	end
-
-	ctrl = {f = 0, b = 0, l = 0, r = 0}
-	lastctrl = {f = 0, b = 0, l = 0, r = 0}
-	speed = 0
-	bg:Destroy()
-	bv:Destroy()
-
-	if char and char:FindFirstChild("Humanoid") then
-		char.Humanoid.PlatformStand = false
-	end
-end)()
-end
-
-local function stopFlying()
+function stopflying()
 	if not flying then return end
 	flying = false
-	if KeyDownFunction then KeyDownFunction:Disconnect() end
-	if KeyUpFunction then KeyUpFunction:Disconnect() end
-	StopAnim()
+	if keydownfunction then keydownfunction:Disconnect() end
+	if keyupfunction then keyupfunction:Disconnect() end
+	stopanim()
 	resetanims()
 end
 
-button.MouseButton1Click:Connect(function()
+button["MouseButton1Click"]:Connect(function()
 	playclicksound()
-	toggle = not toggle
-	button.Text = toggle and "F:O" or "F:X"
-	button.BackgroundColor3 = toggle and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(0, 0, 0)
-	button.BorderColor3 = toggle and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255)
-	button.TextColor3 = toggle and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255)
-	if toggle then startFlying() else stopFlying() resetanims() end
+	flytoggle = not flytoggle
+	button["Text"] = flytoggle and "F:O" or "F:X"
+	button["BackgroundColor3"] = flytoggle and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(0, 0, 0)
+	button["BorderColor3"] = flytoggle and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255)
+	button["TextColor3"] = flytoggle and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255)
+	if flytoggle then startflying() else stopflying() resetanims() end
 end)
 
-plr.Character:WaitForChild("Humanoid").Died:Connect(function()
-	toggle = false
-	stopFlying()
-	button.Text = "F:X"
-	button.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	button.BorderColor3 = Color3.fromRGB(255, 255, 255)
-	button.TextColor3 = Color3.fromRGB(255, 255, 255)
+player["CharacterAdded"]:Connect(function()
+	flytoggle = false
+	stopflying()
+	button["Text"] = "F:X"
+	button["BackgroundColor3"] = Color3.fromRGB(0, 0, 0)
+	button["BorderColor3"] = Color3.fromRGB(255, 255, 255)
+	button["TextColor3"] = Color3.fromRGB(255, 255, 255)
 end)
