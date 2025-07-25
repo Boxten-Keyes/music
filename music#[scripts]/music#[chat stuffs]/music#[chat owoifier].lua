@@ -1,4 +1,10 @@
-function owoify(text)
+-------------------------------------------------------------------------------------------------------------------------------
+
+if not game:IsLoaded() then game["Loaded"]:Wait() end
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+local function owoify(text)
 	local substitutions = {
 		["r"] = "w",
 		["l"] = "w",
@@ -12,8 +18,8 @@ function owoify(text)
 		["th"] = "d",
 	}
 
-	for k, v in pairs(substitutions) do
-		text = text:gsub(k, v)
+	for pattern, replacement in pairs(substitutions) do
+		text = text:gsub(pattern, replacement)
 	end
 
 	local suffixes = { " owo", " UwU", " >w<", " ^w^", " rawr~", " nya~" }
@@ -24,22 +30,24 @@ function owoify(text)
 	return text
 end
 
-local Players = game:GetService("Players")
-local TextChatService = game:GetService("TextChatService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+-------------------------------------------------------------------------------------------------------------------------------
 
-local LocalPlayer = Players.LocalPlayer
-local CoreGui = game:GetService("CoreGui")
+local players = game:GetService("Players")
+local textchatservice = game:GetService("TextChatService")
+local replicatedstorage = game:GetService("ReplicatedStorage")
 
-if CoreGui:FindFirstChild("ReverseChatGui") then return end
+local localplayer = players["LocalPlayer"]
+local coregui = game:GetService("CoreGui")
 
-local function getTargetName(targetChip)
-	if targetChip and targetChip:IsA("TextButton") then
-		local displayName = string.match(targetChip.Text or "", "^%[To%s+(.-)%]$")
-		if displayName and displayName ~= "" then
-			for _, plr in ipairs(Players:GetPlayers()) do
-				if plr.DisplayName:lower() == displayName:lower() then
-					return plr.Name
+-------------------------------------------------------------------------------------------------------------------------------
+
+local function gettargetname(targetchip)
+	if targetchip and targetchip:IsA("TextButton") then
+		local displayname = string.match(targetchip["Text"] or "", "^%[To%s+(.-)%]$")
+		if displayname and displayname ~= "" then
+			for _, plr in ipairs(players:GetPlayers()) do
+				if plr["DisplayName"]:lower() == displayname:lower() then
+					return plr["Name"]
 				end
 			end
 		end
@@ -47,13 +55,15 @@ local function getTargetName(targetChip)
 	return "All"
 end
 
-local function send(message, recipient)
+-------------------------------------------------------------------------------------------------------------------------------
+
+local function sendmessage(message, recipient)
 	local owoified = owoify(message)
 	local channel = nil
 
 	if recipient and recipient ~= "All" then
-		for _, ch in pairs(TextChatService.TextChannels:GetChildren()) do
-			if ch.Name:find("RBXWhisper:") and ch:FindFirstChild(recipient) then
+		for _, ch in pairs(textchatservice["TextChannels"]:GetChildren()) do
+			if ch["Name"]:find("RBXWhisper:") and ch:FindFirstChild(recipient) then
 				channel = ch
 				break
 			end
@@ -61,14 +71,14 @@ local function send(message, recipient)
 	end
 
 	if not channel then
-		channel = TextChatService.TextChannels:FindFirstChild("RBXGeneral")
-			or TextChatService.TextChannels:FindFirstChild("General")
+		channel = textchatservice["TextChannels"]:FindFirstChild("RBXGeneral")
+			or textchatservice["TextChannels"]:FindFirstChild("General")
 	end
 
 	if channel then
 		channel:SendAsync(owoified)
 	else
-		local ev = ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents")
+		local ev = replicatedstorage:FindFirstChild("DefaultChatSystemChatEvents")
 		if ev then
 			local say = ev:FindFirstChild("SayMessageRequest")
 			if say then
@@ -78,28 +88,32 @@ local function send(message, recipient)
 	end
 end
 
+-------------------------------------------------------------------------------------------------------------------------------
+
 task.spawn(function()
-	repeat task.wait() until CoreGui:FindFirstChild("ExperienceChat")
+	repeat task.wait() until coregui:FindFirstChild("ExperienceChat")
 
-	local experienceChat = CoreGui:WaitForChild("ExperienceChat")
-	local chatInputBar = experienceChat:WaitForChild("appLayout"):WaitForChild("chatInputBar")
-	local background = chatInputBar:WaitForChild("Background")
+	local experiencechat = coregui:WaitForChild("ExperienceChat")
+	local chatinputbar = experiencechat:WaitForChild("appLayout"):WaitForChild("chatInputBar")
+	local background = chatinputbar:WaitForChild("Background")
 	local container = background:WaitForChild("Container")
-	local textContainer = container:WaitForChild("TextContainer")
-	local textBoxContainer = textContainer:WaitForChild("TextBoxContainer")
-	local chatBox = textBoxContainer:WaitForChild("TextBox")
-	local targetChip = textContainer:FindFirstChild("TargetChannelChip")
+	local textcontainer = container:WaitForChild("TextContainer")
+	local textboxcontainer = textcontainer:WaitForChild("TextBoxContainer")
+	local chatbox = textboxcontainer:WaitForChild("TextBox")
+	local targetchip = textcontainer:FindFirstChild("TargetChannelChip")
 
-	if chatBox then
-		chatBox.FocusLost:Connect(function(enterPressed)
-			if enterPressed and chatBox.Text ~= "" then
-				local msg = chatBox.Text
-				local recipient = getTargetName(targetChip)
-				chatBox.Text = ""
+	if chatbox then
+		chatbox["FocusLost"]:Connect(function(enterpressed)
+			if enterpressed and chatbox["Text"] ~= "" then
+				local msg = chatbox["Text"]
+				local recipient = gettargetname(targetchip)
+				chatbox["Text"] = ""
 				task.defer(function()
-					send(msg, recipient)
+					sendmessage(msg, recipient)
 				end)
 			end
 		end)
 	end
 end)
+
+-------------------------------------------------------------------------------------------------------------------------------
