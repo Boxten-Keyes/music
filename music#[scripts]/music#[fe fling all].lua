@@ -270,7 +270,7 @@ function performfling(targets)
 			until basepart["Velocity"]["Magnitude"] > 500 or basepart["Parent"] ~= tchar or targetplayer["Parent"] ~= players or targetplayer["Character"] ~= tchar or (thum and thum["Sit"]) or hum["Health"] <= 0 or tick() > starttime + timeout
 		end
 
-		workspace["FallenPartsDestroyHeight"] = math.huge
+		workspace["FallenPartsDestroyHeight"] = 0 / 0
 
 		local bv = Instance.new("BodyVelocity")
 		bv["Name"] = "EpixVel"
@@ -300,7 +300,7 @@ function performfling(targets)
 			hum:ChangeState("GettingUp")
 		end
 
-		workspace["FallenPartsDestroyHeight"] = workspace["FallenPartsDestroyHeight"]
+		workspace["FallenPartsDestroyHeight"] = -500
 	end
 
 	if not targets[1] then return end
