@@ -1,19 +1,45 @@
+-------------------------------------------------------------------------------------------------------------------------------
+
 --[[
-  Licensed under the MIT License (see LICENSE file for full details).
-  Copyright (c) 2025 MrY7zz
+	MIT License
+	Copyright © 2025 MrY7zz
 
-  LEGAL NOTICE:
-  You are REQUIRED to retain this license header under the terms of the MIT License.
-  Removing or modifying this notice may violate copyright law.
-]]
---// BY MrY7zz
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
 
-if not game.IsLoaded then
-	game.Loaded:Wait()
-end
+	The above copyright notice and this permission notice shall be included in all
+	copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	SOFTWARE.
+]]--
+
+--[[
+	Licensed under the MIT License. (Line 4 - 23)
+	Copyright © 2025 MrY7zz
+
+	LEGAL NOTICE:
+	You are REQUIRED to retain this license header under the terms of the MIT License.
+	Removing or modifying this notice may violate copyright law.
+]]--
+
+if not game:IsLoaded() then game["Loaded"]:Wait() end
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+-- BY MrY7zz
+-- edited by team noxious because r15 reanimate doesnt work lmao
 
 if not sethiddenproperty then
-	--error("Script is only compatible with environments that have sethiddenproperty")
 	task.spawn(function()
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/CurrentAngleV2/refs/heads/main/fallback.lua"))()
 	end)
@@ -21,14 +47,11 @@ if not sethiddenproperty then
 	return
 end
 
+-------------------------------------------------------------------------------------------------------------------------------
+
 local UI = (gethui and gethui()) or (cloneref and cloneref(game:GetService("CoreGui"))) or (pcall(function() return game:GetService("CoreGui").Parent end) and game:GetService("CoreGui")) or game:GetService("Players").LocalPlayer:FindFirstChildOfClass("PlayerGui")
 
 local function LoadUi(seconds)
-	-- Gui to Lua
-	-- Version: 3.2
-
-	-- Instances:
-
 	local ScreenGui = Instance.new("ScreenGui")
 	local Frame = Instance.new("Frame")
 	local UICorner = Instance.new("UICorner")
@@ -94,24 +117,26 @@ local function LoadUi(seconds)
 	end)
 end
 
+-------------------------------------------------------------------------------------------------------------------------------
+
+-- setsimulationradius.lua
+-- © 2025 MrY7zz (MIT License)
+
 local setsimulationradius = setsimulationradius
+
 if not setsimulationradius then
-	-- setsimulationradius.lua
-	-- © 2025 MrY7zz (MIT License)
-
 	local Players = game:GetService("Players")
-
 	local newIndex
 	local Index
 
-	--// Extracting __newindex
+	-- Extracting __newindex
 	xpcall(function()
 		game[{}] = {}
 	end, function()
 		newIndex = debug.info(2, "f")
 	end)
 
-	--// Extracting __index
+	-- Extracting __index
 	xpcall(function()
 		return game[{}]
 	end, function()
@@ -128,6 +153,8 @@ if not setsimulationradius then
 		end
 	end
 end
+
+-------------------------------------------------------------------------------------------------------------------------------
 
 local game = game
 local debug = debug
@@ -212,14 +239,14 @@ if not CFrameIndex then
 	end
 end
 
+-------------------------------------------------------------------------------------------------------------------------------
+
 local zeropointone = 0.1
 local twait = task.wait
 local tspawn = task.spawn
 local currentfakechar = nil
 local vector3zero = Vector3.zero
-local getgenv = getgenv or function()
-	return _G
-end
+local getgenv = getgenv or function() return _G end
 
 local NaN = 0/0
 
@@ -233,36 +260,24 @@ local math_random = math.random
 local Vector3_new = Vector3.new
 
 local usedefaultanims = _G["Use default animations"] or false
-
 local transparency_level = _G["Fake character transparency level"] or 1
-
 local disablescripts = _G["Disable character scripts"] or true
-
 local fakecollisions = _G["Fake character should collide"] or true
-
 local nametoexcludefromtransparency = _G["Names to exclude from transparency"] or {}
-
 local parentrealchartofakechar = _G["Parent real character to fake character"] or false
-
 local respawncharacter = (function() if _G["Respawn character"] == nil then return true else return _G["Respawn character"] end end)()
-
 local instantrespawn = (function() if _G["Instant respawn"] == nil then return false else return _G["Instant respawn"] end end)()
-
 local hiderootpart = (function() if _G["Hide HumanoidRootPart"] == nil then return false else return _G["Hide HumanoidRootPart"] end end)()
-
 local permadeathcharacter = (function() if _G["PermaDeath fake character"] == nil then return true else return _G["PermaDeath fake character"] end end)()
-
 local r15rig = (function() if _G["R15 Reanimate"] == nil then return false else return _G["R15 Reanimate"] end end)()
-
 local clickfling = (function() if _G["Click Fling"] == nil then return false else return _G["Click Fling"] end end)()
 
 local LocalPlayer = game:GetService("Players").LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 
-if not LocalPlayer.Character then
-	LocalPlayer.CharacterAdded:Wait()
-	twait(zeropointone)
-end
+if not LocalPlayer.Character then LocalPlayer.CharacterAdded:Wait() twait(zeropointone) end
+
+-------------------------------------------------------------------------------------------------------------------------------
 
 local function removeAnims(character)
 	if character == currentfakechar then
@@ -287,7 +302,11 @@ local function removeAnims(character)
 	end)
 end
 
+-------------------------------------------------------------------------------------------------------------------------------
+
 LocalPlayer.CharacterAdded:Once(removeAnims)
+
+-------------------------------------------------------------------------------------------------------------------------------
 
 LocalPlayer.Character.Archivable = true
 local originalChar = LocalPlayer.Character
@@ -296,24 +315,23 @@ local fakeChar
 if not r15rig then
 	fakeChar = originalChar:Clone()
 else
-	-- Proper R15 character creation
 	local humanoidDescription = originalChar.Humanoid.HumanoidDescription
 	fakeChar = game:GetService("Players"):CreateHumanoidModelFromDescription(humanoidDescription, Enum.HumanoidRigType.R15)
 	fakeChar.Name = LocalPlayer.Name .. "_Fake"
 
-	-- Position the fake character
 	local rootPart = fakeChar:FindFirstChild("HumanoidRootPart")
 	if rootPart then
 		rootPart.CFrame = originalChar.HumanoidRootPart.CFrame
 	end
 
-	-- Ensure all parts are properly named and configured
 	for _, part in ipairs(fakeChar:GetDescendants()) do
 		if part:IsA("BasePart") then
 			part.CanCollide = fakecollisions
 		end
 	end
 end
+
+-------------------------------------------------------------------------------------------------------------------------------
 
 local signaldiedbackend = LocalPlayer.ConnectDiedSignalBackend
 local signalkill = LocalPlayer.Kill
@@ -337,10 +355,13 @@ if respawncharacter then
 	end
 end
 
-twait(zeropointone)
+-------------------------------------------------------------------------------------------------------------------------------
 
+twait(zeropointone)
 local newChar = LocalPlayer.Character
 newChar.Archivable = true
+
+-------------------------------------------------------------------------------------------------------------------------------
 
 if disablescripts then
 	tspawn(function()
@@ -360,17 +381,18 @@ for _, part in ipairs(fakeChar:GetDescendants()) do
 	end
 end
 
-twait(0.4)
+-------------------------------------------------------------------------------------------------------------------------------
 
+twait(0.4)
 LocalPlayer.Character = fakeChar
-if parentrealchartofakechar then
-	newChar.Parent = fakeChar
-end
+if parentrealchartofakechar then newChar.Parent = fakeChar end
 
 local newcharTorso = newChar:WaitForChild(r15rig and "UpperTorso" or "Torso")
 local fakecharTorso = fakeChar:WaitForChild(r15rig and "UpperTorso" or "Torso")
 local newcharRoot = newChar:WaitForChild("HumanoidRootPart")
 local fakecharRoot = fakeChar:WaitForChild("HumanoidRootPart")
+
+-------------------------------------------------------------------------------------------------------------------------------
 
 local limbmapping = {}
 
@@ -384,7 +406,6 @@ if not r15rig then
 		["Right Hip"] = fakeChar:WaitForChild("Right Leg")
 	}
 else
-	-- Proper R15 joint mapping
 	limbmapping = {
 		Neck = fakeChar:WaitForChild("Head"),
 		RootJoint = fakeChar:WaitForChild("UpperTorso"),
@@ -394,6 +415,8 @@ else
 		["Right Hip"] = fakeChar:WaitForChild("RightUpperLeg")
 	}
 end 
+
+-------------------------------------------------------------------------------------------------------------------------------
 
 local jointmapping = {}
 
@@ -407,7 +430,6 @@ if not r15rig then
 		["Right Hip"] = newcharTorso:WaitForChild("Right Hip")
 	}
 else
-	-- Proper R15 joint mapping
 	jointmapping = {
 		Neck = newcharTorso:WaitForChild("Neck"),
 		RootJoint = newChar.HumanoidRootPart:WaitForChild("RootJoint"),
@@ -417,6 +439,8 @@ else
 		["Right Hip"] = newcharTorso:WaitForChild("RightHip")
 	}
 end
+
+-------------------------------------------------------------------------------------------------------------------------------
 
 local Inverse = emptyCFrame.Inverse
 local ToAxisAngle = emptyCFrame.ToAxisAngle
@@ -432,9 +456,11 @@ local function RCA6dToCFrame(Motor6D, TargetPart, ReferencePart)
 	sethiddenproperty(Motor6D, 'ReplicateCurrentAngle6D', newangle)
 end
 
-local poscache = CFrame.new(255, 255, 0)
+-------------------------------------------------------------------------------------------------------------------------------
 
+local poscache = CFrame.new(255, 255, 0)
 local task_spawn = task.spawn
+
 local function stepReanimate()
 	if flinging then return end
 
@@ -472,6 +498,8 @@ local function stepReanimate()
 	end
 end
 
+-------------------------------------------------------------------------------------------------------------------------------
+
 local function setdestroyheight(height)
 	local sucess, result = pcall(function()
 		workspace.FallenPartsDestroyHeight = height
@@ -479,6 +507,8 @@ local function setdestroyheight(height)
 end
 
 local currentheight = workspace.FallenPartsDestroyHeight
+
+-------------------------------------------------------------------------------------------------------------------------------
 
 local function flinginternal(character, time)
 	if character == newChar then return end
@@ -523,6 +553,8 @@ getgenv().fling = function(character, time, yield)
 	end
 end
 
+-------------------------------------------------------------------------------------------------------------------------------
+
 local function disableCollisions()
 	pcall(function()
 		for _, char in ipairs({ newChar }) do
@@ -549,13 +581,13 @@ local function disableCollisionsWithFakeChar()
 	end)
 end
 
-local RunService = game:GetService("RunService")
+-------------------------------------------------------------------------------------------------------------------------------
 
+local RunService = game:GetService("RunService")
 local postSimConnection = RunService.PostSimulation:Connect(stepReanimate)
 local disableCollisionConnection;
 
 local humanoidnewchar = newChar:WaitForChild("Humanoid")
-
 humanoidnewchar.PlatformStand = true
 humanoidnewchar.AutoRotate = false
 
@@ -564,6 +596,8 @@ if fakecollisions then
 else
 	disableCollisionConnection = RunService.PreSimulation:Connect(disableCollisionsWithFakeChar)
 end
+
+-------------------------------------------------------------------------------------------------------------------------------
 
 if not permadeathcharacter then
 	fakeChar.Humanoid.Died:Once(function()
@@ -577,6 +611,8 @@ if not permadeathcharacter then
 end
 
 workspace.CurrentCamera.CameraSubject = fakeChar:WaitForChild("Humanoid")
+
+-------------------------------------------------------------------------------------------------------------------------------
 
 if clickfling then
 	Mouse.Button1Down:Connect(function()
@@ -594,9 +630,13 @@ if clickfling then
 	end)
 end
 
+-------------------------------------------------------------------------------------------------------------------------------
+
 finished = true
 if usedefaultanims then
 	task_spawn(function()
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/CurrentAngleV2/refs/heads/main/anims"))
 	end)
 end
+
+-------------------------------------------------------------------------------------------------------------------------------
