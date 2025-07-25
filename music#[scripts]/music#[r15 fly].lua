@@ -1,9 +1,17 @@
+-------------------------------------------------------------------------------------------------------------------------------
+
+if not game:IsLoaded() then game["Loaded"]:Wait() end
+
+-------------------------------------------------------------------------------------------------------------------------------
+
 local players = game["Players"]
 local player = players["LocalPlayer"]
 local runservice = game["Run Service"]
 local userinputservice = game["UserInputService"]
 local mouse = player:GetMouse()
 local camera = workspace["CurrentCamera"]
+
+-------------------------------------------------------------------------------------------------------------------------------
 
 local screengui = Instance.new("ScreenGui")
 screengui["ResetOnSpawn"] = false
@@ -46,12 +54,7 @@ function playclicksound()
 	newsound["Ended"]:Connect(function() newsound:Destroy() end)
 end
 
-local flytoggle = false
-local flyspeed = 200
-local flying = false
-local ctrl = {f = 0, b = 0, l = 0, r = 0}
-local lastctrl = {f = 0, b = 0, l = 0, r = 0}
-local keydownfunction, keyupfunction
+-------------------------------------------------------------------------------------------------------------------------------
 
 function playanim(id, time, speed)
 	pcall(function()
@@ -109,6 +112,15 @@ function getmovedirectionanim(dir)
 		return sideways > 0 and "d" or "a"
 	end
 end
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+local flytoggle = false
+local flyspeed = 200
+local flying = false
+local ctrl = {f = 0, b = 0, l = 0, r = 0}
+local lastctrl = {f = 0, b = 0, l = 0, r = 0}
+local keydownfunction, keyupfunction
 
 function startflying()
 	if flying then return end
@@ -252,6 +264,8 @@ function stopflying()
 	resetanims()
 end
 
+-------------------------------------------------------------------------------------------------------------------------------
+
 button["MouseButton1Click"]:Connect(function()
 	playclicksound()
 	flytoggle = not flytoggle
@@ -270,3 +284,5 @@ player["CharacterAdded"]:Connect(function()
 	button["BorderColor3"] = Color3.fromRGB(255, 255, 255)
 	button["TextColor3"] = Color3.fromRGB(255, 255, 255)
 end)
+
+-------------------------------------------------------------------------------------------------------------------------------
