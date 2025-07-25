@@ -3,30 +3,25 @@ task.wait(1)
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+
 local plr = Players.LocalPlayer
 local mouse = plr:GetMouse()
 local camera = workspace.CurrentCamera
 
-function repos(ui, t, w, h)
+local function repos(ui, t, w, h)
 	if not t then t = 0.5 end
 
-	local screenWidth = game:GetService("Workspace").CurrentCamera.ViewportSize.X
-	local screenHeight = game:GetService("Workspace").CurrentCamera.ViewportSize.Y
+	local screenWidth = camera.ViewportSize.X
+	local screenHeight = camera.ViewportSize.Y
 
-	local frameWidth = w
-	local frameHeight = h
-	local negative = 56
-
-	local centerX = (screenWidth - frameWidth) / 2
-	local centerY = (screenHeight - frameHeight) / 2 - negative
+	local centerX = (screenWidth - w) / 2
+	local centerY = (screenHeight - h) / 2 - 56
 	local tweenInfo = TweenInfo.new(t, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
 
-	local tween = game:GetService("TweenService"):Create(
-		ui,
-		tweenInfo,
-		{Position = UDim2.new(0, centerX, 0, centerY)}
-	)
-
+	local tween = TweenService:Create(ui, tweenInfo, {
+		Position = UDim2.new(0, centerX, 0, centerY)
+	})
 	tween:Play()
 end
 
@@ -48,13 +43,13 @@ local buttonpad = Instance.new("UIPadding")
 buttonpad.PaddingTop = UDim.new(0, -2)
 buttonpad.Parent = button
 
-local clik = Instance.new"Sound"
+local clik = Instance.new("Sound")
 clik.SoundId = "rbxassetid://226892749"
-clik.Parent = game.Workspace
+clik.Parent = workspace
 clik.Name = "canttouchthis"
 clik.Volume = 0.4
 
-function playclicksound()
+local function playclicksound()
 	local newSound = clik:Clone()
 	newSound.Parent = clik.Parent
 	newSound:Play()
@@ -68,51 +63,12 @@ screenGui.ResetOnSpawn = false
 button.Parent = screenGui
 
 if RunService:IsStudio() then
-	screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+	screenGui.Parent = plr:WaitForChild("PlayerGui")
 else
 	screenGui.Parent = gethui and gethui() or game:GetService("CoreGui")
 end
 
 local FlySpeed = 200
-local Backpack = plr:WaitForChild("Backpack")
-
-local screenGui = Instance.new("ScreenGui", plr:WaitForChild("PlayerGui"))
-screenGui.Name = "FlyDPadUI"
-screenGui.ResetOnSpawn = false
-screenGui.IgnoreGuiInset = true
-
-local FlyPad = Instance.new("Frame")
-FlyPad.Name = "FlyPad"
-FlyPad.Size = UDim2.new(0, 180, 0, 180)
-FlyPad.Position = UDim2.new(0, 10, 1, -200)
-FlyPad.BackgroundTransparency = 1
-FlyPad.Visible = false
-FlyPad.Parent = screenGui
-
-local function CreateDPadButton(name, text, pos, size)
-	local btn = Instance.new("TextButton")
-	btn.Name = name
-	btn.Text = text
-	btn.Size = size
-	btn.Position = pos
-	btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-	btn.BackgroundTransparency = 0.5
-	btn.TextColor3 = Color3.new(1, 1, 1)
-	btn.TextSize = 20
-	btn.Parent = FlyPad
-
-	local corner = Instance.new("UICorner")
-	corner.CornerRadius = UDim.new(0.2, 0)
-	corner.Parent = btn
-
-	return btn
-end
-
-local UpButton = CreateDPadButton("Up", "W", UDim2.new(0.5, -25, 0, 10), UDim2.new(0, 50, 0, 50))
-local DownButton = CreateDPadButton("Down", "S", UDim2.new(0.5, -25, 0.5, 30), UDim2.new(0, 50, 0, 50))
-local LeftButton = CreateDPadButton("Left", "A", UDim2.new(0, 10, 0.5, -25), UDim2.new(0, 50, 0, 50))
-local RightButton = CreateDPadButton("Right", "D", UDim2.new(1, -60, 0.5, -25), UDim2.new(0, 50, 0, 50))
-
 local flying = false
 local ctrl = {f = 0, b = 0, l = 0, r = 0}
 local lastctrl = {f = 0, b = 0, l = 0, r = 0}
@@ -144,51 +100,45 @@ local function StopAnim()
 	end
 end
 
-local function HandleMobileInput(key, state)
-	if not flying then return end
-	local k = key:lower()
-	if k == "w" then 
-		ctrl.f = state and 1 or 0
-		if state then PlayAnim(10714177846, 4.65, 0) end
-	elseif k == "s" then 
-		ctrl.b = state and -1 or 0
-		if state then PlayAnim(10147823318, 4.11, 0) end
-	elseif k == "a" then 
-		ctrl.l = state and -1 or 0
-		if state then PlayAnim(10147823318, 3.55, 0) end
-	elseif k == "d" then 
-		ctrl.r = state and 1 or 0
-		if state then PlayAnim(10147823318, 4.81, 0) end
-	end
+local function resetanims()
+	task.wait()
+	task.spawn(function()
+		local Char = plr.Character or plr.CharacterAdded:Wait()
+		local Human = Char and Char:WaitForChild("Humanoid", 15)
+		local Animate = Char and Char:WaitForChild("Animate", 15)
 
-	if not state and ctrl.f == 0 and ctrl.b == 0 and ctrl.l == 0 and ctrl.r == 0 then
-		PlayAnim(10714347256, 4, 0)
-	end
+		if Animate then
+			Animate.Disabled = true
+			for _, v in ipairs(Human:GetPlayingAnimationTracks()) do
+				v:Stop()
+			end
+			Animate.Disabled = false
+		end
+	end)
 end
 
-UpButton.MouseButton1Down:Connect(function() HandleMobileInput("w", true) end)
-UpButton.MouseButton1Up:Connect(function() HandleMobileInput("w", false) end)
-UpButton.MouseLeave:Connect(function() HandleMobileInput("w", false) end)
+local function getMoveDirectionAnim(dir)
+	if dir.Magnitude < 0.1 then return "idle" end
+	local cam = workspace.CurrentCamera
+	local look = cam.CFrame.LookVector
+	local right = cam.CFrame.RightVector
 
-DownButton.MouseButton1Down:Connect(function() HandleMobileInput("s", true) end)
-DownButton.MouseButton1Up:Connect(function() HandleMobileInput("s", false) end)
-DownButton.MouseLeave:Connect(function() HandleMobileInput("s", false) end)
+	local forward = look:Dot(dir)
+	local sideways = right:Dot(dir)
 
-LeftButton.MouseButton1Down:Connect(function() HandleMobileInput("a", true) end)
-LeftButton.MouseButton1Up:Connect(function() HandleMobileInput("a", false) end)
-LeftButton.MouseLeave:Connect(function() HandleMobileInput("a", false) end)
-
-RightButton.MouseButton1Down:Connect(function() HandleMobileInput("d", true) end)
-RightButton.MouseButton1Up:Connect(function() HandleMobileInput("d", false) end)
-RightButton.MouseLeave:Connect(function() HandleMobileInput("d", false) end)
+	if math.abs(forward) > math.abs(sideways) then
+		return forward > 0 and "w" or "s"
+	else
+		return sideways > 0 and "d" or "a"
+	end
+end
 
 local function startFlying()
 	if flying then return end
 	flying = true
-	if UserInputService.TouchEnabled then FlyPad.Visible = true end
 
 	local char = plr.Character or plr.CharacterAdded:Wait()
-	local UpperTorso = char:WaitForChild("UpperTorso")
+	local UpperTorso = char:FindFirstChild("UpperTorso") or char:FindFirstChild("Torso") or char:WaitForChild("HumanoidRootPart")
 	local speed = 0
 
 	local bg = Instance.new("BodyGyro", UpperTorso)
@@ -200,7 +150,7 @@ local function startFlying()
 	bv.velocity = Vector3.new(0, 0.1, 0)
 	bv.maxForce = Vector3.new(9e9, 9e9, 9e9)
 
-	PlayAnim(10714347256, 4, 0)
+	PlayAnim(10714347256, 4, 0) -- idle fly
 
 	KeyDownFunction = mouse.KeyDown:Connect(function(key)
 		local k = key:lower()
@@ -221,69 +171,90 @@ local function startFlying()
 		PlayAnim(10714347256, 4, 0)
 	end)
 
-	coroutine.wrap(function()
-		while flying and char and char.Parent do
-			RunService.RenderStepped:Wait()
-			char.Humanoid.PlatformStand = true
+	local lastDir = nil
 
-			if ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0 then
-				speed += FlySpeed * 0.10
-				if speed > FlySpeed then speed = FlySpeed end
-			elseif speed > 0 then
-				speed -= FlySpeed * 0.10
-				if speed < 0 then speed = 0 end
-			end
+coroutine.wrap(function()
+	local lastDir = nil
+	while flying and char and char.Parent do
+		RunService.RenderStepped:Wait()
+		char.Humanoid.PlatformStand = true
 
-			if ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0 then
-				bv.velocity = (
-					(workspace.CurrentCamera.CFrame.LookVector * (ctrl.f + ctrl.b)) +
-						((workspace.CurrentCamera.CFrame * CFrame.new(ctrl.l + ctrl.r, (ctrl.f + ctrl.b) * 0.2, 0)).Position - workspace.CurrentCamera.CFrame.Position)
-				) * speed
-				lastctrl = {f = ctrl.f, b = ctrl.b, l = ctrl.l, r = ctrl.r}
-			elseif speed > 0 then
-				bv.velocity = (
-					(workspace.CurrentCamera.CFrame.LookVector * (lastctrl.f + lastctrl.b)) +
-						((workspace.CurrentCamera.CFrame * CFrame.new(lastctrl.l + lastctrl.r, (lastctrl.f + lastctrl.b) * 0.2, 0)).Position - workspace.CurrentCamera.CFrame.Position)
-				) * speed
+local moveVec = char.Humanoid.MoveDirection
+local hasInput = moveVec.Magnitude > 0.1
+local camLook = camera.CFrame.LookVector
+
+-- Project camera's LookVector onto the horizontal plane
+local flatCamLook = Vector3.new(camLook.X, 0, camLook.Z).Unit
+local forwardDot = hasInput and flatCamLook:Dot(moveVec.Unit) or 0
+
+-- Allow vertical movement when moving forward or backward
+local verticalY = (math.abs(forwardDot) > 0.7) and (camLook.Y * moveVec.Magnitude) or 0
+
+-- Combine horizontal movement and vertical tilt
+local flyDir = hasInput and Vector3.new(moveVec.X, verticalY, moveVec.Z).Unit or Vector3.new(0, 0.1, 0)
+
+		-- Determine animation direction
+		local animDir
+		if hasInput then
+			local forward = camera.CFrame.LookVector:Dot(moveVec)
+			local right = camera.CFrame.RightVector:Dot(moveVec)
+
+			if math.abs(forward) > math.abs(right) then
+				animDir = forward > 0 and "w" or "s"
 			else
-				bv.velocity = Vector3.new(0, 0.1, 0)
+				animDir = right > 0 and "d" or "a"
 			end
-
-			bg.CFrame = workspace.CurrentCamera.CFrame * CFrame.Angles(-math.rad((ctrl.f + ctrl.b) * 50 * speed / FlySpeed), 0, 0)
+		else
+			animDir = "idle"
 		end
 
-		ctrl = {f = 0, b = 0, l = 0, r = 0}
-		lastctrl = {f = 0, b = 0, l = 0, r = 0}
-		speed = 0
-		bg:Destroy()
-		bv:Destroy()
-		if char and char:FindFirstChild("Humanoid") then
-			char.Humanoid.PlatformStand = false
-		end
-	end)()
-end
-
-function resetanims()
-	task.wait()
-	task.spawn(function()
-		local Char = Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()
-		local Human = Char and Char:WaitForChild("Humanoid", 15)
-		local Animate = Char and Char:WaitForChild("Animate", 15)
-
-		if Animate then
-			Animate.Disabled = true
-			for _, v in ipairs(Human:GetPlayingAnimationTracks()) do
-				v:Stop()
+		-- Animation play
+		if animDir ~= lastDir then
+			lastDir = animDir
+			if animDir == "w" then
+				PlayAnim(10714177846, 4.65, 0)
+			elseif animDir == "s" then
+				PlayAnim(10147823318, 4.11, 0)
+			elseif animDir == "a" then
+				PlayAnim(10147823318, 3.55, 0)
+			elseif animDir == "d" then
+				PlayAnim(10147823318, 4.81, 0)
+			else
+				PlayAnim(10714347256, 4, 0)
 			end
-			Animate.Disabled = false
 		end
-	end)
+
+		-- Speed management
+		if hasInput then
+			speed += FlySpeed * 0.1
+			if speed > FlySpeed then speed = FlySpeed end
+		elseif speed > 0 then
+			speed -= FlySpeed * 0.1
+			if speed < 0 then speed = 0 end
+		end
+
+		-- Apply velocity
+		bv.velocity = flyDir * speed
+
+		-- Camera tilt for effect
+		bg.CFrame = camera.CFrame * CFrame.Angles(-math.rad(50 * speed / FlySpeed), 0, 0)
+	end
+
+	ctrl = {f = 0, b = 0, l = 0, r = 0}
+	lastctrl = {f = 0, b = 0, l = 0, r = 0}
+	speed = 0
+	bg:Destroy()
+	bv:Destroy()
+
+	if char and char:FindFirstChild("Humanoid") then
+		char.Humanoid.PlatformStand = false
+	end
+end)()
 end
 
 local function stopFlying()
 	if not flying then return end
 	flying = false
-	FlyPad.Visible = false
 	if KeyDownFunction then KeyDownFunction:Disconnect() end
 	if KeyUpFunction then KeyUpFunction:Disconnect() end
 	StopAnim()
@@ -300,7 +271,7 @@ button.MouseButton1Click:Connect(function()
 	if toggle then startFlying() else stopFlying() end
 end)
 
-Players.LocalPlayer.Character:FindFirstChild("Humanoid").Died:Connect(function()
+plr.Character:WaitForChild("Humanoid").Died:Connect(function()
 	toggle = false
 	stopFlying()
 	button.Text = "F:X"
