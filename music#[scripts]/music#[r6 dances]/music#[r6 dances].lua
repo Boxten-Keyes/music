@@ -140,6 +140,6 @@ makeanim("Kazotsky Kick", "https://files.catbox.moe/3mupm8.mp3", 9158896160, 1, 
 makeanim("Who Is You", "https://files.catbox.moe/cqxyp6.mp3", 137714761719347, 1)
 
 -- dance 14 (chegou 3)
-makeanim("Chegou 3", "https://files.catbox.moe/mssm2m.mp3", 122815417402057, 1)
+makeanim("Chegou 3", "https://files.catbox.moe/mssm2m.mp3", 108580080243074, 1)
 
 -------------------------------------------------------------------------------------------------------------------------------
