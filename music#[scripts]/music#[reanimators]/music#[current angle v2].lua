@@ -32,12 +32,12 @@
 	Removing or modifying this notice may violate copyright law.
 ]]--
 
+-- made by MrY7zz
+-- edited by team noxious because r15 reanimate doesnt work lmao
+
 if not game:IsLoaded() then game["Loaded"]:Wait() end
 
 -------------------------------------------------------------------------------------------------------------------------------
-
--- BY MrY7zz
--- edited by team noxious because r15 reanimate doesnt work lmao
 
 if not sethiddenproperty then
 	task.spawn(function()
