@@ -1,124 +1,107 @@
-task.wait(1)
+-------------------------------------------------------------------------------------------------------------------------------
 
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local player = Players.LocalPlayer
-local camera = workspace.CurrentCamera
+if not game:IsLoaded() then game["Loaded"]:Wait() end
 
-function repos(ui, t, w, h)
-	if not t then t = 0.5 end
+-------------------------------------------------------------------------------------------------------------------------------
 
-	local screenWidth = game:GetService("Workspace").CurrentCamera.ViewportSize.X
-	local screenHeight = game:GetService("Workspace").CurrentCamera.ViewportSize.Y
+local players = game:GetService("Players")
+local runservice = game:GetService("RunService")
+local player = players["LocalPlayer"]
+local camera = workspace["CurrentCamera"]
 
-	local frameWidth = w
-	local frameHeight = h
-	local negative = 56
+-------------------------------------------------------------------------------------------------------------------------------
 
-	local centerX = (screenWidth - frameWidth) / 2
-	local centerY = (screenHeight - frameHeight) / 2 - negative
-	local tweenInfo = TweenInfo.new(t, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
+local screengui = Instance.new("ScreenGui")
+screengui["ResetOnSpawn"] = false
+if runservice:IsStudio() then screengui["Parent"] = player:WaitForChild("PlayerGui") else screengui["Parent"] = gethui and gethui() or game:GetService("CoreGui") end
 
-	local tween = game:GetService("TweenService"):Create(
-		ui,
-		tweenInfo,
-		{Position = UDim2.new(0, centerX, 0, centerY)}
-	)
-
-	tween:Play()
+function repos(ui, w, h)
+	local sw, sh = camera["ViewportSize"]["X"], camera["ViewportSize"]["Y"]
+	local cx, cy = (sw - w) / 2, (sh - h) / 2 - 56
+	ui["Position"] = UDim2.new(0, cx, 0, cy)
 end
 
-local toggle = false
 local button = Instance.new("TextButton")
-button.Size = UDim2.new(0, 48, 0, 48)
-button.Position = UDim2.new(0, 20, 0, 80)
-button.Text = "CL:X"
-button.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-button.BorderColor3 = Color3.new(1, 1, 1)
-button.TextColor3 = Color3.new(1, 1, 1)
-button.TextSize = 20
-button.Font = Enum.Font.RobotoMono
-button.TextWrapped = true
-button.Active = true
-button.Draggable = true
+button["Size"] = UDim2.new(0, 48, 0, 48)
+repos(button, 48, 48)
+button["Text"] = "CL:X"
+button["BackgroundColor3"] = Color3.fromRGB(0, 0, 0)
+button["BorderColor3"] = Color3.new(1, 1, 1)
+button["TextColor3"] = Color3.new(1, 1, 1)
+button["TextSize"] = 20
+button["Font"] = Enum.Font.RobotoMono
+button["TextWrapped"] = true
+button["Active"] = true
+button["Draggable"] = true
+button["Parent"] = screengui
 
 local buttonpad = Instance.new("UIPadding")
-buttonpad.PaddingTop = UDim.new(0, -2)
-buttonpad.Parent = button
+buttonpad["PaddingTop"] = UDim.new(0, -2)
+buttonpad["Parent"] = button
 
-local clik = Instance.new"Sound"
-clik.SoundId = "rbxassetid://226892749"
-clik.Parent = game.Workspace
-clik.Name = "canttouchthis"
-clik.Volume = 0.4
+local clik = Instance.new("Sound")
+clik["SoundId"] = "rbxassetid://226892749"
+clik["Parent"] = game["Workspace"]
+clik["Name"] = "canttouchthis"
+clik["Volume"] = 0.4
 
 function playclicksound()
-	local newSound = clik:Clone()
-	newSound.Parent = clik.Parent
-	newSound:Play()
-	newSound.Ended:Connect(function() newSound:Destroy() end)
+	local newsound = clik:Clone()
+	newsound["Parent"] = clik["Parent"]
+	newsound:Play()
+	newsound["Ended"]:Connect(function() newsound:Destroy() end)
 end
 
-repos(button, 0, 48, 48)
+-------------------------------------------------------------------------------------------------------------------------------
 
-local screenGui = Instance.new("ScreenGui")
-screenGui.ResetOnSpawn = false
-button.Parent = screenGui
+local toggle = false
 
-if RunService:IsStudio() then
-	screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-else
-	screenGui.Parent = gethui and gethui() or game:GetService("CoreGui")
-end
-
--- Helper function to check if a part should be considered obstructing
-local function isObstructing(part)
+local function isobstructing(part)
 	if not part then return false end
-	if part.Transparency >= 1 then return false end
-	if not part.CanCollide then return false end
-	if part:IsDescendantOf(player.Character) or part:IsDescendantOf(camera) then return false end
+	if part["Transparency"] >= 1 then return false end
+	if not part["CanCollide"] then return false end
+	if part:IsDescendantOf(player["Character"]) or part:IsDescendantOf(camera) then return false end
 	return true
 end
 
--- Main targeting function
-local function getClosestVisibleEnemyPart()
+local function getclosestvisibleenemypart()
 	local closest = nil
-	local minDist = math.huge
-	local screenCenter = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+	local mindist = math.huge
+	local screencenter = Vector2.new(camera["ViewportSize"]["X"] / 2, camera["ViewportSize"]["Y"] / 2)
 
-	for _, p in ipairs(Players:GetPlayers()) do
-		if p ~= player and p.Team ~= player.Team and p.Character and not p.Character:IsDescendantOf(camera) then
-			local char = p.Character
+	for _, p in ipairs(players:GetPlayers()) do
+		if p ~= player and p["Team"] ~= player["Team"] and p["Character"] and not p["Character"]:IsDescendantOf(camera) then
+			local char = p["Character"]
 			local head = char:FindFirstChild("Head")
 			local torso = char:FindFirstChild("UpperTorso") or char:FindFirstChild("HumanoidRootPart")
 			local humanoid = char:FindFirstChildOfClass("Humanoid")
 
-			if head and torso and humanoid and humanoid.Health > 0 then
-				local targetPart = math.random() < 0.3 and head or torso
-				local camLook = camera.CFrame.LookVector
-				local toTarget = (targetPart.Position - camera.CFrame.Position).Unit
+			if head and torso and humanoid and humanoid["Health"] > 0 then
+				local targetpart = math.random() < 0.3 and head or torso
+				local camlook = camera["CFrame"]["LookVector"]
+				local totarget = (targetpart["Position"] - camera["CFrame"]["Position"])["Unit"]
 
-				if camLook:Dot(toTarget) > 0.5 then
-					local screenPos, onScreen = camera:WorldToViewportPoint(targetPart.Position)
-					if onScreen then
-						local screenPoint = Vector2.new(screenPos.X, screenPos.Y)
-						local distFromCenter = (screenPoint - screenCenter).Magnitude
+				if camlook:Dot(totarget) > 0.5 then
+					local screenpos, onscreen = camera:WorldToViewportPoint(targetpart["Position"])
+					if onscreen then
+						local screenpoint = Vector2.new(screenpos["X"], screenpos["Y"])
+						local distfromcenter = (screenpoint - screencenter)["Magnitude"]
 
-						if distFromCenter <= 200 then
-							local rayOrigin = camera.CFrame.Position
-							local rayDir = (targetPart.Position - rayOrigin)
-							local ignoreList = {player.Character, camera}
-							local hit, _ = workspace:FindPartOnRayWithIgnoreList(Ray.new(rayOrigin, rayDir.Unit * rayDir.Magnitude), ignoreList)
+						if distfromcenter <= 200 then
+							local rayorigin = camera["CFrame"]["Position"]
+							local raydir = (targetpart["Position"] - rayorigin)
+							local ignorelist = {player["Character"], camera}
+							local hit, _ = workspace:FindPartOnRayWithIgnoreList(Ray.new(rayorigin, raydir["Unit"] * raydir["Magnitude"]), ignorelist)
 
-							while hit and not hit:IsDescendantOf(char) and not isObstructing(hit) do
-								table.insert(ignoreList, hit)
-								hit, _ = workspace:FindPartOnRayWithIgnoreList(Ray.new(rayOrigin, rayDir.Unit * rayDir.Magnitude), ignoreList)
+							while hit and not hit:IsDescendantOf(char) and not isobstructing(hit) do
+								table.insert(ignorelist, hit)
+								hit, _ = workspace:FindPartOnRayWithIgnoreList(Ray.new(rayorigin, raydir["Unit"] * raydir["Magnitude"]), ignorelist)
 							end
 
 							if hit and hit:IsDescendantOf(char) then
-								if distFromCenter < minDist then
-									minDist = distFromCenter
-									closest = targetPart
+								if distfromcenter < mindist then
+									mindist = distfromcenter
+									closest = targetpart
 								end
 							end
 						end
@@ -131,33 +114,36 @@ local function getClosestVisibleEnemyPart()
 	return closest
 end
 
--- Camera locking loop
-RunService.RenderStepped:Connect(function()
+runservice["RenderStepped"]:Connect(function()
 	if toggle then
-		local target = getClosestVisibleEnemyPart()
+		local target = getclosestvisibleenemypart()
 		if target then
-			local camPos = camera.CFrame.Position
-			local newLookVector = (target.Position - camPos).Unit
-			local newCF = CFrame.new(camPos, camPos + newLookVector)
+			local campos = camera["CFrame"]["Position"]
+			local newlookvector = (target["Position"] - campos)["Unit"]
+			local newcf = CFrame.new(campos, campos + newlookvector)
 
 			local alpha = 0.2
-			local easedAlpha
+			local easedalpha
 			if alpha < 0.5 then
-				easedAlpha = 2 * alpha * alpha
+				easedalpha = 2 * alpha * alpha
 			else
-				easedAlpha = -1 + (4 - 2 * alpha) * alpha
+				easedalpha = -1 + (4 - 2 * alpha) * alpha
 			end
 
-			camera.CFrame = camera.CFrame:Lerp(newCF, easedAlpha)
+			camera["CFrame"] = camera["CFrame"]:Lerp(newcf, easedalpha)
 		end
 	end
 end)
 
-button.MouseButton1Click:Connect(function()
+-------------------------------------------------------------------------------------------------------------------------------
+
+button["MouseButton1Click"]:Connect(function()
 	playclicksound()
 	toggle = not toggle
-	button.Text = toggle and "CL:O" or "CL:X"
-	button.BackgroundColor3 = toggle and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(0, 0, 0)
-	button.BorderColor3 = toggle and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255)
-	button.TextColor3 = toggle and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255)
+	button["Text"] = toggle and "CL:O" or "CL:X"
+	button["BackgroundColor3"] = toggle and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(0, 0, 0)
+	button["BorderColor3"] = toggle and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255)
+	button["TextColor3"] = toggle and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255)
 end)
+
+-------------------------------------------------------------------------------------------------------------------------------
