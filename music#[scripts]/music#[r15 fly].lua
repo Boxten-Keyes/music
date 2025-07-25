@@ -183,14 +183,19 @@ local moveVec = char.Humanoid.MoveDirection
 local hasInput = moveVec.Magnitude > 0.1
 local camLook = camera.CFrame.LookVector
 
--- Project camera's LookVector onto the horizontal plane
 local flatCamLook = Vector3.new(camLook.X, 0, camLook.Z).Unit
 local forwardDot = hasInput and flatCamLook:Dot(moveVec.Unit) or 0
 
--- Allow vertical movement when moving forward or backward
-local verticalY = (math.abs(forwardDot) > 0.7) and (camLook.Y * moveVec.Magnitude) or 0
+local verticalY = 0
+if math.abs(forwardDot) > 0.7 then
+    -- Flip vertical Y when moving backward
+    if forwardDot < 0 then
+        verticalY = -camLook.Y * moveVec.Magnitude
+    else
+        verticalY = camLook.Y * moveVec.Magnitude
+    end
+end
 
--- Combine horizontal movement and vertical tilt
 local flyDir = hasInput and Vector3.new(moveVec.X, verticalY, moveVec.Z).Unit or Vector3.new(0, 0.1, 0)
 
 		-- Determine animation direction
@@ -237,7 +242,25 @@ local flyDir = hasInput and Vector3.new(moveVec.X, verticalY, moveVec.Z).Unit or
 		bv.velocity = flyDir * speed
 
 		-- Camera tilt for effect
-		bg.CFrame = camera.CFrame * CFrame.Angles(-math.rad(50 * speed / FlySpeed), 0, 0)
+local moveVec = char.Humanoid.MoveDirection
+local camLook = camera.CFrame.LookVector
+local flatCamLook = Vector3.new(camLook.X, 0, camLook.Z).Unit
+local forwardDot = (moveVec.Magnitude > 0 and flatCamLook:Dot(moveVec.Unit)) or 0
+
+local tiltAngle = 0
+
+if forwardDot > 0.7 then
+    -- Tilt forward when flying forward
+    tiltAngle = -math.rad(50 * speed / FlySpeed)
+elseif forwardDot < -0.7 then
+    -- Tilt backward when flying backward (smaller angle)
+    tiltAngle = math.rad(25 * speed / FlySpeed)
+else
+    -- No tilt otherwise
+    tiltAngle = 0
+end
+
+bg.CFrame = camera.CFrame * CFrame.Angles(tiltAngle, 0, 0)
 	end
 
 	ctrl = {f = 0, b = 0, l = 0, r = 0}
