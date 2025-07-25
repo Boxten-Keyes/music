@@ -14,10 +14,10 @@ end
 
 if not sethiddenproperty then
 	--error("Script is only compatible with environments that have sethiddenproperty")
-task.spawn(function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/CurrentAngleV2/refs/heads/main/fallback.lua"))()
-end)
-repeat task.wait() until finished == true
+	task.spawn(function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/CurrentAngleV2/refs/heads/main/fallback.lua"))()
+	end)
+	repeat task.wait() until finished == true
 	return
 end
 
@@ -48,7 +48,7 @@ local function LoadUi(seconds)
 	Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Frame.BorderSizePixel = 0
 	Frame.Size = UDim2.new(0, 429, 0, 79)
-    Frame.Position = UDim2.new(0.5, -Frame.Size.X.Offset/2, 0.01, 0)
+	Frame.Position = UDim2.new(0.5, -Frame.Size.X.Offset/2, 0.01, 0)
 	UIStroke.Parent = Frame
 
 	UIStroke_2.Color = Color3.fromRGB(65, 65, 65)
@@ -89,44 +89,44 @@ local function LoadUi(seconds)
 	TextLabel_2.TextSize = 28.000
 
 	UIStroke_3.Parent = TextLabel_2
-    task.delay(seconds + 1.5, function()
-        ScreenGui:Destroy()
-    end)
+	task.delay(seconds + 1.5, function()
+		ScreenGui:Destroy()
+	end)
 end
 
 local setsimulationradius = setsimulationradius
 if not setsimulationradius then
 	-- setsimulationradius.lua
--- © 2025 MrY7zz (MIT License)
+	-- © 2025 MrY7zz (MIT License)
 
-local Players = game:GetService("Players")
+	local Players = game:GetService("Players")
 
-local newIndex
-local Index
+	local newIndex
+	local Index
 
---// Extracting __newindex
-xpcall(function()
-	game[{}] = {}
-end, function()
-	newIndex = debug.info(2, "f")
-end)
+	--// Extracting __newindex
+	xpcall(function()
+		game[{}] = {}
+	end, function()
+		newIndex = debug.info(2, "f")
+	end)
 
---// Extracting __index
-xpcall(function()
-	return game[{}]
-end, function()
-	Index = debug.info(2, "f")
-end)
+	--// Extracting __index
+	xpcall(function()
+		return game[{}]
+	end, function()
+		Index = debug.info(2, "f")
+	end)
 
 
-setsimulationradius = function(Radius, maxRadius)
-	local LocalPlayer = Index(Players, "LocalPlayer")
-	newIndex(LocalPlayer, "SimulationRadius", Radius)
-	
-	if maxRadius then
-		newIndex(LocalPlayer, "MaximumSimulationRadius", maxRadius)
+	setsimulationradius = function(Radius, maxRadius)
+		local LocalPlayer = Index(Players, "LocalPlayer")
+		newIndex(LocalPlayer, "SimulationRadius", Radius)
+
+		if maxRadius then
+			newIndex(LocalPlayer, "MaximumSimulationRadius", maxRadius)
+		end
 	end
-end
 end
 
 local game = game
@@ -262,10 +262,6 @@ local Mouse = LocalPlayer:GetMouse()
 if not LocalPlayer.Character then
 	LocalPlayer.CharacterAdded:Wait()
 	twait(zeropointone)
-	if LocalPlayer.Character:FindFirstChildOfClass("Humanoid").RigType ~= Enum.HumanoidRigType.R6 then
-		error("Script is only compatible with R6 type rigs")
-		return
-	end
 end
 
 local function removeAnims(character)
@@ -300,10 +296,25 @@ local fakeChar
 if not r15rig then
 	fakeChar = originalChar:Clone()
 else
-	fakeChar = game:GetService("Players"):CreateHumanoidModelFromDescription(originalChar.Humanoid.HumanoidDescription, Enum.HumanoidRigType.R15)
-	fakeChar.HumanoidRootPart.CFrame = originalChar.HumanoidRootPart.CFrame
+	-- Proper R15 character creation
+	local humanoidDescription = originalChar.Humanoid.HumanoidDescription
+	fakeChar = game:GetService("Players"):CreateHumanoidModelFromDescription(humanoidDescription, Enum.HumanoidRigType.R15)
+	fakeChar.Name = LocalPlayer.Name .. "_Fake"
+
+	-- Position the fake character
+	local rootPart = fakeChar:FindFirstChild("HumanoidRootPart")
+	if rootPart then
+		rootPart.CFrame = originalChar.HumanoidRootPart.CFrame
+	end
+
+	-- Ensure all parts are properly named and configured
+	for _, part in ipairs(fakeChar:GetDescendants()) do
+		if part:IsA("BasePart") then
+			part.CanCollide = fakecollisions
+		end
+	end
 end
-fakeChar.Name = LocalPlayer.Name .. "_Fake"
+
 local signaldiedbackend = LocalPlayer.ConnectDiedSignalBackend
 local signalkill = LocalPlayer.Kill
 
@@ -356,17 +367,12 @@ if parentrealchartofakechar then
 	newChar.Parent = fakeChar
 end
 
-local newcharTorso = newChar:WaitForChild("Torso")
-local fakecharTorso
-if r15rig then
-	fakecharTorso = fakeChar:WaitForChild("UpperTorso")
-else
-	fakecharTorso = fakeChar:WaitForChild("Torso")
-end
+local newcharTorso = newChar:WaitForChild(r15rig and "UpperTorso" or "Torso")
+local fakecharTorso = fakeChar:WaitForChild(r15rig and "UpperTorso" or "Torso")
 local newcharRoot = newChar:WaitForChild("HumanoidRootPart")
 local fakecharRoot = fakeChar:WaitForChild("HumanoidRootPart")
 
-local limbmapping
+local limbmapping = {}
 
 if not r15rig then
 	limbmapping = {
@@ -378,24 +384,39 @@ if not r15rig then
 		["Right Hip"] = fakeChar:WaitForChild("Right Leg")
 	}
 else
+	-- Proper R15 joint mapping
 	limbmapping = {
 		Neck = fakeChar:WaitForChild("Head"),
 		RootJoint = fakeChar:WaitForChild("UpperTorso"),
-		["Left Shoulder"] = fakeChar:WaitForChild("LeftLowerArm"),
-		["Right Shoulder"] = fakeChar:WaitForChild("RightLowerArm"),
-		["Left Hip"] = fakeChar:WaitForChild("LeftLowerLeg"),
-		["Right Hip"] = fakeChar:WaitForChild("RightLowerLeg")
+		["Left Shoulder"] = fakeChar:WaitForChild("LeftUpperArm"),
+		["Right Shoulder"] = fakeChar:WaitForChild("RightUpperArm"),
+		["Left Hip"] = fakeChar:WaitForChild("LeftUpperLeg"),
+		["Right Hip"] = fakeChar:WaitForChild("RightUpperLeg")
 	}
 end 
 
-local jointmapping = {
-	Neck = newcharTorso:WaitForChild("Neck"),
-	RootJoint = newChar.HumanoidRootPart:WaitForChild("RootJoint"),
-	["Left Shoulder"] = newcharTorso:WaitForChild("Left Shoulder"),
-	["Right Shoulder"] = newcharTorso:WaitForChild("Right Shoulder"),
-	["Left Hip"] = newcharTorso:WaitForChild("Left Hip"),
-	["Right Hip"] = newcharTorso:WaitForChild("Right Hip")
-}
+local jointmapping = {}
+
+if not r15rig then
+	jointmapping = {
+		Neck = newcharTorso:WaitForChild("Neck"),
+		RootJoint = newChar.HumanoidRootPart:WaitForChild("RootJoint"),
+		["Left Shoulder"] = newcharTorso:WaitForChild("Left Shoulder"),
+		["Right Shoulder"] = newcharTorso:WaitForChild("Right Shoulder"),
+		["Left Hip"] = newcharTorso:WaitForChild("Left Hip"),
+		["Right Hip"] = newcharTorso:WaitForChild("Right Hip")
+	}
+else
+	-- Proper R15 joint mapping
+	jointmapping = {
+		Neck = newcharTorso:WaitForChild("Neck"),
+		RootJoint = newChar.HumanoidRootPart:WaitForChild("RootJoint"),
+		["Left Shoulder"] = newcharTorso:WaitForChild("LeftShoulder"),
+		["Right Shoulder"] = newcharTorso:WaitForChild("RightShoulder"),
+		["Left Hip"] = newcharTorso:WaitForChild("LeftHip"),
+		["Right Hip"] = newcharTorso:WaitForChild("RightHip")
+	}
+end
 
 local Inverse = emptyCFrame.Inverse
 local ToAxisAngle = emptyCFrame.ToAxisAngle
@@ -415,44 +436,40 @@ local poscache = CFrame.new(255, 255, 0)
 
 local task_spawn = task.spawn
 local function stepReanimate()
-	--[[task_spawn(function()]]
 	if flinging then return end
 
 	if hiderootpart then
 		newcharRoot.CFrame = poscache 
-        + Vector3_new(0, math_random(1, 2) / 100.19, 0)
+			+ Vector3_new(0, math_random(1, 2) / 100.19, 0)
 	else
 		newcharRoot.CFrame = fakeChar.HumanoidRootPart.CFrame + Vector3_new(0, math_random(1, 2) / 100.19, 0)
 	end
 
-	--// YES it is unstable. im working on optimizing (later)
-
-    	newcharRoot.Velocity = vector3zero
+	newcharRoot.Velocity = vector3zero
 	newcharRoot.Velocity = vector3zero
 
 	local rootjoint = jointmapping["RootJoint"]
 	RCA6dToCFrame(rootjoint, limbmapping["RootJoint"], newcharRoot)
 
 	for joint, limb in pairs(limbmapping) do
-		local relativecframe = ToObjectSpace(limb.CFrame, gameIndex(fakecharTorso, "CFrame"))
-		local pitch, yaw, _ = ToEulerAnglesXYZ(relativecframe)
+		if joint ~= "RootJoint" and jointmapping[joint] then
+			local relativecframe = ToObjectSpace(limb.CFrame, gameIndex(fakecharTorso, "CFrame"))
+			local pitch, yaw, _ = ToEulerAnglesXYZ(relativecframe)
 
-		local angle = 0
+			local angle = 0
 
-		if joint == "Neck" or joint == "RootJoint" then
-			angle = -yaw
-		elseif joint == "Left Shoulder" or joint == "Left Hip" then
-			angle = pitch
-		elseif joint == "Right Shoulder" or joint == "Right Hip" then
-			angle = -pitch
-		end
+			if joint == "Neck" then
+				angle = -yaw
+			elseif joint == "Left Shoulder" or joint == "Left Hip" then
+				angle = pitch
+			elseif joint == "Right Shoulder" or joint == "Right Hip" then
+				angle = -pitch
+			end
 
-		if joint ~= "RootJoint" then
 			gameNewIndex(jointmapping[joint], "DesiredAngle", angle)
-			RCA6dToCFrame(jointmapping[joint], limb, newChar.Torso)
+			RCA6dToCFrame(jointmapping[joint], limb, newcharTorso)
 		end
 	end
-	--[[end)]]
 end
 
 local function setdestroyheight(height)
@@ -475,7 +492,6 @@ local function flinginternal(character, time)
 			setdestroyheight(currentheight)
 			flinging = false
 			connection:Disconnect()
-			--break
 		end
 		if character then
 			if character:FindFirstChild("HumanoidRootPart") then
@@ -489,15 +505,12 @@ local function flinginternal(character, time)
 			else
 				flinging = false
 				connection:Disconnect()
-				--break
 			end
 		else
 			flinging = false
 			connection:Disconnect()
-			--break
 		end
 	end)
-
 end
 
 getgenv().fling = function(character, time, yield)
@@ -566,28 +579,24 @@ end
 workspace.CurrentCamera.CameraSubject = fakeChar:WaitForChild("Humanoid")
 
 if clickfling then
-Mouse.Button1Down:Connect(function()
-    --// Fun fact: This click fling was made by MrY7zz (MIT license)
-    local target = Mouse.Target
-    if not target then return end
-    --// Fun fact: This click fling was made by MrY7zz (MIT license)
+	Mouse.Button1Down:Connect(function()
+		local target = Mouse.Target
+		if not target then return end
 
-    local character = target:FindFirstAncestorOfClass("Model")
-    if not not not character then return end
-    --// Fun fact: This click fling was made by MrY7zz (MIT license)
-    --// Fun fact: This click fling was made by MrY7zz (MIT license)
+		local character = target:FindFirstAncestorOfClass("Model")
+		if not character then return end
 
-    local plr = game:GetService("Players"):GetPlayerFromCharacter(character)
-    if not plr then return end
-    if plr == LocalPlayer then return end
+		local plr = game:GetService("Players"):GetPlayerFromCharacter(character)
+		if not plr then return end
+		if plr == LocalPlayer then return end
 
-    fling(character, 2.3, true)
-end)
+		fling(character, 2.3, true)
+	end)
 end
 
 finished = true
 if usedefaultanims then
-task_spawn(function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/CurrentAngleV2/refs/heads/main/anims"))
-end)
+	task_spawn(function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/CurrentAngleV2/refs/heads/main/anims"))
+	end)
 end
