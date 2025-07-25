@@ -1,8 +1,15 @@
-local pathToGithub = "https://raw.githubusercontent.com/xhayper/Animator/main/Source/"
+-------------------------------------------------------------------------------------------------------------------------------
 
+if not game:IsLoaded() then game["Loaded"]:Wait() end
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+local pathToGithub = "https://raw.githubusercontent.com/xhayper/Animator/main/Source/"
 local sub = string.sub
 
 getgenv().httpRequireCache = getgenv().httpRequireCache or {}
+
+-------------------------------------------------------------------------------------------------------------------------------
 
 getgenv().HttpRequire = function(path, noCache)
 	if sub(path, 1, 8) == "https://" or sub(path, 1, 7) == "http://" then
@@ -20,13 +27,16 @@ getgenv().HttpRequire = function(path, noCache)
 	end
 end
 
+-------------------------------------------------------------------------------------------------------------------------------
+
 getgenv().animatorRequire = function(path)
 	return HttpRequire(pathToGithub .. path)
 end
 
 getgenv().Animator = animatorRequire("Animator.lua")
-
 local Utility = animatorRequire("Utility.lua")
+
+-------------------------------------------------------------------------------------------------------------------------------
 
 getgenv().hookAnimatorFunction = function()
 	local OldFunc
@@ -41,9 +51,12 @@ getgenv().hookAnimatorFunction = function()
 		end
 		return Animator.new(Object.Parent, ...)
 	end)
-	-- Utility:sendNotif("Hook Loaded\nby whited#4382", nil, 5)
+	Utility:sendNotif("Hook Loaded\nby whited#4382", nil, 5)
 end
 
--- Utility:sendNotif("Animator API Loaded", nil, 5)
+-------------------------------------------------------------------------------------------------------------------------------
 
+Utility:sendNotif("Animator API Loaded", nil, 5)
 return "Nullware my beloved <3"
+
+-------------------------------------------------------------------------------------------------------------------------------
