@@ -296,6 +296,8 @@ button.MouseButton1Click:Connect(function()
 	if toggle then startFlying() else stopFlying() end
 	button.Text = toggle and "F:O" or "F:X"
 	button.BackgroundColor3 = toggle and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(0, 0, 0)
+	button.BorderColor3 = toggle and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255)
+	button.TextColor3 = toggle and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255)
 end)
 
 Players.LocalPlayer.Character:FindFirstChild("Humanoid").Died:Connect(function()
@@ -303,6 +305,6 @@ Players.LocalPlayer.Character:FindFirstChild("Humanoid").Died:Connect(function()
 	stopFlying()
 	button.Text = "F:X"
 	button.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	button.BorderColor3 = Color3.fromRGB(0, 0, 0)
-	button.TextColor3 = Color3.fromRGB(0, 0, 0)
+	button.BorderColor3 = Color3.fromRGB(255, 255, 255)
+	button.TextColor3 = Color3.fromRGB(255, 255, 255)
 end)
