@@ -1,140 +1,100 @@
---[[---------------------------------------------------------------------------------------------------------------------------
-  ______     __  __     __    __     ______   __  __     __  __     ______     __     ______    
- /\  ___\   /\ \_\ \   /\ "-./  \   /\  __ \ /\ \_\ \   /\ \_\ \   /\  ___\   /\ \   /\  ___\   
- \ \___  \  \ \____ \  \ \ \-./\ \  \ \  __/ \ \  __ \  \ \____ \  \ \___  \  \ \ \  \ \___  \  
-  \/\_____\  \/\_____\  \ \_\ \ \_\  \ \_\    \ \_\ \_\  \/\_____\  \/\_____\  \ \_\  \/\_____\ 
-   \/_____/   \/_____/   \/_/  \/_/   \/_/     \/_/\/_/   \/_____/   \/_____/   \/_/   \/_____/
-                                                                                                       
-   Made by Team Symphysis - FE Flip Tools
-   
----------------------------------------------------------------------------------------------------------------------------]]--
+-------------------------------------------------------------------------------------------------------------------------------
 
-task.wait(0.1)
+if not game:IsLoaded() then game["Loaded"]:Wait() end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-local player = game.Players.LocalPlayer
-local UserInputService = game:GetService("UserInputService")
+local plr = game["Players"]["LocalPlayer"]
 
-local function performfrontflip(character)
-	local humanoid = character:WaitForChild("Humanoid")
-	local rootPart = character:WaitForChild("HumanoidRootPart")
+function performflip(character, flipdirection)
+	local hum = character:WaitForChild("Humanoid")
+	local rootpart = character:WaitForChild("HumanoidRootPart")
 
-	humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-	humanoid.Sit = true
+	hum:ChangeState(Enum.HumanoidStateType.Jumping)
+	hum["Sit"] = true
 
-	local lookVector = rootPart.CFrame.LookVector
-	local spinDirection = Vector3.new(-lookVector.Z, 0, lookVector.X)
-
-	local torso = character:FindFirstChild("UpperTorso") or character:FindFirstChild("Torso")
-	if torso then
-		local bodyVelocity = Instance.new("BodyAngularVelocity", torso)
-		bodyVelocity.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-		bodyVelocity.AngularVelocity = spinDirection * -10
-		bodyVelocity.P = 1000
-
-		wait(0.4)
-		bodyVelocity:Destroy()
-	end
-
-	wait(0.2)
-	humanoid.Sit = false
-end
-
-local function performbackflip(character)
-	local humanoid = character:WaitForChild("Humanoid")
-	local rootPart = character:WaitForChild("HumanoidRootPart")
-
-	humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-	humanoid.Sit = true
-
-	local lookVector = rootPart.CFrame.LookVector
-	local spinDirection = Vector3.new(-lookVector.Z, 0, lookVector.X)
+	local lookvector = rootpart["CFrame"]["LookVector"]
+	local spindirection = Vector3.new(-lookvector["Z"], 0, lookvector["X"])
 
 	local torso = character:FindFirstChild("UpperTorso") or character:FindFirstChild("Torso")
 	if torso then
-		local bodyVelocity = Instance.new("BodyAngularVelocity", torso)
-		bodyVelocity.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-		bodyVelocity.AngularVelocity = spinDirection * 10
-		bodyVelocity.P = 1000
+		local bodyvelocity = Instance.new("BodyAngularVelocity", torso)
+		bodyvelocity["MaxTorque"] = Vector3.new(math.huge, math.huge, math.huge)
+		bodyvelocity["AngularVelocity"] = spindirection * (flipdirection * 10)
+		bodyvelocity["P"] = 1000
 
 		wait(0.4)
-		bodyVelocity:Destroy()
+		bodyvelocity:Destroy()
 	end
 
 	wait(0.2)
-	humanoid.Sit = false
+	hum["Sit"] = false
 end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-local function onToolActivated(tool)
-	local character = player.Character
-	if character then
-		if tool.Name == "frontflip" then
-			performfrontflip(character)
-		elseif tool.Name == "backflip" then
-			performbackflip(character)
+function ontoolactivated(tool)
+	local char = plr["Character"]
+	if char then
+		if tool["Name"] == "frontflip" then
+			performflip(char, -1)
+		elseif tool["Name"] == "backflip" then
+			performflip(char, 1)
 		end
 	end
 end
 
-local function connectToolEvents(tool)
+function connecttoolevents(tool)
 	if tool:IsA("Tool") then
-		tool.RequiresHandle = false
-		tool.Activated:Connect(function()
-			onToolActivated(tool)
+		tool["RequiresHandle"] = false
+		tool["Activated"]:Connect(function()
+			ontoolactivated(tool)
 		end)
 	end
 end
 
-local function giveTools()
-	local backpack = player:FindFirstChild("Backpack")
+function givetools()
+	local backpack = plr:FindFirstChild("Backpack")
 	if not backpack then return end
 
 	if not backpack:FindFirstChild("FrontFlipTool") then
-		local frontFlipTool = Instance.new("Tool")
-		frontFlipTool.Name = "frontflip"
-		frontFlipTool.RequiresHandle = false
-		frontFlipTool.Parent = backpack
-		connectToolEvents(frontFlipTool)
+		local frontfliptool = Instance.new("Tool")
+		frontfliptool["Name"] = "frontflip"
+		frontfliptool["RequiresHandle"] = false
+		frontfliptool["Parent"] = backpack
+		connecttoolevents(frontfliptool)
 	end
 
 	if not backpack:FindFirstChild("BackFlipTool") then
-		local backFlipTool = Instance.new("Tool")
-		backFlipTool.Name = "backflip"
-		backFlipTool.RequiresHandle = false
-		backFlipTool.Parent = backpack
-		connectToolEvents(backFlipTool)
+		local backfliptool = Instance.new("Tool")
+		backfliptool["Name"] = "backflip"
+		backfliptool["RequiresHandle"] = false
+		backfliptool["Parent"] = backpack
+		connecttoolevents(backfliptool)
 	end
 end
 
-local function initializeCharacter(character)
-	character:WaitForChild("Humanoid")
-	character:WaitForChild("HumanoidRootPart")
+function initializecharacter(char)
+	char:WaitForChild("Humanoid")
+	char:WaitForChild("HumanoidRootPart")
 
-	giveTools()
+	givetools()
 
-	local backpack = player:WaitForChild("Backpack")
+	local backpack = plr:WaitForChild("Backpack")
 	for _, tool in pairs(backpack:GetChildren()) do
-		connectToolEvents(tool)
+		connecttoolevents(tool)
 	end
 
-	backpack.ChildAdded:Connect(function(tool)
-		connectToolEvents(tool)
+	backpack["ChildAdded"]:Connect(function(tool)
+		connecttoolevents(tool)
 	end)
 end
 
-player.CharacterAdded:Connect(function(character)
-	initializeCharacter(character)
-end)
-
-if player.Character then
-	initializeCharacter(player.Character)
-end
+plr["CharacterAdded"]:Connect(function(char) initializecharacter(char) end)
+if plr["Character"] then initializecharacter(plr["Character"]) end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
+game["StarterGui"]:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, true)
 
 -------------------------------------------------------------------------------------------------------------------------------
