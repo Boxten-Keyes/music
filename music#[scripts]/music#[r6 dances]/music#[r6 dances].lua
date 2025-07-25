@@ -134,7 +134,7 @@ makeanim("Mesmerizer", "https://files.catbox.moe/k42abp.mp3", 107578737342278, 1
 makeanim("Locked", "https://files.catbox.moe/5vxthn.mp3", 76975616044095, 1)
 
 -- dance 12 (kazotsky kick)
-makeanim("Kazotsky Kick", "https://files.catbox.moe/3mupm8.mp3", 9158896160, 1)
+makeanim("Kazotsky Kick", "https://files.catbox.moe/3mupm8.mp3", 9158896160, 1, 0.5)
 
 -- dance 13 (who is you)
 makeanim("Who Is You", "https://files.catbox.moe/cqxyp6.mp3", 137714761719347, 1)
