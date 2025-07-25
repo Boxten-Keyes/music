@@ -1,139 +1,155 @@
-if not Game:IsLoaded() then Game.Loaded:Wait() end
+-------------------------------------------------------------------------------------------------------------------------------
 
-local Players = Game:GetService("Players")
-local RunService = Game:GetService("RunService")
-local Stats = Game:GetService("Stats")
+if not game:IsLoaded() then game["Loaded"]:Wait() end
 
-local NetworkStats = Stats:FindFirstChild("Network", false) or Stats:WaitForChild("Network", 60)
-local ServerStatsItem = NetworkStats:FindFirstChild("ServerStatsItem", false) or NetworkStats:WaitForChild("ServerStatsItem", 60)
-local DataPing = ServerStatsItem:FindFirstChild("Data Ping", false) or ServerStatsItem:WaitForChild("Data Ping", 60)
+-------------------------------------------------------------------------------------------------------------------------------
 
-local LocalPlayer = Players.LocalPlayer
-local LocalCharacter = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-local LocalHumanoid = LocalCharacter:FindFirstChildWhichIsA("Humanoid", false) or LocalCharacter:WaitForChild("Humanoid", 60)
-local LocalRootPart = LocalHumanoid and (LocalHumanoid.RootPart or LocalCharacter:WaitForChild("HumanoidRootPart", 60))
-local LocalCharacterClone = nil
+local players = game:GetService("Players")
+local runservice = game:GetService("RunService")
+local stats = game:GetService("Stats")
 
-local PingDivisionFactor = 500 -- 500 for the server and 1000 for the client
-local Connections = {}
-local PoseHistory = {}
+local networkstats = stats:FindFirstChild("Network", false) or stats:WaitForChild("Network", 60)
+local serverstatsitem = networkstats:FindFirstChild("ServerStatsItem", false) or networkstats:WaitForChild("ServerStatsItem", 60)
+local dataping = serverstatsitem:FindFirstChild("Data Ping", false) or serverstatsitem:WaitForChild("Data Ping", 60)
 
-local function CreateCharacterClone()
-	if LocalCharacterClone then
-		LocalCharacterClone:Destroy()
+local localplayer = players["LocalPlayer"]
+local localcharacter = localplayer["Character"] or localplayer["CharacterAdded"]:Wait()
+local localhumanoid = localcharacter:FindFirstChildWhichIsA("Humanoid", false) or localcharacter:WaitForChild("Humanoid", 60)
+local localrootpart = localhumanoid and (localhumanoid["RootPart"] or localcharacter:WaitForChild("HumanoidRootPart", 60))
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+local localcharacterclone = nil
+local pingdivisionfactor = 500 -- 500 for the server and 1000 for the client
+local connections = {}
+local posehistory = {}
+
+local function createcharacterclone()
+	if localcharacterclone then
+		localcharacterclone:Destroy()
 	end
 
 	task.wait(1)
 
-	LocalCharacter.Archivable = true
-	LocalCharacterClone = LocalCharacter:Clone()
-	LocalCharacterClone.Name = `{LocalCharacter.Name} Clone`
-	LocalCharacterClone.Parent = LocalCharacter.Parent
-	LocalCharacter.Archivable = false
+	localcharacter["Archivable"] = true
+	localcharacterclone = localcharacter:Clone()
+	localcharacterclone["Name"] = `{localcharacter["Name"]} Clone`
+	localcharacterclone["Parent"] = localcharacter["Parent"]
+	localcharacter["Archivable"] = false
 
-	for _, descendant in LocalCharacterClone:GetDescendants() do
+	for _, descendant in localcharacterclone:GetDescendants() do
 		if descendant:IsA("Motor6D") then
-			descendant.Enabled = false
+			descendant["Enabled"] = false
 		end
 	end
 
-	for _, descendant in LocalCharacterClone:GetDescendants() do
+	for _, descendant in localcharacterclone:GetDescendants() do
 		if descendant:IsA("BillboardGui") then
 			descendant:Destroy()
 		end
 	end
 end
 
-local function RecordPose(DeltaTime)
-	if not LocalCharacter or not LocalRootPart then return end
-	local CurrentTime = tick()
-	local BodyPartsCFrames = {}
+-------------------------------------------------------------------------------------------------------------------------------
 
-	for _, Descendant in LocalCharacter:GetDescendants() do
-		if not Descendant:IsA("BasePart") or Descendant == LocalRootPart then continue end
-		BodyPartsCFrames[Descendant.Name] = LocalRootPart.CFrame:ToObjectSpace(Descendant.CFrame)
+local function recordpose(deltatime)
+	if not localcharacter or not localrootpart then return end
+	local currenttime = tick()
+	local bodypartscframes = {}
+
+	for _, descendant in localcharacter:GetDescendants() do
+		if not descendant:IsA("BasePart") or descendant == localrootpart then continue end
+		bodypartscframes[descendant["Name"]] = localrootpart["CFrame"]:ToObjectSpace(descendant["CFrame"])
 	end
 
-	table.insert(PoseHistory, {
-		Time = CurrentTime,
-		Pivot = LocalCharacter:GetPivot(),
-		BodyPartsCFrames = BodyPartsCFrames
+	table.insert(posehistory, {
+		time = currenttime,
+		pivot = localcharacter:GetPivot(),
+		bodypartscframes = bodypartscframes
 	})
 
-	while #PoseHistory > 0 and (CurrentTime - PoseHistory[1].Time) > (1 / DeltaTime) do
-		table.remove(PoseHistory, 1)
+	while #posehistory > 0 and (currenttime - posehistory[1]["time"]) > (1 / deltatime) do
+		table.remove(posehistory, 1)
 	end
 end
 
-local function UpdateClonePose()
-	if not (LocalCharacterClone and LocalCharacter) then return end
+local function updateclonepose()
+	if not (localcharacterclone and localcharacter) then return end
 
-	local CurrentTime = tick()
-	local PingDelay = math.clamp(DataPing:GetValue() / PingDivisionFactor, 0, math.huge)
-	local TargetTime = CurrentTime - PingDelay
-	local TargetPose = nil
+	local currenttime = tick()
+	local pingdelay = math.clamp(dataping:GetValue() / pingdivisionfactor, 0, math.huge)
+	local targettime = currenttime - pingdelay
+	local targetpose = nil
 
-	for Index = #PoseHistory, 1, -1 do
-		if PoseHistory[Index].Time <= TargetTime then
-			TargetPose = PoseHistory[Index]
+	for index = #posehistory, 1, -1 do
+		if posehistory[index]["time"] <= targettime then
+			targetpose = posehistory[index]
 			break
 		end
 	end
 
-	if TargetPose then
-		LocalCharacterClone:PivotTo(TargetPose.Pivot)
+	if targetpose then
+		localcharacterclone:PivotTo(targetpose["pivot"])
 
-		for _, Child in LocalCharacterClone:GetChildren() do
-			if not Child:IsA("BasePart") or Child == LocalCharacterClone.Humanoid.RootPart then continue end
-			local RelativeCFrame = TargetPose.BodyPartsCFrames[Child.Name]
-			if not RelativeCFrame then continue end
-			Child.CFrame = LocalCharacterClone.Humanoid.RootPart.CFrame * RelativeCFrame
+		for _, child in localcharacterclone:GetChildren() do
+			if not child:IsA("BasePart") or child == localcharacterclone["Humanoid"]["RootPart"] then continue end
+			local relativecframe = targetpose["bodypartscframes"][child["Name"]]
+			if not relativecframe then continue end
+			child["CFrame"] = localcharacterclone["Humanoid"]["RootPart"]["CFrame"] * relativecframe
 		end
 	end
 end
 
-RunService:BindToRenderStep("Server Position Predictor", 1, function(DeltaTime)
-	RecordPose(DeltaTime)
-	UpdateClonePose()
+-------------------------------------------------------------------------------------------------------------------------------
 
-	if LocalCharacterClone then
-		LocalCharacterClone.Humanoid.DisplayDistanceType = "None"
-		LocalCharacterClone.Humanoid.PlatformStand = true
+runservice:BindToRenderStep("Server Position Predictor", 1, function(deltatime)
+	recordpose(deltatime)
+	updateclonepose()
 
-		for _, Animation in LocalCharacterClone.Humanoid:GetPlayingAnimationTracks() do
-			Animation:Stop()
+	if localcharacterclone then
+		localcharacterclone["Humanoid"]["DisplayDistanceType"] = "None"
+		localcharacterclone["Humanoid"]["PlatformStand"] = true
+
+		for _, animation in localcharacterclone["Humanoid"]:GetPlayingAnimationTracks() do
+			animation:Stop()
 		end
 
-		for _, Descendant in LocalCharacterClone:GetDescendants() do
-			if Descendant:IsA("BasePart") then
-				Descendant.CanCollide = false
-				Descendant.CanTouch = false
-				Descendant.CanQuery = false
-				Descendant.Anchored = false
-				if Descendant.Transparency ~= 1 then Descendant.Transparency = 0.5 end
-			elseif Descendant:IsA("Script") or Descendant:IsA("LocalScript") or Descendant:IsA("ForceField") then
-				Descendant:Destroy()
+		for _, descendant in localcharacterclone:GetDescendants() do
+			if descendant:IsA("BasePart") then
+				descendant["CanCollide"] = false
+				descendant["CanTouch"] = false
+				descendant["CanQuery"] = false
+				descendant["Anchored"] = false
+				if descendant["Transparency"] ~= 1 then descendant["Transparency"] = 0.5 end
+			elseif descendant:IsA("Script") or descendant:IsA("LocalScript") or descendant:IsA("ForceField") then
+				descendant:Destroy()
 			end
 		end
 	end
 end)
 
-LocalPlayer.CharacterAdded:Connect(function(Character)
-	LocalCharacter = Character
-	LocalHumanoid = LocalCharacter:FindFirstChildWhichIsA("Humanoid", false) or LocalCharacter:WaitForChild("Humanoid", 60)
-	LocalRootPart = LocalHumanoid.RootPart or LocalCharacter:WaitForChild("HumanoidRootPart", 60)
-	CreateCharacterClone()
+-------------------------------------------------------------------------------------------------------------------------------
+
+localplayer["CharacterAdded"]:Connect(function(character)
+	localcharacter = character
+	localhumanoid = localcharacter:FindFirstChildWhichIsA("Humanoid", false) or localcharacter:WaitForChild("Humanoid", 60)
+	localrootpart = localhumanoid["RootPart"] or localcharacter:WaitForChild("HumanoidRootPart", 60)
+	createcharacterclone()
 end)
 
-LocalPlayer.CharacterRemoving:Connect(function()
-	LocalCharacter = nil
-	LocalHumanoid = nil
-	LocalRootPart = nil
-	if LocalCharacterClone then
-		LocalCharacterClone:Destroy()
-		LocalCharacterClone = nil
+localplayer["CharacterRemoving"]:Connect(function()
+	localcharacter = nil
+	localhumanoid = nil
+	localrootpart = nil
+	if localcharacterclone then
+		localcharacterclone:Destroy()
+		localcharacterclone = nil
 	end
-	PoseHistory = {}
+	posehistory = {}
 end)
 
-CreateCharacterClone()
+-------------------------------------------------------------------------------------------------------------------------------
+
+createcharacterclone()
+
+-------------------------------------------------------------------------------------------------------------------------------
