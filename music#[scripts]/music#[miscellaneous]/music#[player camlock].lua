@@ -146,4 +146,16 @@ button["MouseButton1Click"]:Connect(function()
 	button["TextColor3"] = toggle and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255)
 end)
 
+game["UserInputService"].InputBegan:Connect(function(input)
+	local key = input.KeyCode
+	if key == Enum.KeyCode.R then
+		playclicksound()
+		toggle = not toggle
+		button["Text"] = toggle and "CL:O" or "CL:X"
+		button["BackgroundColor3"] = toggle and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(0, 0, 0)
+		button["BorderColor3"] = toggle and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255)
+		button["TextColor3"] = toggle and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255)
+	end
+end)
+
 -------------------------------------------------------------------------------------------------------------------------------
