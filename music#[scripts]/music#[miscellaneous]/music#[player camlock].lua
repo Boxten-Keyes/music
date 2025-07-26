@@ -162,7 +162,7 @@ runservice["RenderStepped"]:Connect(function()
 			local newlookvector = (target["Position"] - campos)["Unit"]
 			local newcf = CFrame.new(campos, campos + newlookvector)
 
-			local alpha = 0.2
+			local alpha = 0.3
 			local easedalpha
 			if alpha < 0.5 then
 				easedalpha = 2 * alpha * alpha
