@@ -8,7 +8,10 @@ function iskillbrick(part)
     if not part:IsA("BasePart") then return false end
 
     local namelower = part["Name"]:lower()
-    if namelower:find("kill") or namelower:find("lava") then
+    if namelower:find("kill") or namelower:find("lava") or 
+    namelower:find("kil") or namelower:find("death") or namelower:find("die") 
+    or namelower:find("dead") or namelower:find("killbrick") or namelower:find("deadly") 
+    or namelower:find("zerohealth") or namelower:find("health") then
         return true
     end
 
@@ -28,9 +31,7 @@ end
 function disablekillbrick(part)
     part["CanTouch"] = false
     part["CanCollide"] = false
-    part["Transparency"] = 0.5
-    part["Material"] = Enum.Material.Neon
-    part["BrickColor"] = BrickColor.new("Really black")
+    part["Transparency"] = 0.7
 
     for _, scriptobj in ipairs(part:GetDescendants()) do
         if scriptobj:IsA("Script") or scriptobj:IsA("LocalScript") then
