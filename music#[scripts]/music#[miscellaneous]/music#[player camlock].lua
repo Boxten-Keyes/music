@@ -24,7 +24,7 @@ end
 local button = Instance.new("TextButton")
 button["Size"] = UDim2.new(0, 46, 0, 46)
 repos(button, 48, 48)
-button["Text"] = "F:X"
+button["Text"] = "CL:X"
 button["BackgroundColor3"] = Color3.fromRGB(0, 0, 0)
 button["TextColor3"] = Color3.new(1, 1, 1)
 button["TextSize"] = 20
