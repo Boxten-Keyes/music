@@ -115,7 +115,7 @@ for i = 1, #currentplayers do
 end
 
 players["PlayerAdded"]:Connect(function()
-	task.wait(0.1)
+	task.wait(0.5)
 	hiderobloxnametags()
 	nametags()
 end)
