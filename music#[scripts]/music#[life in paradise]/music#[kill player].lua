@@ -105,9 +105,10 @@ local function yeetPlayer(target)
 
 	Workspace.FallenPartsDestroyHeight = 0 / 0
 	hrp.CFrame = CFrame.new(0, -3000, 0)
-	task.wait(0.4)
+	task.wait(0.2)
 
 	stroller.Parent = LocalPlayer.Backpack
+ 	task.wait(0.2)
 
 	hrp.CFrame = oldcframe
 	task.wait(0.1)
