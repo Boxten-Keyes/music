@@ -166,15 +166,12 @@ local function bringPlayer(target)
 	stroller.Parent = char
 	task.wait(0.1)
 
-	-- No void teleport here, just bring them close
+	hrp.CFrame = oldcframe
+	task.wait(0.1)
 
+	hrp.CFrame = oldcframe
 	stroller.Parent = LocalPlayer.Backpack
-	task.wait(0.1)
 
-	hrp.CFrame = oldcframe
-	task.wait(0.1)
-
-	hrp.CFrame = oldcframe
 	strollerbringing = false
 end
 
