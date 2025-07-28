@@ -38,13 +38,23 @@ activateButton.BackgroundColor3 = Color3.fromRGB(90, 0, 0)
 activateButton.Font = Enum.Font.SourceSansBold
 activateButton.TextSize = 16
 
--- Utility: Get closest matching player
 local function getTargetPlayer(partial)
+	partial = partial:lower()
+
+	-- First, try to match by DisplayName
 	for _, player in ipairs(Players:GetPlayers()) do
-		if player ~= LocalPlayer and player.Name:lower():find(partial:lower()) then
+		if player ~= LocalPlayer and player.DisplayName:lower():find(partial) then
 			return player
 		end
 	end
+
+	-- If no display name matched, fall back to username
+	for _, player in ipairs(Players:GetPlayers()) do
+		if player ~= LocalPlayer and player.Name:lower():find(partial) then
+			return player
+		end
+	end
+
 	return nil
 end
 
