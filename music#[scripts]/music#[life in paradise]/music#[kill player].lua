@@ -65,6 +65,8 @@ local function yeetPlayer(target)
 	local targetHRP = targetChar:FindFirstChild("HumanoidRootPart")
 	if not targetHRP then return end
 
+ oldcframe = hrp.CFrame
+
 	-- Bring target in front of you
 	targetHRP.CFrame = hrp.CFrame * CFrame.new(0, 0, -5)
 	task.wait(0.1)
@@ -82,10 +84,10 @@ local function yeetPlayer(target)
 	stroller.Parent = LocalPlayer.Backpack
 
 	-- Return
-	hrp.CFrame = CFrame.new(0, 10, 0)
+	hrp.CFrame = oldcframe
 	task.wait(0.1)
 
-	hrp.CFrame = CFrame.new(0, 10, 0)
+	hrp.CFrame = oldcframe
 end
 
 -- Button click connection
