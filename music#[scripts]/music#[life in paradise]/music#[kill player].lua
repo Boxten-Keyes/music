@@ -62,12 +62,17 @@ local function yeetPlayer(target)
 	local targetChar = target.Character
 	if not targetChar then return end
 
+	-- Abort if target has stroller
+	if targetChar:FindFirstChild("Stroller") then
+		return warn("Target has a stroller equipped. Aborting yeet.")
+	end
+
 	local targetHRP = targetChar:FindFirstChild("HumanoidRootPart")
 	if not targetHRP then return end
 
- oldcframe = hrp.CFrame
+	local oldcframe = hrp.CFrame
 
-	-- Bring target in front of you
+	-- Bring target in front
 	targetHRP.CFrame = hrp.CFrame * CFrame.new(0, 0, -5)
 	task.wait(0.1)
 
@@ -75,19 +80,34 @@ local function yeetPlayer(target)
 	stroller.Parent = char
 	task.wait(0.1)
 
-	-- Bring player to void
-	Workspace.FallenPartsDestroyHeight = 0 / 0
+	-- Send to void
+	Workspace.FallenPartsDestroyHeight = math.huge * -1
 	hrp.CFrame = CFrame.new(0, -2000, 0)
 	task.wait(0.4)
 
 	-- Unequip
 	stroller.Parent = LocalPlayer.Backpack
 
-	-- Return
+	-- Wait until target dies or timeout (5s)
+	local humanoid = targetChar:FindFirstChildOfClass("Humanoid")
+	if humanoid then
+		local died = false
+		local connection
+		connection = humanoid.Died:Connect(function()
+			died = true
+			connection:Disconnect()
+		end)
+
+		local timeout = 5
+		while not died and timeout > 0 do
+			task.wait(0.1)
+			timeout -= 0.1
+		end
+	end
+
+	-- Return to original position
 	hrp.CFrame = oldcframe
 	task.wait(0.1)
-
-	hrp.CFrame = oldcframe
 end
 
 -- Button click connection
