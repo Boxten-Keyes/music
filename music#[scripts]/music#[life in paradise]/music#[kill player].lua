@@ -58,11 +58,15 @@ local function getTargetPlayer(partial)
 	return nil
 end
 
+local strollerkilling = false
+
 -- Core action logic
 local function yeetPlayer(target)
 	local char = LocalPlayer.Character
 	local hrp = char and char:FindFirstChild("HumanoidRootPart")
 	if not hrp then return end
+ if strollerkilling then return end
+ strollerkilling = true
 
 	local stroller = LocalPlayer.Backpack:FindFirstChild("Stroller") or char:FindFirstChild("Stroller")
 	if not stroller then
@@ -99,6 +103,7 @@ local function yeetPlayer(target)
 	task.wait(0.1)
 
 	hrp.CFrame = oldcframe
+ strollerkilling = false
 end
 
 -- Button click connection
