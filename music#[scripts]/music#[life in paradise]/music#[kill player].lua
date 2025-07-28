@@ -41,14 +41,30 @@ activateButton.TextSize = 16
 local function getTargetPlayer(partial)
 	partial = partial:lower()
 
-	-- First, try to match by DisplayName
+	if partial == "random" then
+		local candidates = {}
+		for _, player in ipairs(Players:GetPlayers()) do
+			if player ~= LocalPlayer then
+				table.insert(candidates, player)
+			end
+		end
+		if #candidates > 0 then
+			return candidates[math.random(1, #candidates)]
+		else
+			return nil
+		end
+	end
+
+	if partial == "all" or partial == "others" then
+		return partial
+	end
+
 	for _, player in ipairs(Players:GetPlayers()) do
 		if player ~= LocalPlayer and player.DisplayName:lower():find(partial) then
 			return player
 		end
 	end
 
-	-- If no display name matched, fall back to username
 	for _, player in ipairs(Players:GetPlayers()) do
 		if player ~= LocalPlayer and player.Name:lower():find(partial) then
 			return player
@@ -60,7 +76,6 @@ end
 
 local strollerkilling = false
 
--- Core action logic
 local function yeetPlayer(target)
 	local char = LocalPlayer.Character
 	local hrp = char and char:FindFirstChild("HumanoidRootPart")
@@ -82,23 +97,18 @@ local function yeetPlayer(target)
 
  oldcframe = hrp.CFrame
 
-	-- Bring target in front of you
 	targetHRP.CFrame = hrp.CFrame * CFrame.new(0, 0, -5)
 	task.wait(0.1)
 
-	-- Equip stroller
 	stroller.Parent = char
 	task.wait(0.1)
 
-	-- Bring player to void
 	Workspace.FallenPartsDestroyHeight = 0 / 0
 	hrp.CFrame = CFrame.new(0, -3000, 0)
 	task.wait(0.4)
 
-	-- Unequip
 	stroller.Parent = LocalPlayer.Backpack
 
-	-- Return
 	hrp.CFrame = oldcframe
 	task.wait(0.1)
 
@@ -106,18 +116,26 @@ local function yeetPlayer(target)
  strollerkilling = false
 end
 
--- Button click connection
 activateButton.MouseButton1Click:Connect(function()
 	local input = usernameBox.Text
 	local target = getTargetPlayer(input)
+
 	if not target then
 		warn("No matching player found.")
 		return
 	end
 
-	-- Perform the stroller yeet repeatedly (optional loop)
-	for i = 1, 1 do
+	if target == "all" or target == "others" then
+		for _, player in ipairs(Players:GetPlayers()) do
+			if player ~= LocalPlayer then
+				local char = player.Character
+				if char and not (char:FindFirstChild("Stroller")) then
+					yeetPlayer(player)
+					task.wait(0.5)
+				end
+			end
+		end
+	else
 		yeetPlayer(target)
-		task.wait(0.5)
 	end
 end)
