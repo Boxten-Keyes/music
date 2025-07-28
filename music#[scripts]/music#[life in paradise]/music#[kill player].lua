@@ -164,7 +164,7 @@ local function bringPlayer(target)
 	task.wait(0.1)
 
 	stroller.Parent = char
-	task.wait(0.1)
+	task.wait(0.3)
 
 	hrp.CFrame = oldcframe
 	task.wait(0.1)
