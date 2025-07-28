@@ -7,12 +7,15 @@ local StarterGui = game:GetService("StarterGui")
 -- Create GUI
 local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
 screenGui.Name = "StrollerAbuseGui"
+screenGui.ResetOnSpawn = false
 
 local frame = Instance.new("Frame", screenGui)
 frame.Size = UDim2.new(0, 250, 0, 120)
 frame.Position = UDim2.new(0, 20, 0.4, 0)
 frame.BackgroundTransparency = 0.1
 frame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+frame.Draggable = true
+frame.Active = true
 
 local usernameBox = Instance.new("TextBox", frame)
 usernameBox.Size = UDim2.new(1, -20, 0, 30)
@@ -71,16 +74,18 @@ local function yeetPlayer(target)
 	task.wait(0.1)
 
 	-- Bring player to void
-	Workspace.FallenPartsDestroyHeight = 0
+	Workspace.FallenPartsDestroyHeight = 0 / 0
 	hrp.CFrame = CFrame.new(0, -1000, 0)
 	task.wait(0.2)
+
+	-- Unequip
+	stroller.Parent = LocalPlayer.Backpack
 
 	-- Return
 	hrp.CFrame = CFrame.new(0, 10, 0)
 	task.wait(0.1)
 
-	-- Unequip
-	stroller.Parent = LocalPlayer.Backpack
+	hrp.CFrame = CFrame.new(0, 10, 0)
 end
 
 -- Button click connection
