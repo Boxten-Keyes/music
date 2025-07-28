@@ -88,7 +88,7 @@ local function yeetPlayer(target)
 
 	-- Bring player to void
 	Workspace.FallenPartsDestroyHeight = 0 / 0
-	hrp.CFrame = CFrame.new(0, -2000, 0)
+	hrp.CFrame = CFrame.new(0, -3000, 0)
 	task.wait(0.4)
 
 	-- Unequip
