@@ -33,7 +33,7 @@ local function nametags(player)
 		frame["Parent"] = nametag
 
 		local username = Instance.new("TextLabel")
-		username["Size"] = UDim2.new(1, 0, 0.14, 0)
+		username["Size"] = UDim2.new(10, 0, 0.14, 0)
 		username["Text"] = "(@" .. player["Name"] .. ")"
 		-- username["Text"] = "(@gayestboxten)"
 		username["AnchorPoint"] = Vector2.new(0.5, 0.5)
@@ -48,7 +48,7 @@ local function nametags(player)
 		username["Parent"] = frame
 
 		local displayname = Instance.new("TextLabel")
-		displayname["Size"] = UDim2.new(2, 0, 0.24, 0)
+		displayname["Size"] = UDim2.new(10, 0, 0.24, 0)
 		displayname["BackgroundTransparency"] = 1
 		displayname["Text"] = player["DisplayName"]
 		-- displayname["Text"] = "GayestBoxten"
