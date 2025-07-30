@@ -121,6 +121,11 @@ apply()
 players["PlayerAdded"]:Connect(function()
 	task.wait(0.5)
 	apply()
+	hiderobloxnametags()
+	hiderobloxnametags()
+	hiderobloxnametags()
+	hiderobloxnametags()
+	hiderobloxnametags()
 end)
 
 -------------------------------------------------------------------------------------------------------------------------------
