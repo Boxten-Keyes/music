@@ -105,19 +105,21 @@ local function hiderobloxnametags()
 	end
 end
 
--------------------------------------------------------------------------------------------------------------------------------
-
-local currentplayers = players:GetPlayers()
-for i = 1, #currentplayers do
+local function apply()
+	local currentplayers = players:GetPlayers()
+	for i = 1, #currentplayers do
 	local player = currentplayers[i]
 	nametags(player)
 	hiderobloxnametags()
 end
 
+-------------------------------------------------------------------------------------------------------------------------------
+
+apply()
+
 players["PlayerAdded"]:Connect(function()
 	task.wait(0.5)
-	hiderobloxnametags()
-	nametags()
+	apply()
 end)
 
 -------------------------------------------------------------------------------------------------------------------------------
