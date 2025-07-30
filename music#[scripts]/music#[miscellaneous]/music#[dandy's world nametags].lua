@@ -108,9 +108,10 @@ end
 local function apply()
 	local currentplayers = players:GetPlayers()
 	for i = 1, #currentplayers do
-	local player = currentplayers[i]
-	nametags(player)
-	hiderobloxnametags()
+		local player = currentplayers[i]
+		nametags(player)
+		hiderobloxnametags()
+	end
 end
 
 -------------------------------------------------------------------------------------------------------------------------------
