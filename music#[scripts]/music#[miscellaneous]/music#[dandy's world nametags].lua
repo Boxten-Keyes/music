@@ -14,8 +14,12 @@ local friendsbadge = "rbxassetid://18207951972"
 
 local function nametags(player)
 	local function oncharacteradded(character)
-		local humanoidrootpart = character:WaitForChild("HumanoidRootPart", 0.5)
-		local head = character:WaitForChild("Head", 0.5)
+		local head = character:WaitForChild("Head", 3)
+		
+		local humanoid = character:FindFirstChildOfClass("Humanoid")
+		if humanoid then
+			humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+		end
 
 		local nametag = Instance.new("BillboardGui")
 		nametag["Size"] = UDim2.new(3, 0, 3, 0)
@@ -87,45 +91,21 @@ local function nametags(player)
 		corner["Parent"] = line
 	end
 
-	player["CharacterAdded"]:Connect(oncharacteradded)
-
-	if player["Character"] then
-		oncharacteradded(player["Character"])
-	end
-end
-
-local function hiderobloxnametags()
-	for _, player in ipairs(players:GetPlayers()) do
-		if player["Character"] then
-			local humanoid = player["Character"]:FindFirstChildOfClass("Humanoid")
-			if humanoid then
-				humanoid["DisplayDistanceType"] = Enum.HumanoidDisplayDistanceType.None
-			end
-		end
-	end
-end
-
-local function apply()
-	local currentplayers = players:GetPlayers()
-	for i = 1, #currentplayers do
-		local player = currentplayers[i]
-		nametags(player)
-		hiderobloxnametags()
+	player.CharacterAdded:Connect(oncharacteradded)
+	
+	if player.Character then
+		oncharacteradded(player.Character)
 	end
 end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-apply()
+for _, player in ipairs(players:GetPlayers()) do
+	nametags(player)
+end
 
-players["PlayerAdded"]:Connect(function()
-	task.wait(0.5)
-	apply()
-	hiderobloxnametags()
-	hiderobloxnametags()
-	hiderobloxnametags()
-	hiderobloxnametags()
-	hiderobloxnametags()
+players["PlayerAdded"]:Connect(function(player)
+	nametags(player)
 end)
 
 -------------------------------------------------------------------------------------------------------------------------------
