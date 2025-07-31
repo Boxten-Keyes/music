@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------------------------------------------
 
-if not game:IsLoaded() then game["Loaded"]:Wait() end
+if not game:IsLoaded() then game["Loaded"]:Wait() end task.wait(1)
 
 -------------------------------------------------------------------------------------------------------------------------------
 
@@ -315,6 +315,21 @@ button["MouseButton1Click"]:Connect(function()
 	buttonbor["BorderColor3"] = flytoggle and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(0, 0, 0)
 	button["TextColor3"] = flytoggle and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255)
 	if flytoggle then startflying() else stopflying() resetanims() end
+end)
+
+game["UserInputService"].InputBegan:Connect(function(input, gameProcessed)
+	if gameProcessed then return end
+	local key = input.KeyCode
+	if key == Enum.KeyCode.E then
+		playclicksound()
+		flytoggle = not flytoggle
+		button["Text"] = flytoggle and "F:O" or "F:X"
+		button["BackgroundColor3"] = flytoggle and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(0, 0, 0)
+		buttonbor["BackgroundColor3"] = flytoggle and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255)
+		buttonbor["BorderColor3"] = flytoggle and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(0, 0, 0)
+		button["TextColor3"] = flytoggle and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255)
+		if flytoggle then startflying() else stopflying() resetanims() end
+	end
 end)
 
 player["CharacterAdded"]:Connect(function()
