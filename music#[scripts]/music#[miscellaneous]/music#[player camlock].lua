@@ -187,7 +187,8 @@ button["MouseButton1Click"]:Connect(function()
 	button["TextColor3"] = toggle and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255)
 end)
 
-game["UserInputService"].InputBegan:Connect(function(input)
+game["UserInputService"].InputBegan:Connect(function(input, gameProcessed)
+	if gameProcessed then return end
 	local key = input.KeyCode
 	if key == Enum.KeyCode.R then
 		playclicksound()
