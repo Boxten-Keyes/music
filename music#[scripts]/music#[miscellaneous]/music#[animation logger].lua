@@ -262,8 +262,49 @@ local function createlogentry(animationname, animationid, source)
 	copybutton["TextColor3"] = Color3.new(1, 1, 1)
 	copybutton["TextSize"] = 14
 	copybutton["Parent"] = entryframe
+	
+	local track = nil
+	
+	playbutton["MouseButton1Click"]:Connect(function()
+		if localplayer.Character then
+			local humanoid = localplayer.Character:FindFirstChildOfClass("Humanoid")
+			if humanoid then
+				if track then
+					track:Stop()
+					track = nil
+				end
+
+				local animation = Instance.new("Animation")
+				animation.AnimationId = "rbxassetid://" .. numericid
+
+				track = humanoid:LoadAnimation(animation)
+				track:Play()
+
+				playbutton.Text = "Playing"
+				task.delay(1, function()
+					if playbutton then
+						playbutton.Text = "Play"
+					end
+				end)
+			end
+		end
+	end)
+
+	stopbutton["MouseButton1Click"]:Connect(function()
+		if track then
+			track:Stop()
+			track = nil
+			stopbutton.Text = "Stopped"
+			task.delay(1, function()
+				if stopbutton then
+					stopbutton.Text = "Stop"
+				end
+			end)
+		end
+	end)
 
 	copybutton["MouseButton1Click"]:Connect(function()
+		clik()
 		local justid = string.gsub(animationid, "rbxassetid://", "")
 		if setclipboard then
 			setclipboard(justid)
