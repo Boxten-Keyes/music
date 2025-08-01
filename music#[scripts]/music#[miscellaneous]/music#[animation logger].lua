@@ -280,6 +280,7 @@ local function createlogentry(animationname, animationid, source)
 
 				track = humanoid:LoadAnimation(animation)
 				track:Play()
+				track:AdjustWeight(999)
 
 				playbutton.Text = "Playing"
 				task.delay(1, function()
