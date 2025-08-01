@@ -266,6 +266,7 @@ local function createlogentry(animationname, animationid, source)
 	local track = nil
 	
 	playbutton["MouseButton1Click"]:Connect(function()
+		clik()
 		if localplayer.Character then
 			local humanoid = localplayer.Character:FindFirstChildOfClass("Humanoid")
 			if humanoid then
@@ -291,6 +292,7 @@ local function createlogentry(animationname, animationid, source)
 	end)
 
 	stopbutton["MouseButton1Click"]:Connect(function()
+		clik()
 		if track then
 			track:Stop()
 			track = nil
