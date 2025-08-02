@@ -24,8 +24,8 @@ end
 
 local function adadad()
 	while adingrunning do
-		k(Enum["KeyCode"]["A"]) if not adingrunning then break end task.wait()
-		k(Enum["KeyCode"]["D"]) if not adingrunning then break end task.wait()
+		p(Enum["KeyCode"]["A"]) if not adingrunning then break end task.wait()
+		p(Enum["KeyCode"]["D"]) if not adingrunning then break end task.wait()
 	end
 end
 
