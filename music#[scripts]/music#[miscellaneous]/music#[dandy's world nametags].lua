@@ -17,9 +17,9 @@ local function nametags(player)
 		local head = character:WaitForChild("Head", 3)
 		
 		local humanoid = character:FindFirstChildOfClass("Humanoid")
-		if humanoid then
-			humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
-		end
+		if humanoid then humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None end
+		if humanoid then humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None end
+		if humanoid then humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None end
 
 		local nametag = Instance.new("BillboardGui")
 		nametag["Size"] = UDim2.new(3, 0, 3, 0)
@@ -92,9 +92,11 @@ local function nametags(player)
 	end
 
 	player.CharacterAdded:Connect(oncharacteradded)
+	if humanoid then humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None end
 	
 	if player.Character then
 		oncharacteradded(player.Character)
+		if humanoid then humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None end
 	end
 end
 
