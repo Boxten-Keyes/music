@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------------------------------------------------
 
-if not game:IsLoaded() then game["Loaded"]:Wait() end
+if not game:IsLoaded() then game["Loaded"]:Wait() end task.wait(1)
 
 -------------------------------------------------------------------------------------------------------------------------------
 
@@ -24,7 +24,7 @@ end
 
 local gui = Instance.new("ScreenGui")
 gui["Name"] = "AnimationPlayer"
-gui["Parent"] = gethui and gethui() or game:GetService("CoreGui")
+if game["Run Service"]:IsStudio() then gui["Parent"] = localplayer:WaitForChild("PlayerGui") else gui["Parent"] = gethui and gethui() or game:GetService("CoreGui") end
 gui["ResetOnSpawn"] = false
 
 local function repos(ui, w, h)
@@ -161,7 +161,7 @@ buttonlayout["Parent"] = buttoncontainer
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-local originalButtons = {}
+local oldbuttons = {}
 
 local animations = {
 	{name = "California\nGirls", id = 124982597491660, speed = 1, timepos = 0},
@@ -214,14 +214,14 @@ local animations = {
 	{name = "Thinking", id = 127088545449493, speed = 1, timepos = 0},
 }
 
-local activeTracks = {}
+local active = {}
 
-local function createAnimationButton(animData)
+local function makebutton(data)
 	local button = Instance.new("TextButton")
-	button["Name"] = animData.name
+	button["Name"] = data.name
 	button["Size"] = UDim2.new(1, 0, 1, 0)
 	button["BackgroundColor3"] = Color3.fromRGB(60, 60, 60)
-	button["Text"] = animData.name
+	button["Text"] = data.name
 	button["TextColor3"] = Color3.new(1, 1, 1)
 	button["TextSize"] = 16
 	button["TextWrapped"] = true
@@ -229,49 +229,49 @@ local function createAnimationButton(animData)
 	button["BorderSizePixel"] = 0
 	button["Parent"] = buttoncontainer
 
-	table.insert(originalButtons, button)
+	table.insert(oldbuttons, button)
 
 	button["MouseButton1Click"]:Connect(function()
 		clik()
 		if localplayer.Character then
 			local humanoid = localplayer.Character:FindFirstChildOfClass("Humanoid")
 			if humanoid then
-				for id, track in pairs(activeTracks) do
+				for id, track in pairs(active) do
 					if track then
 						track:Stop()
 					end
 				end
-				activeTracks = {}
+				active = {}
 
 				local animation = Instance.new("Animation")
-				animation.AnimationId = "rbxassetid://" .. animData.id
+				animation.AnimationId = "rbxassetid://" .. data.id
 
 				local track = humanoid:LoadAnimation(animation)
 				track:Play()
 				track.Looped = true
-				track.TimePosition = animData.timepos
-				track:AdjustSpeed(animData.speed)
+				track.TimePosition = data.timepos
+				track:AdjustSpeed(data.speed)
 				track:AdjustWeight(999)
 
-				activeTracks[animData.id] = track
+				active[data.id] = track
 			end
 		end
 	end)
 end
 
 for _, anim in ipairs(animations) do
-	createAnimationButton(anim)
+	makebutton(anim)
 end
 
-local function filterAnimations(searchText)
-	searchText = string.lower(searchText)
+local function filteranims(input)
+	input = string.lower(input)
 
-	for _, button in pairs(originalButtons) do
+	for _, button in pairs(oldbuttons) do
 		button.Visible = false
 	end
 
-	for _, button in pairs(originalButtons) do
-		if string.find(string.lower(button.Text), searchText, 1, true) then
+	for _, button in pairs(oldbuttons) do
+		if string.find(string.lower(button.Text), input, 1, true) then
 			button.Visible = true
 		end
 	end
@@ -281,19 +281,19 @@ local function filterAnimations(searchText)
 end
 
 searchbox:GetPropertyChangedSignal("Text"):Connect(function()
-	filterAnimations(searchbox.Text)
+	filteranims(searchbox.Text)
 end)
 
 -------------------------------------------------------------------------------------------------------------------------------
 
 stopallbutton["MouseButton1Click"]:Connect(function()
 	clik()
-	for id, track in pairs(activeTracks) do
+	for id, track in pairs(active) do
 		if track then
 			track:Stop()
 		end
 	end
-	activeTracks = {}
+	active = {}
 end)
 
 xbutton["MouseButton1Click"]:Connect(function()
