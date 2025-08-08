@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------------------------------------------------
 
-if not game:IsLoaded() then game["Loaded"]:Wait() end task.wait(1)
+if not game:IsLoaded() then game["Loaded"]:Wait() end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
@@ -164,54 +164,65 @@ buttonlayout["Parent"] = buttoncontainer
 local oldbuttons = {}
 
 local animations = {
-	{name = "California\nGirls", id = 124982597491660, speed = 1, timepos = 0},
-	{name = "Helicopter", id = 95301257497525, speed = 1, timepos = 0},
-	{name = "Helicopter 2", id = 122951149300674, speed = 1, timepos = 0},
-	{name = "Helicopter 3", id = 91257498644328, speed = 1, timepos = 0},
-	{name = "Da Hood Dance", id = 108171959207138, speed = 1, timepos = 0},
-	{name = "Da Hood Stomp", id = 115048845533448, speed = 1.4, timepos = 0},
-	{name = "Flopping Fish", id = 79075971527754, speed = 1, timepos = 0},
-	{name = "Gangnam Style", id = 100531289776679, speed = 1, timepos = 0},
-	{name = "Caramelldansen", id = 88315693621494, speed = 1, timepos = 0},
-	{name = "Air Circle", id = 94324173536622, speed = 1, timepos = 0},
-	{name = "Heart Left", id = 110936682778213, speed = 0, timepos = 0},
-	{name = "Heart Right", id = 84671941093489, speed = 0, timepos = 0},
-	{name = "67", id = 115439144505157, speed = 1, timepos = 0},
-	{name = "6", id = 115439144505157, speed = 0, timepos = 0.2},
-	{name = "7", id = 115439144505157, speed = 0, timepos = 1.2},
-	{name = "Dog", id = 78195344190486, speed = 1, timepos = 0},
-	{name = "MM2 Zen", id = 86872878957632, speed = 1, timepos = 0},
-	{name = "Default Dance", id = 88455578674030, speed = 1, timepos = 0},
-	{name = "Sit", id = 97185364700038, speed = 1, timepos = 0},
-	{name = "Kazotsky Kick", id = 119264600441310, speed = 1, timepos = 0},
-	{name = "Fight Stance", id = 116763940575803, speed = 1, timepos = 0},
-	{name = "Oh Who Is You", id = 81389876138766, speed = 1, timepos = 0},
-	{name = "Sway Sit", id = 130995344283026, speed = 1, timepos = 0},
-	{name = "Sway Sit 2", id = 131836270858895, speed = 1, timepos = 0},
-	{name = "The Worm", id = 90333292347820, speed = 1, timepos = 0},
-	{name = "Snake", id = 98476854035224, speed = 1, timepos = 0},
-	{name = "Peter Griffin Death", id = 129787664584610, speed = 1, timepos = 0},
-	{name = "Walter Scene", id = 113475147402830, speed = 1, timepos = 0},
-	{name = "Cute Stomach Lay", id = 80754582835479, speed = 1, timepos = 0},
-	{name = "Shadow Dio Pose", id = 92266904563270, speed = 1, timepos = 0},
-	{name = "Jotaro Pose", id = 122120443600865, speed = 1, timepos = 0},
-	{name = "Jojo Pose", id = 120629563851640, speed = 1, timepos = 0},
-	{name = "Float Lay", id = 77840765435893, speed = 1, timepos = 0},
-	{name = "Biblically Accurate", id = 109873544976020, speed = 1, timepos = 0},
-	{name = "Headless", id = 78837807518622, speed = 1, timepos = 0},
-	{name = "ME!ME!ME!", id = 103235915424832, speed = 1, timepos = 0},
-	{name = "Plane", id = 82135680487389, speed = 1, timepos = 0},
-	{name = "XavierSoBased", id = 90802740360125, speed = 1, timepos = 0},
-	{name = "Chinese Dance", id = 131758838511368, speed = 1, timepos = 0},
-	{name = "Slickback", id = 74288964113793, speed = 1, timepos = 0},
-	{name = "Car", id = 108747312576405, speed = 1, timepos = 0},
-	{name = "Beat Da Koto Nai", id = 93497729736287, speed = 1, timepos = 0},
-	{name = "Tank", id = 94915612757079, speed = 1, timepos = 0},
-	{name = "Classic Walk", id = 107806791584829, speed = 1, timepos = 0},
-	{name = "Weird Creature", id = 87025086742503, speed = 1, timepos = 0},
-	{name = "Skibidi Toilet", id = 127154705636043, speed = 1, timepos = 0},
-	{name = "Rolling Crybaby", id = 129699431093711, speed = 1, timepos = 0},
-	{name = "Thinking", id = 127088545449493, speed = 1, timepos = 0},
+	{name = "California\nGirls", id = 124982597491660, speed = 1, timepos = 0, looped = true},
+	{name = "Helicopter", id = 95301257497525, speed = 1, timepos = 0, looped = true},
+	{name = "Helicopter 2", id = 122951149300674, speed = 1, timepos = 0, looped = true},
+	{name = "Helicopter 3", id = 91257498644328, speed = 1, timepos = 0, looped = true},
+	{name = "Da Hood Dance", id = 108171959207138, speed = 1, timepos = 0, looped = true},
+	{name = "Da Hood Stomp", id = 115048845533448, speed = 1.4, timepos = 0, looped = true},
+	{name = "Flopping Fish", id = 79075971527754, speed = 1, timepos = 0, looped = true},
+	{name = "Gangnam Style", id = 100531289776679, speed = 1, timepos = 0, looped = true},
+	{name = "Caramelldansen", id = 88315693621494, speed = 1, timepos = 0, looped = true},
+	{name = "Air Circle", id = 94324173536622, speed = 1, timepos = 0, looped = true},
+	{name = "Heart Left", id = 110936682778213, speed = 0, timepos = 0, looped = true},
+	{name = "Heart Right", id = 84671941093489, speed = 0, timepos = 0, looped = true},
+	{name = "67", id = 115439144505157, speed = 1, timepos = 0, looped = true},
+	{name = "6", id = 115439144505157, speed = 0, timepos = 0.2, looped = false},
+	{name = "7", id = 115439144505157, speed = 0, timepos = 1.2, looped = false},
+	{name = "Dog", id = 78195344190486, speed = 1, timepos = 0, looped = true},
+	{name = "MM2 Zen", id = 86872878957632, speed = 1, timepos = 0, looped = true},
+	{name = "Default Dance", id = 88455578674030, speed = 1, timepos = 0, looped = true},
+	{name = "Sit", id = 97185364700038, speed = 1, timepos = 0, looped = true},
+	{name = "Kazotsky Kick", id = 119264600441310, speed = 1, timepos = 0, looped = true},
+	{name = "Fight Stance", id = 116763940575803, speed = 1, timepos = 0, looped = true},
+	{name = "Oh Who Is You", id = 81389876138766, speed = 1, timepos = 0, looped = true},
+	{name = "Sway Sit", id = 130995344283026, speed = 1, timepos = 0, looped = true},
+	{name = "Sway Sit 2", id = 131836270858895, speed = 1, timepos = 0, looped = true},
+	{name = "The Worm", id = 90333292347820, speed = 1, timepos = 0, looped = true},
+	{name = "Snake", id = 98476854035224, speed = 1, timepos = 0, looped = true},
+	{name = "Peter Griffin Death", id = 129787664584610, speed = 1, timepos = 0, looped = true},
+	{name = "Walter Scene", id = 113475147402830, speed = 1, timepos = 0, looped = true},
+	{name = "Cute Stomach Lay", id = 80754582835479, speed = 1, timepos = 0, looped = true},
+	{name = "Shadow Dio Pose", id = 92266904563270, speed = 1, timepos = 0, looped = true},
+	{name = "Jotaro Pose", id = 122120443600865, speed = 1, timepos = 0, looped = true},
+	{name = "Jojo Pose", id = 120629563851640, speed = 1, timepos = 0, looped = true},
+	{name = "Float Lay", id = 77840765435893, speed = 1, timepos = 0, looped = true},
+	{name = "Biblically Accurate", id = 109873544976020, speed = 1, timepos = 0, looped = true},
+	{name = "Headless", id = 78837807518622, speed = 1, timepos = 0, looped = true},
+	{name = "ME!ME!ME!", id = 103235915424832, speed = 1, timepos = 0, looped = true},
+	{name = "Plane", id = 82135680487389, speed = 1, timepos = 0, looped = true},
+	{name = "XavierSoBased", id = 90802740360125, speed = 1, timepos = 0, looped = true},
+	{name = "Chinese Dance", id = 131758838511368, speed = 1, timepos = 0, looped = true},
+	{name = "Slickback", id = 74288964113793, speed = 1, timepos = 0, looped = true},
+	{name = "Car", id = 108747312576405, speed = 1, timepos = 0, looped = true},
+	{name = "Beat Da Koto Nai", id = 93497729736287, speed = 1, timepos = 0, looped = true},
+	{name = "Tank", id = 94915612757079, speed = 1, timepos = 0, looped = true},
+	{name = "Classic Walk", id = 107806791584829, speed = 1, timepos = 0, looped = true},
+	{name = "Weird Creature", id = 87025086742503, speed = 1, timepos = 0, looped = true},
+	{name = "Skibidi Toilet", id = 127154705636043, speed = 1, timepos = 0, looped = true},
+	{name = "Rolling Crybaby", id = 129699431093711, speed = 1, timepos = 0, looped = true},
+	{name = "Thinking", id = 127088545449493, speed = 1, timepos = 0, looped = true},
+	{name = "Fake Death", id = 88130117312312, speed = 1, timepos = 0, looped = false, freezeondeath = true},
+	{name = "Laced", id = 135611169366768, speed = 1, timepos = 0, looped = false, freezeondeath = false},
+	{name = "Fit Check", id = 81176957565811, speed = 1, timepos = 0, looped = false, freezeondeath = false},
+	{name = "Surrender", id = 100537772865440, speed = 1, timepos = 0, looped = false, freezeondeath = false},
+	{name = "Assumptions", id = 91294374426630, speed = 1, timepos = 0, looped = false, freezeondeath = false},
+	{name = "Griddy", id = 121966805049108, speed = 1, timepos = 0, looped = false, freezeondeath = false},
+	{name = "Take The L", id = 78653596566468, speed = 1, timepos = 0, looped = false, freezeondeath = true},
+	{name = "Basketball Head Spin", id = 92854797386719, speed = 1, timepos = 0, looped = false, freezeondeath = false},
+	{name = "Parrot Dance", id = 101810746304426, speed = 1, timepos = 0, looped = false, freezeondeath = false},
+	{name = "Shot", id = 102691551292124, speed = 1, timepos = 0, looped = false, freezeondeath = true},
+	{name = "Ragdoll", id = 136224735234038, speed = 1, timepos = 0, looped = false, freezeondeath = true},
 }
 
 local active = {}
@@ -248,12 +259,27 @@ local function makebutton(data)
 
 				local track = humanoid:LoadAnimation(animation)
 				track:Play()
-				track.Looped = true
+				track.Looped = data.looped
 				track.TimePosition = data.timepos
 				track:AdjustSpeed(data.speed)
 				track:AdjustWeight(999)
 
 				active[data.id] = track
+
+				if data.freezeondeath then
+					local connection
+					connection = track.Stopped:Connect(function()
+						if humanoid and humanoid.Parent then
+							humanoid.AutoRotate = false
+							humanoid.WalkSpeed = 0
+							humanoid.JumpPower = 0
+						end
+
+						if connection then
+							connection:Disconnect()
+						end
+					end)
+				end
 			end
 		end
 	end)
