@@ -185,6 +185,15 @@ local animations = {
     {name = "Sit", id = 97185364700038, speed = 1, timepos = 0},
     {name = "Kazotsky Kick", id = 119264600441310, speed = 1, timepos = 0},
     {name = "Fight Stance", id = 116763940575803, speed = 1, timepos = 0},
+    {name = "Oh Who Is You", id = 81389876138766, speed = 1, timepos = 0},
+    {name = "Cute Sit", id = 130995344283026, speed = 1, timepos = 0},
+    {name = "The Worm", id = 90333292347820, speed = 1, timepos = 0},
+    {name = "Snake", id = 98476854035224, speed = 1, timepos = 0},
+    {name = "Peter Griffin Death", id = 129787664584610, speed = 1, timepos = 0},
+    {name = "Walter Scene", id = 113475147402830, speed = 1, timepos = 0},
+    {name = "Cute Stomach Lay", id = 80754582835479, speed = 1, timepos = 0},
+    {name = "Shadow Dio Pose", id = 92266904563270, speed = 1, timepos = 0},
+    {name = "Jotaro Pose", id = 122120443600865, speed = 1, timepos = 0},
 }
 
 local activeTracks = {}
