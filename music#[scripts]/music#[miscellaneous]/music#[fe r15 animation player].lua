@@ -237,6 +237,7 @@ local function createAnimationButton(animData)
                 track.Looped = true
                 track.TimePosition = animData.timepos
                 track:AdjustSpeed(animData.speed)
+                track:AdjustWeight(999)
                 
                 activeTracks[animData.id] = track
             end
