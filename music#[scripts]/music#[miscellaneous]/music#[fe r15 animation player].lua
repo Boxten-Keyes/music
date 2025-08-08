@@ -195,6 +195,9 @@ local animations = {
     {name = "Shadow Dio Pose", id = 92266904563270, speed = 1, timepos = 0},
     {name = "Jotaro Pose", id = 122120443600865, speed = 1, timepos = 0},
     {name = "Float Lay", id = 77840765435893, speed = 1, timepos = 0},
+    {name = "Biblically Accurate", id = 109873544976020, speed = 1, timepos = 0},
+    {name = "Headless", id = 78837807518622, speed = 1, timepos = 0},
+    {name = "ME!ME!ME!", id = 103235915424832, speed = 1, timepos = 0},
 }
 
 local activeTracks = {}
@@ -231,7 +234,6 @@ local function createAnimationButton(animData)
                 
                 local track = humanoid:LoadAnimation(animation)
                 track:Play()
-                track:AdjustWeight(999)
                 track.Looped = true
                 track.TimePosition = animData.timepos
                 track:AdjustSpeed(animData.speed)
