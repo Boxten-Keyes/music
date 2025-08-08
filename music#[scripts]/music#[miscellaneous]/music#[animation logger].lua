@@ -34,7 +34,7 @@ local indw = dw[game["GameId"]] or false
 
 local gui = Instance.new("ScreenGui")
 gui["Name"] = "AnimationLogger"
-gui["Parent"] = localplayer:WaitForChild("PlayerGui")
+gui["Parent"] = gethui and gethui() or game:GetService("CoreGui")
 gui["ResetOnSpawn"] = false
 
 local function repos(ui, w, h)
