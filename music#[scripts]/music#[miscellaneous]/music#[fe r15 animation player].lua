@@ -194,6 +194,7 @@ local animations = {
     {name = "Cute Stomach Lay", id = 80754582835479, speed = 1, timepos = 0},
     {name = "Shadow Dio Pose", id = 92266904563270, speed = 1, timepos = 0},
     {name = "Jotaro Pose", id = 122120443600865, speed = 1, timepos = 0},
+    {name = "Float Lay", id = 77840765435893, speed = 1, timepos = 0},
 }
 
 local activeTracks = {}
