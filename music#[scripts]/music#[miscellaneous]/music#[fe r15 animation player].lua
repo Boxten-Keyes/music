@@ -234,7 +234,7 @@ local animations = {
 	{name = "Float", id = 89523370947906, speed = 1, timepos = 0, looped = true, freezeonend = false},
 	{name = "Hi", id = 103041144411206, speed = 1, timepos = 0, looped = false, freezeonend = true},
 	{name = "Posessed", id = 90708290447388, speed = 1, timepos = 0, looped = true, freezeonend = false},
-	{name = "Fuck you!", id = 98289978017308, speed = 1, timepos = 0, looped = true, freezeonend = false},
+	{name = "Fuck You!", id = 98289978017308, speed = 1, timepos = 0, looped = true, freezeonend = false},
 }
 
 local active = {}
