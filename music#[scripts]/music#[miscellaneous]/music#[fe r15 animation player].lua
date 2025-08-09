@@ -202,43 +202,46 @@ local animations = {
 	{name = "Hi", id = 103041144411206, speed = 1, timepos = 0, looped = false, freezeonend = true},
 	{name = "Posessed", id = 90708290447388, speed = 1, timepos = 0, looped = true, freezeonend = false},
 	{name = "Fuck You!", id = 98289978017308, speed = 1, timepos = 0, looped = true, freezeonend = false},
+	{name = "Headpats", id = 85422671683973, speed = 1, timepos = 0, looped = true, freezeonend = false},
 }
 
 local active = {}
+local frozen = {}
 
 local function makebutton(data)
 	local button = Instance.new("TextButton")
-	button["Name"] = data.name
-	button["Size"] = UDim2.new(1, 0, 1, 0)
-	button["BackgroundColor3"] = Color3.fromRGB(60, 60, 60)
-	button["Text"] = data.name
-	button["TextColor3"] = Color3.new(1, 1, 1)
-	button["TextSize"] = 16
-	button["TextWrapped"] = true
-	button["Font"] = Enum.Font.RobotoMono
-	button["BorderSizePixel"] = 0
-	button["Parent"] = buttoncontainer
+	button.Name = data.name
+	button.Size = UDim2.new(1, 0, 1, 0)
+	button.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+	button.Text = data.name
+	button.TextColor3 = Color3.new(1, 1, 1)
+	button.TextSize = 16
+	button.TextWrapped = true
+	button.Font = Enum.Font.RobotoMono
+	button.BorderSizePixel = 0
+	button.Parent = buttoncontainer
 
 	table.insert(oldbuttons, button)
 
-	button["MouseButton1Click"]:Connect(function()
+	button.MouseButton1Click:Connect(function()
 		clik()
 		if localplayer.Character then
 			local humanoid = localplayer.Character:FindFirstChildOfClass("Humanoid")
 			if humanoid then
-				for id, track in pairs(active) do
+				for _, track in pairs(active) do
 					if track then
 						track:Stop()
 					end
 				end
 				active = {}
+				frozen = {}
 
 				local animation = Instance.new("Animation")
 				animation.AnimationId = "rbxassetid://" .. data.id
 
 				local track = humanoid:LoadAnimation(animation)
-				track:Play()
 				track.Looped = data.looped
+				track:Play()
 				track.TimePosition = data.timepos
 				track:AdjustSpeed(data.speed)
 				track:AdjustWeight(999)
@@ -246,16 +249,11 @@ local function makebutton(data)
 				active[data.id] = track
 
 				if data.freezeonend then
-					local connection
-					connection = track.Stopped:Connect(function()
-						if humanoid and humanoid.Parent then
-							humanoid.AutoRotate = false
-							humanoid.WalkSpeed = 0
-							humanoid.JumpPower = 0
-						end
-
-						if connection then
-							connection:Disconnect()
+					track.Stopped:Connect(function()
+						if track.Length > 0 then
+							track.TimePosition = track.Length - 0.01
+							track:AdjustSpeed(0)
+							frozen[track] = true
 						end
 					end)
 				end
@@ -291,14 +289,18 @@ end)
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-stopallbutton["MouseButton1Click"]:Connect(function()
+stopallbutton.MouseButton1Click:Connect(function()
 	clik()
-	for id, track in pairs(active) do
+	for _, track in pairs(active) do
 		if track then
+			if frozen[track] then
+				track:AdjustSpeed(1)
+			end
 			track:Stop()
 		end
 	end
 	active = {}
+	frozen = {}
 end)
 
 xbutton["MouseButton1Click"]:Connect(function()
