@@ -40,41 +40,8 @@ repos(frame, 399, 300)
 frame["BackgroundColor3"] = Color3.fromRGB(30, 30, 30)
 frame["BorderSizePixel"] = 0
 frame["Parent"] = gui
-
-task.spawn(function()
-	local dragtoggle
-	local dragspeed = 0.25
-	local dragstart
-	local startpos
-
-	local function updatebuttoninput(input)
-		local delta = input["Position"] - dragstart
-		local position = UDim2.new(startpos["X"]["Scale"], startpos["X"]["Offset"] + delta["X"],
-			startpos["Y"]["Scale"], startpos["Y"]["Offset"] + delta["Y"])
-		game:GetService("TweenService"):Create(frame, TweenInfo.new(dragspeed), {["Position"] = position}):Play()
-	end
-
-	frame["InputBegan"]:Connect(function(input)
-		if (input["UserInputType"] == Enum.UserInputType.MouseButton1 or input["UserInputType"] == Enum.UserInputType.Touch) then 
-			dragtoggle = true
-			dragstart = input["Position"]
-			startpos = frame["Position"]
-			input["Changed"]:Connect(function()
-				if input["UserInputState"] == Enum.UserInputState.End then
-					dragtoggle = false
-				end
-			end)
-		end
-	end)
-
-	game:GetService("UserInputService")["InputChanged"]:Connect(function(input)
-		if input["UserInputType"] == Enum.UserInputType.MouseMovement or input["UserInputType"] == Enum.UserInputType.Touch then
-			if dragtoggle then
-				updatebuttoninput(input)
-			end
-		end
-	end)
-end)
+frame["Active"] = true
+frame["Draggable"] = true
 
 -------------------------------------------------------------------------------------------------------------------------------
 
