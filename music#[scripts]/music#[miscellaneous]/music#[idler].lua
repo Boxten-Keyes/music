@@ -89,7 +89,7 @@ local function getRandomPosition(character)
     
     -- Get a completely random direction and distance
     local angle = math.random() * 2 * math.pi
-    local distance = math.random(30, 80) -- Walk 10-30 studs away
+    local distance = math.random(6, 26) -- Walk 10-30 studs away
     local offset = Vector3.new(math.cos(angle) * distance, 0, math.sin(angle) * distance)
     
     -- Raycast to ensure we're not walking into walls
@@ -117,21 +117,26 @@ local function walkToRandomPoint()
     local hrp = character and character:FindFirstChild("HumanoidRootPart")
     if not humanoid or not hrp then return end
 
-    local targetPos = getRandomPosition(character)
-    if not targetPos then return end
+    -- Walk in 3 different directions
+    for i = 1, math.random(4, 8) do
+        if not enabled or stopLoop then break end
 
-    local path = PathfindingService:CreatePath()
-    path:ComputeAsync(hrp.Position, targetPos)
-    
-    if path.Status == Enum.PathStatus.Success then
-        local waypoints = path:GetWaypoints()
-        for i, waypoint in ipairs(waypoints) do
-            if not enabled or stopLoop then break end
-            humanoid:MoveTo(waypoint.Position)
-            if waypoint.Action == Enum.PathWaypointAction.Jump then
-                humanoid.Jump = true
+        local targetPos = getRandomPosition(character)
+        if not targetPos then return end
+
+        local path = PathfindingService:CreatePath()
+        path:ComputeAsync(hrp.Position, targetPos)
+        
+        if path.Status == Enum.PathStatus.Success then
+            local waypoints = path:GetWaypoints()
+            for _, waypoint in ipairs(waypoints) do
+                if not enabled or stopLoop then break end
+                humanoid:MoveTo(waypoint.Position)
+                if waypoint.Action == Enum.PathWaypointAction.Jump then
+                    humanoid.Jump = true
+                end
+                humanoid.MoveToFinished:Wait()
             end
-            humanoid.MoveToFinished:Wait()
         end
     end
 end
