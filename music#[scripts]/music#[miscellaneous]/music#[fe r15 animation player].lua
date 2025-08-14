@@ -203,6 +203,7 @@ local animations = {
 	{name = "Posessed", id = 90708290447388, speed = 1, timepos = 0},
 	{name = "Fuck You!", id = 98289978017308, speed = 1, timepos = 0},
 	{name = "Headpats", id = 85422671683973, speed = 1, timepos = 0},
+	{name = "Legs Up", id = 90119307427044, speed = 1, timepos = 0},
 }
 
 local active = {}
