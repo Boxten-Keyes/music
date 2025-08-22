@@ -273,9 +273,9 @@ function startflying()
 			local tiltangle = 0
 
 			if forwarddot > 0.7 then
-				tiltangle = -math.rad(50 * speed / flyspeed)
+				tiltangle = -math.rad(80 * speed / flyspeed)
 			elseif forwarddot < -0.7 then
-				tiltangle = math.rad(25 * speed / flyspeed)
+				tiltangle = math.rad(50 * speed / flyspeed)
 			else
 				tiltangle = 0
 			end
