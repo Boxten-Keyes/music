@@ -185,16 +185,25 @@ local starttime, elapsed = 0, 0
 local connection
 
 function updatetime(seconds)
-	local m = math.floor(seconds / 60)
+	local d = math.floor(seconds / 86400)
+	local h = math.floor((seconds % 86400) / 3600)
+	local m = math.floor((seconds % 3600) / 60)
 	local s = math.floor(seconds % 60)
 	local ms = math.floor((seconds - math.floor(seconds)) * 100)
 
-	if m == 0 then
-		bigtime.Text = string.format("%d:%02d", m, s)
-	else
-		bigtime.Text = string.format("%d:%02d", m, s)
+	local parts = {}
+
+	if d > 0 then
+		table.insert(parts, tostring(d))
+	end
+	if h > 0 or d > 0 then
+		table.insert(parts, string.format("%d", h))
 	end
 
+	table.insert(parts, string.format("%d", m))
+	table.insert(parts, string.format("%02d", s))
+
+	bigtime.Text = table.concat(parts, ":")
 	smalltime.Text = string.format(".%02d", ms)
 end
 
