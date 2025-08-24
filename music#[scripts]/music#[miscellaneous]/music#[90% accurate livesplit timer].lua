@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------------------------------------------------
 
-if not game:IsLoaded() then game["Loaded"]:Wait() end task.wait(1)
+if not game:IsLoaded() then game["Loaded"]:Wait() end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
@@ -36,7 +36,7 @@ bigtime.TextColor3 = Color3.new(1, 1, 1)
 bigtime.Font = Enum.Font.SourceSansBold
 bigtime.TextSize = 40
 bigtime.TextXAlignment = Enum.TextXAlignment.Right
-bigtime.Text = "00:00"
+bigtime.Text = "0:00"
 bigtime.Parent = mainframe
 
 local smalltime = Instance.new("TextLabel")
@@ -58,18 +58,18 @@ resetbtn.TextColor3 = Color3.new(1, 1, 1)
 resetbtn.Font = Enum.Font.Arimo
 resetbtn.TextSize = 10
 resetbtn.TextXAlignment = Enum.TextXAlignment.Left
-resetbtn.Text = "RESET"
+resetbtn.Text = "[R] RESET"
 resetbtn.Parent = mainframe
 
 local ctrlbtn = Instance.new("TextButton")
 ctrlbtn.Size = UDim2.new(0, 50, 0, 11)
-ctrlbtn.Position = UDim2.new(0, 38, 0, 54)
+ctrlbtn.Position = UDim2.new(0, 50, 0, 54)
 ctrlbtn.BackgroundTransparency = 1
 ctrlbtn.TextColor3 = Color3.new(1, 1, 1)
 ctrlbtn.Font = Enum.Font.Arimo
 ctrlbtn.TextSize = 10
 ctrlbtn.TextXAlignment = Enum.TextXAlignment.Left
-ctrlbtn.Text = "START"
+ctrlbtn.Text = "│ [T] START"
 ctrlbtn.Parent = mainframe
 
 -------------------------------------------------------------------------------------------------------------------------------
@@ -184,11 +184,23 @@ local running, played = false, false
 local starttime, elapsed = 0, 0
 local connection
 
-function updatetime(seconds) local m = math.floor(seconds / 60) local s = math.floor(seconds % 60) local ms = math.floor((seconds - math.floor(seconds)) * 100) bigtime.Text = string.format("%02d:%02d", m, s) smalltime.Text = string.format(".%02d", ms) end
+function updatetime(seconds)
+	local m = math.floor(seconds / 60)
+	local s = math.floor(seconds % 60)
+	local ms = math.floor((seconds - math.floor(seconds)) * 100)
 
-function start() if running then return end running = true played = true ctrlbtn.Text = "PAUSE" gren() starttime = tick() - elapsed connection = game["Run Service"].RenderStepped:Connect(function() elapsed = tick() - starttime updatetime(elapsed) end) end
-function pause() if not running then return end running = false if connection then connection:Disconnect() end if played then blu() ctrlbtn.Text = "RESUME" end end
-function reset() pause() gre() elapsed = 0 updatetime(0) played = false ctrlbtn.Text = "START" end
+	if m == 0 then
+		bigtime.Text = string.format("%d:%02d", m, s)
+	else
+		bigtime.Text = string.format("%d:%02d", m, s)
+	end
+
+	smalltime.Text = string.format(".%02d", ms)
+end
+
+function start() if running then return end running = true played = true ctrlbtn.Text = "│ [T] PAUSE" gren() starttime = tick() - elapsed connection = game["Run Service"].RenderStepped:Connect(function() elapsed = tick() - starttime updatetime(elapsed) end) end
+function pause() if not running then return end running = false if connection then connection:Disconnect() end if played then blu() ctrlbtn.Text = "│ [T] RESUME" end end
+function reset() pause() gre() elapsed = 0 updatetime(0) played = false ctrlbtn.Text = "│ [T] START" end
 
 game["UserInputService"].InputBegan:Connect(function(input, gp)
 	if gp then return end
