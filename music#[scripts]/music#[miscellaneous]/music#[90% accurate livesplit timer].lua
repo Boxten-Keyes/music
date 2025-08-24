@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------------------------------------------------
 
-if not game:IsLoaded() then game["Loaded"]:Wait() end
+if not game:IsLoaded() then game["Loaded"]:Wait() end task.wait(1)
 
 -------------------------------------------------------------------------------------------------------------------------------
 
@@ -11,11 +11,18 @@ if game["Run Service"]:IsStudio() then gui["Parent"]= game["Players"]["LocalPlay
 
 -------------------------------------------------------------------------------------------------------------------------------
 
+function repos(ui, w, h)
+	local sw, sh = workspace["CurrentCamera"]["ViewportSize"]["X"], workspace["CurrentCamera"]["ViewportSize"]["Y"]
+	local cx, cy = (sw - w) / 2, (sh - h) / 2 - 56
+	ui["Position"] = UDim2.new(0, cx, 0, cy)
+end
+
 local mainframe = Instance.new("Frame")
 mainframe.Size = UDim2.new(0, 200, 0, 50)
 mainframe.Position = UDim2.new(0.5, -100, 0, 50)
 mainframe.BackgroundTransparency = 0
 mainframe.BorderSizePixel = 0
+repos(mainframe, 200, 50)
 mainframe.BackgroundColor3 = Color3.new(0, 0, 0)
 mainframe.Active = true
 mainframe.Draggable = true
@@ -42,6 +49,28 @@ smalltime.TextSize = 30
 smalltime.TextXAlignment = Enum.TextXAlignment.Left
 smalltime.Text = ".00"
 smalltime.Parent = mainframe
+
+local resetbtn = Instance.new("TextButton")
+resetbtn.Size = UDim2.new(0, 50, 0, 11)
+resetbtn.Position = UDim2.new(0, 0, 0, 54)
+resetbtn.BackgroundTransparency = 1
+resetbtn.TextColor3 = Color3.new(1, 1, 1)
+resetbtn.Font = Enum.Font.Arimo
+resetbtn.TextSize = 10
+resetbtn.TextXAlignment = Enum.TextXAlignment.Left
+resetbtn.Text = "RESET"
+resetbtn.Parent = mainframe
+
+local ctrlbtn = Instance.new("TextButton")
+ctrlbtn.Size = UDim2.new(0, 50, 0, 11)
+ctrlbtn.Position = UDim2.new(0, 38, 0, 54)
+ctrlbtn.BackgroundTransparency = 1
+ctrlbtn.TextColor3 = Color3.new(1, 1, 1)
+ctrlbtn.Font = Enum.Font.Arimo
+ctrlbtn.TextSize = 10
+ctrlbtn.TextXAlignment = Enum.TextXAlignment.Left
+ctrlbtn.Text = "START"
+ctrlbtn.Parent = mainframe
 
 -------------------------------------------------------------------------------------------------------------------------------
 
@@ -157,9 +186,9 @@ local connection
 
 function updatetime(seconds) local m = math.floor(seconds / 60) local s = math.floor(seconds % 60) local ms = math.floor((seconds - math.floor(seconds)) * 100) bigtime.Text = string.format("%02d:%02d", m, s) smalltime.Text = string.format(".%02d", ms) end
 
-function start() if running then return end running = true played = true gren() starttime = tick() - elapsed connection = game["Run Service"].RenderStepped:Connect(function() elapsed = tick() - starttime updatetime(elapsed) end) end
-function pause() if not running then return end running = false if connection then connection:Disconnect() end if played then blu() end end
-function reset() pause() gre() elapsed = 0 updatetime(0) played = false end
+function start() if running then return end running = true played = true ctrlbtn.Text = "PAUSE" gren() starttime = tick() - elapsed connection = game["Run Service"].RenderStepped:Connect(function() elapsed = tick() - starttime updatetime(elapsed) end) end
+function pause() if not running then return end running = false if connection then connection:Disconnect() end if played then blu() ctrlbtn.Text = "RESUME" end end
+function reset() pause() gre() elapsed = 0 updatetime(0) played = false ctrlbtn.Text = "START" end
 
 game["UserInputService"].InputBegan:Connect(function(input, gp)
 	if gp then return end
@@ -171,6 +200,18 @@ game["UserInputService"].InputBegan:Connect(function(input, gp)
 		end
 	elseif input.KeyCode == Enum.KeyCode.R then
 		reset()
+	end
+end)
+
+resetbtn.MouseButton1Click:Connect(function()
+	reset()
+end)
+
+ctrlbtn.MouseButton1Click:Connect(function()
+	if running then
+		pause()
+	else
+		start()
 	end
 end)
 
