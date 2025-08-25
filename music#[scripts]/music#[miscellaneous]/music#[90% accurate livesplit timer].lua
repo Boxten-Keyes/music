@@ -72,6 +72,37 @@ ctrlbtn.TextXAlignment = Enum.TextXAlignment.Left
 ctrlbtn.Text = "│ [T] START"
 ctrlbtn.Parent = mainframe
 
+local idletime = 3
+
+function fadeout()
+	game["TweenService"]:Create(resetbtn, TweenInfo.new(0.5), {TextTransparency = 1}):Play()
+	game["TweenService"]:Create(ctrlbtn, TweenInfo.new(0.5), {TextTransparency = 1}):Play()
+end
+
+function fadein()
+	game["TweenService"]:Create(resetbtn, TweenInfo.new(0.1), {TextTransparency = 0}):Play()
+	game["TweenService"]:Create(ctrlbtn, TweenInfo.new(0.1), {TextTransparency = 0}):Play()
+end
+
+local lastinteraction = tick()
+local faded = false
+
+mainframe.MouseEnter:Connect(function() lastinteraction = tick() if faded then faded = false fadein() end end)
+mainframe.MouseLeave:Connect(function() lastinteraction = tick() end)
+
+resetbtn.MouseEnter:Connect(function() lastinteraction = tick() if faded then faded = false fadein() end end)
+resetbtn.MouseLeave:Connect(function() lastinteraction = tick() end)
+
+ctrlbtn.MouseEnter:Connect(function() lastinteraction = tick() if faded then faded = false fadein() end end)
+ctrlbtn.MouseLeave:Connect(function() lastinteraction = tick() end)
+
+game["Run Service"].Heartbeat:Connect(function()
+	if not faded and tick() - lastinteraction >= idletime then
+		faded = true
+		fadeout()
+	end
+end)
+
 -------------------------------------------------------------------------------------------------------------------------------
 
 local greengrad, graygrad, bluegrad, greengrad2, graygrad2, bluegrad2 = nil
