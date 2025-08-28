@@ -105,45 +105,54 @@ local function isobstructing(part)
 end
 
 local function getclosestvisibleenemypart()
-	local closest = nil
-	local mindist = math.huge
-	local screencenter = Vector2.new(camera["ViewportSize"]["X"] / 2, camera["ViewportSize"]["Y"] / 2)
+	local closestPart = nil
+	local closestChar = nil
+	local minCharDist = math.huge
+	local campos = camera.CFrame.Position
 
 	for _, p in ipairs(players:GetPlayers()) do
-		if p ~= player and p["Team"] ~= player["Team"] and p["Character"] and not p["Character"]:IsDescendantOf(camera) then
-			local char = p["Character"]
-			local head = char:FindFirstChild("Head")
-			local torso = char:FindFirstChild("UpperTorso") or char:FindFirstChild("HumanoidRootPart")
+		if p ~= player and p.Team ~= player.Team and p.Character and not p.Character:IsDescendantOf(camera) then
+			local char = p.Character
 			local humanoid = char:FindFirstChildOfClass("Humanoid")
 
-			if head and torso and humanoid and humanoid["Health"] > 0 then
-				local targetpart = math.random() < 0.3 and head or torso
-				local camlook = camera["CFrame"]["LookVector"]
-				local totarget = (targetpart["Position"] - camera["CFrame"]["Position"])["Unit"]
+			if humanoid and humanoid.Health > 0 then
+				local root = char:FindFirstChild("HumanoidRootPart")
+				if root then
+					local dist = (root.Position - player.Character.HumanoidRootPart.Position).Magnitude
+					if dist < minCharDist then
+						local visiblePart = nil
+						for _, part in ipairs(char:GetChildren()) do
+							if part:IsA("BasePart") then
+								local screenpos, onscreen = camera:WorldToViewportPoint(part.Position)
+								if onscreen then
+									local rayorigin = campos
+									local raydir = (part.Position - rayorigin)
+									local ignorelist = {player.Character, camera}
+									local hit, _ = workspace:FindPartOnRayWithIgnoreList(
+										Ray.new(rayorigin, raydir.Unit * raydir.Magnitude),
+										ignorelist
+									)
 
-				if camlook:Dot(totarget) > 0.5 then
-					local screenpos, onscreen = camera:WorldToViewportPoint(targetpart["Position"])
-					if onscreen then
-						local screenpoint = Vector2.new(screenpos["X"], screenpos["Y"])
-						local distfromcenter = (screenpoint - screencenter)["Magnitude"]
+									while hit and not hit:IsDescendantOf(char) and not isobstructing(hit) do
+										table.insert(ignorelist, hit)
+										hit, _ = workspace:FindPartOnRayWithIgnoreList(
+											Ray.new(rayorigin, raydir.Unit * raydir.Magnitude),
+											ignorelist
+										)
+									end
 
-						if distfromcenter <= 200 then
-							local rayorigin = camera["CFrame"]["Position"]
-							local raydir = (targetpart["Position"] - rayorigin)
-							local ignorelist = {player["Character"], camera}
-							local hit, _ = workspace:FindPartOnRayWithIgnoreList(Ray.new(rayorigin, raydir["Unit"] * raydir["Magnitude"]), ignorelist)
-
-							while hit and not hit:IsDescendantOf(char) and not isobstructing(hit) do
-								table.insert(ignorelist, hit)
-								hit, _ = workspace:FindPartOnRayWithIgnoreList(Ray.new(rayorigin, raydir["Unit"] * raydir["Magnitude"]), ignorelist)
-							end
-
-							if hit and hit:IsDescendantOf(char) then
-								if distfromcenter < mindist then
-									mindist = distfromcenter
-									closest = targetpart
+									if hit and hit:IsDescendantOf(char) then
+										visiblePart = part
+										break
+									end
 								end
 							end
+						end
+
+						if visiblePart then
+							minCharDist = dist
+							closestChar = char
+							closestPart = visiblePart
 						end
 					end
 				end
@@ -151,7 +160,7 @@ local function getclosestvisibleenemypart()
 		end
 	end
 
-	return closest
+	return closestPart
 end
 
 runservice["RenderStepped"]:Connect(function()
