@@ -3,7 +3,6 @@ local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "WASDGui"
 screenGui.Parent = gethui and gethui() or game:GetService("CoreGui")
 screenGui.ResetOnSpawn = false
 
