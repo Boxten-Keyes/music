@@ -95,112 +95,82 @@ end
 -------------------------------------------------------------------------------------------------------------------------------
 
 local toggle = false
-local lockedTarget = nil
-local lockedPart = nil
-local maxLockDistance = 300
 
 local function isobstructing(part)
 	if not part then return false end
-	if part.Transparency >= 1 then return false end
-	if not part.CanCollide then return false end
-	if part:IsDescendantOf(player.Character) or part:IsDescendantOf(camera) then return false end
+	if part["Transparency"] >= 1 then return false end
+	if not part["CanCollide"] then return false end
+	if part:IsDescendantOf(player["Character"]) or part:IsDescendantOf(camera) then return false end
 	return true
 end
 
-local function getFirstVisiblePart(char)
-	for _, part in ipairs(char:GetDescendants()) do
-		if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
-			local rayOrigin = camera.CFrame.Position
-			local rayDir = part.Position - rayOrigin
-			local ignoreList = {player.Character, camera}
-			local hit, _ = workspace:FindPartOnRayWithIgnoreList(Ray.new(rayOrigin, rayDir.Unit * rayDir.Magnitude), ignoreList)
-
-			while hit and not hit:IsDescendantOf(char) and not isobstructing(hit) do
-				table.insert(ignoreList, hit)
-				hit, _ = workspace:FindPartOnRayWithIgnoreList(Ray.new(rayOrigin, rayDir.Unit * rayDir.Magnitude), ignoreList)
-			end
-
-			if hit and hit:IsDescendantOf(char) then
-				return part
-			end
-		end
-	end
-	return nil
-end
-
-local function getClosestVisibleEnemy()
-	local closestChar = nil
-	local closestDist = math.huge
-	local camPos = camera.CFrame.Position
-	local screencenter = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+local function getclosestvisibleenemypart()
+	local closest = nil
+	local mindist = math.huge
+	local screencenter = Vector2.new(camera["ViewportSize"]["X"] / 2, camera["ViewportSize"]["Y"] / 2)
 
 	for _, p in ipairs(players:GetPlayers()) do
-		if p ~= player and p.Team ~= player.Team and p.Character and p.Character:FindFirstChildOfClass("Humanoid") then
-			local char = p.Character
-			local humanoid = char:FindFirstChildOfClass("Humanoid")
-			if humanoid.Health <= 0 then continue end
-
-			-- Check for head/torso visibility first
+		if p ~= player and p["Team"] ~= player["Team"] and p["Character"] and not p["Character"]:IsDescendantOf(camera) then
+			local char = p["Character"]
 			local head = char:FindFirstChild("Head")
 			local torso = char:FindFirstChild("UpperTorso") or char:FindFirstChild("HumanoidRootPart")
-			local partToCheck = nil
+			local humanoid = char:FindFirstChildOfClass("Humanoid")
 
-			if head and torso then
-				if getFirstVisiblePart(head.Parent) == head then
-					partToCheck = head
-				elseif getFirstVisiblePart(torso.Parent) == torso then
-					partToCheck = torso
-				else
-					partToCheck = getFirstVisiblePart(char)
-				end
-			else
-				partToCheck = getFirstVisiblePart(char)
-			end
+			if head and torso and humanoid and humanoid["Health"] > 0 then
+				local targetpart = math.random() < 0.3 and head or torso
+				local camlook = camera["CFrame"]["LookVector"]
+				local totarget = (targetpart["Position"] - camera["CFrame"]["Position"])["Unit"]
 
-			if partToCheck then
-				local screenPos, onscreen = camera:WorldToViewportPoint(partToCheck.Position)
-				if onscreen then
-					local distFromCenter = (Vector2.new(screenPos.X, screenPos.Y) - screencenter).Magnitude
-					if distFromCenter < closestDist then
-						closestDist = distFromCenter
-						closestChar = char
+				if camlook:Dot(totarget) > 0.5 then
+					local screenpos, onscreen = camera:WorldToViewportPoint(targetpart["Position"])
+					if onscreen then
+						local screenpoint = Vector2.new(screenpos["X"], screenpos["Y"])
+						local distfromcenter = (screenpoint - screencenter)["Magnitude"]
+
+						if distfromcenter <= 200 then
+							local rayorigin = camera["CFrame"]["Position"]
+							local raydir = (targetpart["Position"] - rayorigin)
+							local ignorelist = {player["Character"], camera}
+							local hit, _ = workspace:FindPartOnRayWithIgnoreList(Ray.new(rayorigin, raydir["Unit"] * raydir["Magnitude"]), ignorelist)
+
+							while hit and not hit:IsDescendantOf(char) and not isobstructing(hit) do
+								table.insert(ignorelist, hit)
+								hit, _ = workspace:FindPartOnRayWithIgnoreList(Ray.new(rayorigin, raydir["Unit"] * raydir["Magnitude"]), ignorelist)
+							end
+
+							if hit and hit:IsDescendantOf(char) then
+								if distfromcenter < mindist then
+									mindist = distfromcenter
+									closest = targetpart
+								end
+							end
+						end
 					end
 				end
 			end
 		end
 	end
 
-	if closestChar then
-		lockedTarget = closestChar
-		lockedPart = (closestChar:FindFirstChild("Head") and getFirstVisiblePart(closestChar) == closestChar.Head) and closestChar.Head
-			or (closestChar:FindFirstChild("UpperTorso") and getFirstVisiblePart(closestChar) == closestChar.UpperTorso) and closestChar.UpperTorso
-			or getFirstVisiblePart(closestChar)
-	else
-		lockedTarget = nil
-		lockedPart = nil
-	end
+	return closest
 end
 
-runservice.RenderStepped:Connect(function()
+runservice["RenderStepped"]:Connect(function()
 	if toggle then
-		if not lockedTarget or not lockedTarget.Parent or lockedTarget:FindFirstChildOfClass("Humanoid").Health <= 0 then
-			getClosestVisibleEnemy()
-		end
-
-		if lockedTarget and lockedPart then
-			local camPos = camera.CFrame.Position
-			if (lockedPart.Position - camPos).Magnitude > maxLockDistance then
-				lockedTarget = nil
-				lockedPart = nil
-				return
-			end
-
-			local newLookVector = (lockedPart.Position - camPos).Unit
-			local newCFrame = CFrame.new(camPos, camPos + newLookVector)
+		local target = getclosestvisibleenemypart()
+		if target then
+			local campos = camera["CFrame"]["Position"]
+			local newlookvector = (target["Position"] - campos)["Unit"]
+			local newcf = CFrame.new(campos, campos + newlookvector)
 
 			local alpha = 0.25
-			local easedAlpha = alpha < 0.5 and 2 * alpha * alpha or -1 + (4 - 2 * alpha) * alpha
-			camera.CFrame = camera.CFrame:Lerp(newCFrame, easedAlpha)
+			local easedalpha
+			if alpha < 0.5 then
+				easedalpha = 2 * alpha * alpha
+			else
+				easedalpha = -1 + (4 - 2 * alpha) * alpha
+			end
+
+			camera["CFrame"] = camera["CFrame"]:Lerp(newcf, easedalpha)
 		end
 	end
 end)
