@@ -411,10 +411,22 @@ screenGui.Parent = gethui() or game:GetService("CoreGui")
 if screenGui.Parent:FindFirstChild("MM2SNS") then screenGui.Parent:FindFirstChild("MM2SNS"):Destroy() end
 screenGui.Name = "MM2SNS"
 
+function clik() 
+	task.spawn(function()
+		local s = Instance.new("Sound") 
+		s.SoundId = "rbxassetid://87152549167464"
+		s.Parent = workspace
+		s.Volume = 1.2 
+		s.TimePosition = 0.1 
+		s:Play() 
+	end)
+end
+
 if not onmobile then
 	game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
 		if gameProcessed then return end
 		if input.KeyCode == Enum.KeyCode.R then
+			clik() 
 			if equipgun() then  
 				for i = 1, 11 do  
 					task.spawn(function()  
@@ -423,12 +435,15 @@ if not onmobile then
 				end  
 			end
 		elseif input.KeyCode == Enum.KeyCode.E then
+			clik() 
 			task.spawn(function() if not highloop then startplayeresp() else stopplayeresp() end end)
 			task.spawn(function() if not nameloop then startnameesp() else stopnameesp() end end)
 			task.spawn(function() if not gunespactive then gundropesp() else nogundropesp() end end)
 		elseif input.KeyCode == Enum.KeyCode.G then
+			clik() 
 			task.spawn(function() bringgun() end)
 		elseif input.KeyCode == Enum.KeyCode.K then
+			clik() 
 			task.spawn(function() stabsheriff() end)
 		end
 	end)
@@ -456,17 +471,6 @@ if not onmobile then
 	label.Text = "Murder Mystery 2 | Simple Necessity Script\n\nControls:\nPress R to shoot the murderer.\nPress E to toggle ESP.\nPress G to grab the gun if dropped.\nPress K to kill the sheriff."
 	label.Parent = frame
 else
-	function clik() 
-		task.spawn(function()
-			local s = Instance.new("Sound") 
-			s.SoundId = "rbxassetid://87152549167464"
-			s.Parent = workspace
-			s.Volume = 1.2 
-			s.TimePosition = 0.1 
-			s:Play() 
-		end)
-	end
-	
 	function repos(ui, w, h, off)
 		off = off or 0
 		local sw, sh = game.Workspace.CurrentCamera.ViewportSize.X, game.Workspace.CurrentCamera.ViewportSize.Y
