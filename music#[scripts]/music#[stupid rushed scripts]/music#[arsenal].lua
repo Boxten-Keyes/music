@@ -81,9 +81,7 @@ local function getclosestvisibleenemypart()
 
 	local function isVisible(targetPart, char)
 		local rayorigin = camera.CFrame.Position
-		local targetPos = targetPart.Position
-		local raydir = (targetPos - rayorigin)
-		local raylength = raydir.Magnitude
+		local raydir = targetPart.Position - rayorigin
 
 		local raycastParams = RaycastParams.new()
 		raycastParams.FilterDescendantsInstances = {player.Character, camera, char}
@@ -91,7 +89,6 @@ local function getclosestvisibleenemypart()
 		raycastParams.IgnoreWater = true
 
 		local raycastResult = workspace:Raycast(rayorigin, raydir, raycastParams)
-
 		if raycastResult then
 			local hitPart = raycastResult.Instance
 			if hitPart and not hitPart:IsDescendantOf(char) then
@@ -104,10 +101,8 @@ local function getclosestvisibleenemypart()
 
 	local function isPartVisible(targetPart, char)
 		if not targetPart then return false end
-
 		local screenpos, onscreen = camera:WorldToViewportPoint(targetPart.Position)
 		if not onscreen then return false end
-
 		return isVisible(targetPart, char)
 	end
 
@@ -115,65 +110,57 @@ local function getclosestvisibleenemypart()
 		local humanoid = lockedTarget.Parent:FindFirstChildOfClass("Humanoid")
 		if humanoid and humanoid.Health > 0 then
 			if isPartVisible(lockedTarget, lockedTarget.Parent) then
-				return lockedTarget
+				if lockedTarget.Position.Y - mypos.Y <= 100 then
+					return lockedTarget
+				end
 			end
 		end
 	end
 	lockedTarget = nil
 
-	local bestPart = nil
+	local bestTarget = nil
 	local bestDistance = math.huge
 	local lowestHealth = math.huge
 
 	for _, p in ipairs(players:GetPlayers()) do
-		if p ~= player and p.Character and p.Character:FindFirstChild("Humanoid") and p.Character:FindFirstChild("HumanoidRootPart") then
-			local char = p.Character
-			local humanoid = char:FindFirstChildOfClass("Humanoid")
-			if humanoid.Health <= 0 then continue end
-			if p.Team and p.Team == player.Team then continue end
-			if char:FindFirstChildOfClass("ForceField") then continue end
+		if p == player then continue end
+		local char = p.Character
+		if not char then continue end
 
-			local head = char:FindFirstChild("Head")
-			local hrp = char:FindFirstChild("HumanoidRootPart")
-			if not hrp then continue end
+		local humanoid = char:FindFirstChildOfClass("Humanoid")
+		local hrp = char:FindFirstChild("HumanoidRootPart")
+		local head = char:FindFirstChild("Head")
+		if not humanoid or humanoid.Health <= 0 or not hrp then continue end
+		if p.Team and p.Team == player.Team then continue end
+		if char:FindFirstChildOfClass("ForceField") then continue end
 
-			local distToHRP = (hrp.Position - mypos).Magnitude
+		local yDiff = hrp.Position.Y - mypos.Y
+		if yDiff > 100 then continue end
 
-			if head and isPartVisible(head, char) then
-				local dist = (head.Position - mypos).Magnitude
-				if dist < bestDistance or (dist == bestDistance and humanoid.Health < lowestHealth) then
-					bestPart = head
-					bestDistance = dist
-					lowestHealth = humanoid.Health
-				end
-			end
+		local targetPart
+		if head and math.random() <= 0.3 and isPartVisible(head, char) then
+			targetPart = head
+		elseif isPartVisible(hrp, char) then
+			local backOffset = -hrp.CFrame.LookVector * 1.5
+			targetPart = Instance.new("Part")
+			targetPart.Anchored = true
+			targetPart.CanCollide = false
+			targetPart.Transparency = 1
+			targetPart.Position = hrp.Position + backOffset
+		else
+			continue
+		end
 
-			if hrp and isPartVisible(hrp, char) then
-				local dist = (hrp.Position - mypos).Magnitude
-				if dist < bestDistance or (dist == bestDistance and humanoid.Health < lowestHealth) then
-					bestPart = hrp
-					bestDistance = dist
-					lowestHealth = humanoid.Health
-				end
-			end
-
-			for _, part in ipairs(char:GetDescendants()) do
-				if part:IsA("BasePart") and (part.Name == "UpperTorso" or part.Name == "LowerTorso") then
-					if isPartVisible(part, char) then
-						local dist = (part.Position - mypos).Magnitude
-						if dist < bestDistance or (dist == bestDistance and humanoid.Health < lowestHealth) then
-							bestPart = part
-							bestDistance = dist
-							lowestHealth = humanoid.Health
-						end
-					end
-				end
-			end
+		local dist = (targetPart.Position - mypos).Magnitude
+		if dist < bestDistance or (dist == bestDistance and humanoid.Health < lowestHealth) then
+			bestTarget = targetPart
+			bestDistance = dist
+			lowestHealth = humanoid.Health
 		end
 	end
 
-	lockedTarget = bestPart
-	return bestPart
+	lockedTarget = bestTarget
+	return bestTarget
 end
 
 local smoothSpeed = 23
