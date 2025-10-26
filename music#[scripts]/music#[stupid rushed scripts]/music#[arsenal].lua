@@ -29,7 +29,7 @@ local function makecircle()
 	circle = Instance.new("Frame")
 	circle.Name = "AimCircle"
 	circle.AnchorPoint = Vector2.new(0.5, 0.5)
-	circle.Size = UDim2.new(0, 921, 0, 921)
+	circle.Size = UDim2.new(0, 521, 0, 521)
 	circle.Position = crosshair.Position
 	circle.BackgroundTransparency = 1
 	circle.ZIndex = crosshair.ZIndex - 1
@@ -106,7 +106,7 @@ local function getclosestvisibleenemypart()
 			if onscreen then
 				local target2d = Vector2.new(screenpos.X, screenpos.Y)
 				local distpixels = (target2d - crosspos).Magnitude
-				if distpixels <= 921 and isVisible(lockedTarget, lockedTarget.Parent) then
+				if distpixels <= 521 and isVisible(lockedTarget, lockedTarget.Parent) then
 					return lockedTarget
 				end
 			end
@@ -137,7 +137,7 @@ local function getclosestvisibleenemypart()
 						local target2d = Vector2.new(screenpos.X, screenpos.Y)
 						local distpixels = (target2d - crosspos).Magnitude
 
-						if distpixels <= 140 and isVisible(targetpart, char) then
+						if distpixels <= 521 and isVisible(targetpart, char) then
 							if humanoid.Health < lowestHealth or (humanoid.Health == lowestHealth and distpixels < closestScreenDist) then
 								bestPart = targetpart
 								lowestHealth = humanoid.Health
