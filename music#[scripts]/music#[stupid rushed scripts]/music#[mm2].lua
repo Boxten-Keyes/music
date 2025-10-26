@@ -405,12 +405,6 @@ end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-local screenGui = Instance.new("ScreenGui")
-screenGui.ResetOnSpawn = false
-screenGui.Parent = gethui() or game:GetService("CoreGui")
-if screenGui.Parent:FindFirstChild("MM2SNS") then screenGui.Parent:FindFirstChild("MM2SNS"):Destroy() end
-screenGui.Name = "MM2SNS"
-
 function clik() 
 	task.spawn(function()
 		local s = Instance.new("Sound") 
@@ -422,184 +416,119 @@ function clik()
 	end)
 end
 
-if not onmobile then
-	game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
-		if gameProcessed then return end
-		if input.KeyCode == Enum.KeyCode.R then
-			clik() 
-			if equipgun() then  
-				for i = 1, 11 do  
-					task.spawn(function()  
-						shootmurderer()  
-					end)  
-				end  
-			end
-		elseif input.KeyCode == Enum.KeyCode.E then
-			clik() 
-			task.spawn(function() if not highloop then startplayeresp() else stopplayeresp() end end)
-			task.spawn(function() if not nameloop then startnameesp() else stopnameesp() end end)
-			task.spawn(function() if not gunespactive then gundropesp() else nogundropesp() end end)
-		elseif input.KeyCode == Enum.KeyCode.G then
-			clik() 
-			task.spawn(function() bringgun() end)
-		elseif input.KeyCode == Enum.KeyCode.K then
-			clik() 
-			task.spawn(function() stabsheriff() end)
-		end
-	end)
-	
-	local frame = Instance.new("Frame")
-	frame.Size = UDim2.new(0, 307, 0, 112)
-	frame.Position = UDim2.new(0, 14, 0, 10)
-	frame.BackgroundTransparency = 0.5
-	frame.BackgroundColor3 = Color3.new(0, 0, 0)
-	frame.BorderSizePixel = 0
-	frame.Active = true
-	frame.Draggable = true
-	frame.Parent = screenGui
-
-	local label = Instance.new("TextLabel")
-	label.Size = UDim2.new(1, -10, 1, 0)
-	label.TextStrokeTransparency = 1
-	label.Position = UDim2.new(0, 4, 0, 6)
-	label.BackgroundTransparency = 1
-	label.TextColor3 = Color3.fromRGB(255, 255, 255)
-	label.Font = Enum.Font.Code
-	label.TextSize = 14
-	label.TextXAlignment = Enum.TextXAlignment.Left
-	label.TextYAlignment = Enum.TextYAlignment.Top
-	label.Text = "Murder Mystery 2 | Simple Necessity Script\n\nControls:\nPress R to shoot the murderer.\nPress E to toggle ESP.\nPress G to grab the gun if dropped.\nPress K to kill the sheriff."
-	label.Parent = frame
-else
-	function repos(ui, w, h, off)
-		off = off or 0
-		local sw, sh = game.Workspace.CurrentCamera.ViewportSize.X, game.Workspace.CurrentCamera.ViewportSize.Y
-		local cx, cy = (sw - w) / 2, (sh - h) / 2 - 56
-		ui.Position = UDim2.new(0, cx + off, 0, cy)
-	end
-	
-	local shoot = Instance.new("TextButton")
-	shoot.Size = UDim2.new(0, 70, 0, 55)
-	shoot.TextStrokeTransparency = 1
-	repos(shoot, 70, 55)
-	shoot.BackgroundTransparency = 0.3
-	shoot.TextColor3 = Color3.fromRGB(255, 255, 255)
-	shoot.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	shoot.Font = Enum.Font.Code
-	shoot.BorderSizePixel = 0
-	shoot.TextSize = 13
-	shoot.TextXAlignment = Enum.TextXAlignment.Center
-	shoot.TextYAlignment = Enum.TextYAlignment.Center
-	shoot.Active = true
-	shoot.Draggable = true
-	shoot.TextWrapped = true
-	shoot.Text = "Grab Gun"
-	shoot.Parent = screenGui
-	
-	local shootbord = Instance.new("UIStroke")
-	shootbord.Thickness = 1
-	shootbord.Color = Color3.new(1, 1, 1)
-	shootbord.Parent = shoot
-	shootbord.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-	
-	shoot.MouseButton1Click:Connect(function()
-		clik() bringgun()
-	end)
-	
-	local esp = Instance.new("TextButton")
-	esp.Size = UDim2.new(0, 70, 0, 55)
-	esp.TextStrokeTransparency = 1
-	repos(esp, 70, 55, 80)
-	esp.BackgroundTransparency = 0.3
-	esp.TextColor3 = Color3.fromRGB(255, 255, 255)
-	esp.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	esp.Font = Enum.Font.Code
-	esp.BorderSizePixel = 0
-	esp.TextSize = 13
-	esp.TextXAlignment = Enum.TextXAlignment.Center
-	esp.TextYAlignment = Enum.TextYAlignment.Center
-	esp.Active = true
-	esp.Draggable = true
-	esp.TextWrapped = true
-	esp.Text = "Toggle\nESP (Off)"
-	esp.Parent = screenGui
-
-	local espbord = Instance.new("UIStroke")
-	espbord.Thickness = 1
-	espbord.Color = Color3.new(1, 1, 1)
-	espbord.Parent = esp
-	espbord.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-	
-	esp.MouseButton1Click:Connect(function()
-		clik()
-		task.spawn(function() if not highloop then startplayeresp() else stopplayeresp() end end)
-		task.spawn(function() if not nameloop then startnameesp() else stopnameesp() end end)
-		task.spawn(function() if not gunespactive then gundropesp() esp.Text = "Toggle\nESP (On)" else nogundropesp() esp.Text = "Toggle\nESP (Off)" end end)
-	end)
-	
-	local grabgun = Instance.new("TextButton")
-	grabgun.Size = UDim2.new(0, 70, 0, 55)
-	grabgun.TextStrokeTransparency = 1
-	repos(grabgun, 70, 55, -80)
-	grabgun.BackgroundTransparency = 0.3
-	grabgun.TextColor3 = Color3.fromRGB(255, 255, 255)
-	grabgun.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	grabgun.Font = Enum.Font.Code
-	grabgun.BorderSizePixel = 0
-	grabgun.TextSize = 13
-	grabgun.TextXAlignment = Enum.TextXAlignment.Center
-	grabgun.TextYAlignment = Enum.TextYAlignment.Center
-	grabgun.Active = true
-	grabgun.Draggable = true
-	grabgun.TextWrapped = true
-	grabgun.Text = "Shoot Murderer"
-	grabgun.Parent = screenGui
-
-	local grabgunbord = Instance.new("UIStroke")
-	grabgunbord.Thickness = 1
-	grabgunbord.Color = Color3.new(1, 1, 1)
-	grabgunbord.Parent = grabgun
-	grabgunbord.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-	
-	grabgun.MouseButton1Click:Connect(function()
-		clik()
-		if equipgun() then  
-			for i = 1, 11 do  
-				task.spawn(function()  
-					shootmurderer()  
-				end)  
-			end  
-		end
-	end)
-	
-	local killsheriff = Instance.new("TextButton")
-	killsheriff.Size = UDim2.new(0, 70, 0, 55)
-	killsheriff.TextStrokeTransparency = 1
-	repos(killsheriff, 70, 55, -160)
-	killsheriff.BackgroundTransparency = 0.3
-	killsheriff.TextColor3 = Color3.fromRGB(255, 255, 255)
-	killsheriff.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	killsheriff.Font = Enum.Font.Code
-	killsheriff.BorderSizePixel = 0
-	killsheriff.TextSize = 13
-	killsheriff.TextXAlignment = Enum.TextXAlignment.Center
-	killsheriff.TextYAlignment = Enum.TextYAlignment.Center
-	killsheriff.Active = true
-	killsheriff.Draggable = true
-	killsheriff.TextWrapped = true
-	killsheriff.Text = "Kill Sheriff"
-	killsheriff.Parent = screenGui
-
-	local killsheriffbord = Instance.new("UIStroke")
-	killsheriffbord.Thickness = 1
-	killsheriffbord.Color = Color3.new(1, 1, 1)
-	killsheriffbord.Parent = killsheriff
-	killsheriffbord.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-
-	killsheriff.MouseButton1Click:Connect(function()
-		clik()
-		stabsheriff()
-	end)
+function repos(ui, w, h, off)
+	off = off or 0
+	local sw, sh = game.Workspace.CurrentCamera.ViewportSize.X, game.Workspace.CurrentCamera.ViewportSize.Y
+	local cx, cy = (sw - w) / 2, (sh - h) / 2 - 56
+	ui.Position = UDim2.new(0, cx + off, 0, cy)
 end
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.ResetOnSpawn = false
+screenGui.Parent = gethui() or game:GetService("CoreGui")
+if screenGui.Parent:FindFirstChild("Stupid Rushed Script") then screenGui.Parent:FindFirstChild("Stupid Rushed Script"):Destroy() end
+screenGui.Name = "Stupid Rushed Script"
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+local function makebutton(text, callback, offset)
+	local btn = Instance.new("TextButton")
+	btn.Size = UDim2.new(0, 90, 0, 55)
+	btn.TextStrokeTransparency = 1
+	repos(btn, 90, 55, offset)
+	btn.BackgroundTransparency = 0.3
+	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	btn.Font = Enum.Font.Code
+	btn.BorderSizePixel = 0
+	btn.TextSize = 13
+	btn.TextXAlignment = Enum.TextXAlignment.Center
+	btn.TextYAlignment = Enum.TextYAlignment.Center
+	btn.Active = true
+	btn.Draggable = true
+	btn.TextWrapped = true
+	btn.Text = text
+	btn.Parent = screenGui
+
+	local stroke = Instance.new("UIStroke")
+	stroke.Thickness = 1
+	stroke.Color = Color3.new(1, 1, 1)
+	stroke.Parent = btn
+	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+	btn.MouseButton1Click:Connect(function()
+		clik()
+		if callback then callback() end
+	end)
+
+	return btn
+end
+
+local function maketoggle(text, initialState, callback, offset)
+	local toggled = initialState or false
+
+	local btn = Instance.new("TextButton")
+	btn.Size = UDim2.new(0, 90, 0, 55)
+	btn.TextStrokeTransparency = 1
+	repos(btn, 90, 55, offset)
+	btn.BackgroundTransparency = 0.3
+	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	btn.Font = Enum.Font.Code
+	btn.BorderSizePixel = 0
+	btn.TextSize = 13
+	btn.TextXAlignment = Enum.TextXAlignment.Center
+	btn.TextYAlignment = Enum.TextYAlignment.Center
+	btn.Active = true
+	btn.Draggable = true
+	btn.TextWrapped = true
+	btn.Text = text
+	btn.Parent = screenGui
+
+	local stroke = Instance.new("UIStroke")
+	stroke.Thickness = 1
+	stroke.Color = Color3.new(1, 1, 1)
+	stroke.Parent = btn
+	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+	local function updateVisual()
+		if toggled then
+			btn.TextColor3 = Color3.fromRGB(0, 255, 0)
+			stroke.Color = Color3.fromRGB(0, 255, 0)
+		else
+			btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+			stroke.Color = Color3.fromRGB(255, 255, 255)
+		end
+	end
+
+	updateVisual()
+
+	btn.MouseButton1Click:Connect(function()
+		clik()
+		toggled = not toggled
+		updateVisual()
+		if callback then callback(toggled) end
+	end)
+
+	return btn
+end
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+makebutton("Grab Gun", bringgun, 0)
+makebutton("Kill Sheriff", stabsheriff, 0)
+makebutton("Shoot Murderer", shootmurderer, 0)
+
+maketoggle("Toggle ESP", false, function(s)
+	if s then
+		task.spawn(startplayeresp)
+		task.spawn(startnameesp)
+		task.spawn(gundropesp)
+	else
+		task.spawn(stopplayeresp)
+		task.spawn(stopnameesp)
+		task.spawn(stopgunesploop)
+	end
+end, 0)
 
 -------------------------------------------------------------------------------------------------------------------------------
