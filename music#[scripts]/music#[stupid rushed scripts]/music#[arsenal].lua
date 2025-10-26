@@ -161,7 +161,7 @@ local function getclosestvisibleenemypart()
 	return bestPart
 end
 
-local smoothSpeed = 21
+local smoothSpeed = 23
 
 runservice.RenderStepped:Connect(function(dt)
 	if toggle then
