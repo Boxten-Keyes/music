@@ -228,7 +228,7 @@ local function maketoggle(text, initialState, callback, offset)
 	stroke.Parent = btn
 	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
-	local function updateVisual()
+	local function updvisual()
 		if toggled then
 			btn.TextColor3 = Color3.fromRGB(0, 255, 0)
 			stroke.Color = Color3.fromRGB(0, 255, 0)
@@ -238,21 +238,21 @@ local function maketoggle(text, initialState, callback, offset)
 		end
 	end
 
-	updateVisual()
+	updvisual()
 
-	local function toggleButton()
+	local function togglebutton()
 		clik()
 		toggled = not toggled
-		updateVisual()
+		updvisual()
 		if callback then callback(toggled) end
 	end
 
-	btn.MouseButton1Click:Connect(toggleButton)
-	
+	btn.MouseButton1Click:Connect(togglebutton)
+
 	game["UserInputService"].InputBegan:Connect(function(input, gp)
 		if gp then return end
 		if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.R then
-			toggleButton()
+			togglebutton()
 		end
 	end)
 
