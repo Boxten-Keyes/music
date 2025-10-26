@@ -24,7 +24,14 @@ local function usejumper() i:InvokeServer("JumperCable") end
 local function usebandage() i:InvokeServer("Bandage") end
 
 function checkforgenpps()
-	local gens = workspace:FindFirstChild("CurrentFloor"):FindFirstChildWhichIsA("Model"):FindFirstChild("Generators")
+	local mod
+	for _, model in pairs(workspace:FindFirstChild("CurrentFloor"):GetChildren()) do
+		if model:IsA("Model") and model.Name:match("^%d+$") then
+			mod = model
+		end
+	end
+		
+	local gens = mod:FindFirstChild("Generators")
 	if gens then
 		for _, v in ipairs(gens:GetDescendants()) do
 			if v:IsA("ProximityPrompt") then
@@ -44,8 +51,12 @@ local function togen()
 	local room = workspace:FindFirstChild("CurrentFloor")
 	if not room then return end
 
-	local roomModel = room:FindFirstChildWhichIsA("Model")
-	if not roomModel then return end
+	local roomModel
+	for _, model in pairs(room:GetChildren()) do
+		if model:IsA("Model") and model.Name:match("^%d+$") then
+			roomModel = model
+		end
+	end
 
 	local generatorsFolder = roomModel:FindFirstChild("Generators")
 	if not generatorsFolder then return end
@@ -140,11 +151,81 @@ function disableafb()
 	end
 end
 
+autovotebestcardenabled = false
+autovotebestcardthread = nil
+
+function votebest()
+	local voter = game.Workspace.Info:WaitForChild("CardVote")
+	local event = rs:WaitForChild("Events"):WaitForChild("CardVoteEvent")
+
+	task.spawn(function() local c = voter:FindFirstChild("DyleFloor") if c then event:FireServer(c) end end)
+	task.spawn(function() local c = voter:FindFirstChild("PipingTape") if c then event:FireServer(c) end end)
+	task.spawn(function() local c = voter:FindFirstChild("DandyDiscount") if c then event:FireServer(c) end end)
+	task.spawn(function() local c = voter:FindFirstChild("Elevator") local c2 = voter:FindFirstChild("Elevator2") if c then event:FireServer(c) end if c2 then event:FireServer(c2) end end)
+	task.spawn(function() local c = voter:FindFirstChild("SurvivalPoint") local c2 = voter:FindFirstChild("SurvivalPoint2") if c then event:FireServer(c) end if c2 then event:FireServer(c2) end end)
+	task.spawn(function() local c = voter:FindFirstChild("RandomItem") local c2 = voter:FindFirstChild("RandomItem2") if c then event:FireServer(c) end if c2 then event:FireServer(c2) end end)
+	task.spawn(function() local c = voter:FindFirstChild("AbilityCooldown") local c2 = voter:FindFirstChild("AbilityCooldown2") if c then event:FireServer(c) end if c2 then event:FireServer(c2) end end)
+	task.spawn(function() local c = voter:FindFirstChild("GlowLight") if c then event:FireServer(c) end end)
+	task.spawn(function() local c = voter:FindFirstChild("MonsterPanicReduction") if c then event:FireServer(c) end end)
+	task.spawn(function() local c = voter:FindFirstChild("ItemRarity") local c2 = voter:FindFirstChild("ItemRarity2") if c then event:FireServer(c) end if c2 then event:FireServer(c2) end end)
+	task.spawn(function() local c = voter:FindFirstChild("Stamina") local c2 = voter:FindFirstChild("Stamina2") if c then event:FireServer(c) end if c2 then event:FireServer(c2) end end)
+	task.spawn(function() local c = voter:FindFirstChild("Machine") if c then event:FireServer(c) end end)
+	task.spawn(function()
+		local v = false
+		for _, p in ipairs(game:GetService("Players"):GetPlayers()) do
+			local c = p.Character
+			local h = c and c:FindFirstChildOfClass("Humanoid")
+			if h and h.Health < 2 then
+				v = true
+				break
+			end
+		end
+
+		local c = voter:FindFirstChild("Heal")
+		local c2 = voter:FindFirstChild("Heal2")
+		if c and v then event:FireServer(c) end
+		if c2 and v then event:FireServer(c2) end
+	end)
+end
+
+function monitorcards()
+	local voter = game.Workspace.Info:WaitForChild("CardVote")
+
+	local function tryvote()
+		if not autovotebestcardenabled or alreadyVoted then return end
+
+		task.delay(1, function()
+			if not autovotebestcardenabled or alreadyVoted then return end
+			if #voter:GetChildren() > 0 then
+				votebest()
+				alreadyVoted = true
+			end
+		end)
+	end
+
+	voter.ChildAdded:Connect(tryvote)
+	voter.ChildRemoved:Connect(function() if #voter:GetChildren() == 0 then alreadyVoted = false end end)
+	if #voter:GetChildren() > 0 then tryvote() end
+end
+
+function autovotebestcard()
+	if autovotebestcardenabled then return end
+	autovotebestcardenabled = true
+	alreadyVoted = false
+	task.spawn(monitorcards)
+end
+
+function unautovotebestcard()
+	autovotebestcardenabled = false
+	alreadyVoted = false
+end
+
 autofarmenabled = false
 
 function startautofarm()
 	if autofarmenabled then return end 
 	autofarmenabled = true
+	task.spawn(autovotebestcard)
 
 	task.spawn(function()
 		while autofarmenabled do
@@ -175,6 +256,7 @@ end
 function stopautofarm()
 	if not autofarmenabled then return end 
 	autofarmenabled = false
+	task.spawn(unautovotebestcard)
 end
 
 -------------------------------------------------------------------------------------------------------------------------------
