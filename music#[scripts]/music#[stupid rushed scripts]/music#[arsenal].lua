@@ -41,7 +41,7 @@ local function makecircle()
 	local stroke = Instance.new("UIStroke")
 	stroke.Thickness = 1
 	stroke.Transparency = 0
-	stroke.Color = Color3.fromRGB(1, 1, 1)
+	stroke.Color = Color3.fromRGB(255, 255, 255)
 	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 	stroke.Parent = circle
 end
