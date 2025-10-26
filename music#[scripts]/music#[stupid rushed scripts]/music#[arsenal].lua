@@ -19,17 +19,17 @@ local function makecircle()
 
 	local screengui = player:FindFirstChildOfClass("PlayerGui")
 	if not screengui then return end
-	local gui = screengui:WaitForChild("GUI")
+	local gui = screengui:FindFirstChild("GUI")
 	if not gui then return end
-	local crosshairs = gui:WaitForChild("Crosshairs")
+	local crosshairs = gui:FindFirstChild("Crosshairs")
 	if not crosshairs then return end
-	local crosshair = crosshairs:WaitForChild("Crosshair"):WaitForChild("Dot")
+	local crosshair = crosshairs:FindFirstChild("Crosshair"):FindFirstChild("Dot")
 	if not crosshair then return end
 
 	circle = Instance.new("Frame")
 	circle.Name = "AimCircle"
 	circle.AnchorPoint = Vector2.new(0.5, 0.5)
-	circle.Size = UDim2.new(0, 521, 0, 521)
+	circle.Size = UDim2.new(0, 421, 0, 421)
 	circle.Position = crosshair.Position
 	circle.BackgroundTransparency = 1
 	circle.ZIndex = crosshair.ZIndex - 1
@@ -106,7 +106,7 @@ local function getclosestvisibleenemypart()
 			if onscreen then
 				local target2d = Vector2.new(screenpos.X, screenpos.Y)
 				local distpixels = (target2d - crosspos).Magnitude
-				if distpixels <= 521 and isVisible(lockedTarget, lockedTarget.Parent) then
+				if distpixels <= 921 and isVisible(lockedTarget, lockedTarget.Parent) then
 					return lockedTarget
 				end
 			end
@@ -122,7 +122,7 @@ local function getclosestvisibleenemypart()
 		if p ~= player and p.Character and p.Character:FindFirstChild("Humanoid") and p.Character:FindFirstChild("HumanoidRootPart") then
 			local hwrap = workspace:FindFirstChild("HWRAP_" .. player.Name):WaitForChild("Gun")
 			if not hwrap or not hwrap:IsA("MeshPart") then continue end
-
+			
 			local char = p.Character
 			local humanoid = char:FindFirstChildOfClass("Humanoid")
 
@@ -137,7 +137,7 @@ local function getclosestvisibleenemypart()
 						local target2d = Vector2.new(screenpos.X, screenpos.Y)
 						local distpixels = (target2d - crosspos).Magnitude
 
-						if distpixels <= 521 and isVisible(targetpart, char) then
+						if distpixels <= circle.Size.X.Offset and isVisible(targetpart, char) then
 							if humanoid.Health < lowestHealth or (humanoid.Health == lowestHealth and distpixels < closestScreenDist) then
 								bestPart = targetpart
 								lowestHealth = humanoid.Health
@@ -162,7 +162,7 @@ runservice.RenderStepped:Connect(function()
 			local newlookvector = (target.Position - campos).Unit
 			local newcf = CFrame.new(campos, campos + newlookvector)
 
-			local alpha = 0.31
+			local alpha = 0.25
 			local easedalpha
 			if alpha < 0.5 then
 				easedalpha = 2 * alpha * alpha
