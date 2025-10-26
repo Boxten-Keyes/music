@@ -180,8 +180,8 @@ end)
 local screenGui = Instance.new("ScreenGui")
 screenGui.ResetOnSpawn = false
 screenGui.Parent = gethui() or game:GetService("CoreGui")
-if screenGui.Parent:FindFirstChild("ASNS") then screenGui.Parent:FindFirstChild("ASNS"):Destroy() end
-screenGui.Name = "ASNS"
+if screenGui.Parent:FindFirstChild("Stupid Rushed Script") then screenGui.Parent:FindFirstChild("Stupid Rushed Script"):Destroy() end
+screenGui.Name = "Stupid Rushed Script"
 
 function clik() 
 	task.spawn(function()
