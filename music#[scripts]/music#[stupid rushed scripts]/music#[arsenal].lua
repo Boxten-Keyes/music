@@ -6,8 +6,8 @@ if not game:IsLoaded() then game["Loaded"]:Wait() end
 
 local players = game:GetService("Players")
 local runservice = game:GetService("RunService")
-local player = players["LocalPlayer"]
-local camera = workspace["CurrentCamera"]
+local player = players.LocalPlayer
+local camera = workspace.CurrentCamera
 
 -------------------------------------------------------------------------------------------------------------------------------
 
@@ -127,9 +127,6 @@ local function getclosestvisibleenemypart()
 
 	for _, p in ipairs(players:GetPlayers()) do
 		if p ~= player and p.Character and p.Character:FindFirstChild("Humanoid") and p.Character:FindFirstChild("HumanoidRootPart") then
-			local hwrapClone = workspace:FindFirstChild("HWRAP_" .. p.Name)
-			if not hwrapClone or #hwrapClone:GetChildren() == 0 then return end
-			
 			local char = p.Character
 			local humanoid = char:FindFirstChildOfClass("Humanoid")
 			if humanoid.Health <= 0 then continue end
@@ -203,6 +200,73 @@ runservice.RenderStepped:Connect(function(dt)
 	end
 end)
 
+local highlights = {}
+local espEnabled = false
+
+local function highlightCharacter(plr)
+	if plr == player then return end
+	local char = plr.Character
+	if not char then return end
+
+	if highlights[plr] then
+		highlights[plr]:Destroy()
+	end
+
+	local hl = Instance.new("Highlight")
+	hl.Parent = char
+	hl.Adornee = char
+	hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+	hl.FillTransparency = 0.4
+	hl.OutlineTransparency = 0
+
+	if plr.Team then
+		hl.FillColor = plr.Team.TeamColor.Color
+		hl.OutlineColor = Color3.fromRGB(255, 255, 255)
+	else
+		hl.FillColor = Color3.fromRGB(255, 255, 255)
+		hl.OutlineColor = Color3.fromRGB(255, 255, 255)
+	end
+
+	highlights[plr] = hl
+end
+
+local function removeHighlight(plr)
+	if highlights[plr] then
+		highlights[plr]:Destroy()
+		highlights[plr] = nil
+	end
+end
+
+local function updateHighlights()
+	for _, plr in ipairs(players:GetPlayers()) do
+		if espEnabled and plr.Character then
+			highlightCharacter(plr)
+		else
+			removeHighlight(plr)
+		end
+	end
+end
+
+players.PlayerAdded:Connect(function(plr)
+	plr.CharacterAdded:Connect(function()
+		if espEnabled then
+			highlightCharacter(plr)
+		end
+	end)
+end)
+
+players.PlayerRemoving:Connect(removeHighlight)
+runservice.RenderStepped:Connect(updateHighlights)
+
+local function toggleESP(state)
+	espEnabled = state
+	if not espEnabled then
+		for plr, _ in pairs(highlights) do
+			removeHighlight(plr)
+		end
+	end
+end
+
 -------------------------------------------------------------------------------------------------------------------------------
 
 function clik() 
@@ -216,11 +280,22 @@ function clik()
 	end)
 end
 
-function repos(ui, w, h, off)
-	off = off or 0
-	local sw, sh = game.Workspace.CurrentCamera.ViewportSize.X, game.Workspace.CurrentCamera.ViewportSize.Y
-	local cx, cy = (sw - w) / 2, (sh - h) / 2 - 56
-	ui.Position = UDim2.new(0, cx + off, 0, cy)
+local function repos(ui, row, col, totalRows, totalCols)
+	local buttonWidth = 90
+	local buttonHeight = 55
+	local spacing = 10
+
+	local totalWidth = (buttonWidth * totalCols) + (spacing * (totalCols - 1))
+	local totalHeight = (buttonHeight * totalRows) + (spacing * (totalRows - 1))
+
+	local sw, sh = camera.ViewportSize.X, camera.ViewportSize.Y
+	local startX = (sw - totalWidth) / 2
+	local startY = (sh - totalHeight) / 2 - 56
+
+	local x = startX + (col - 1) * (buttonWidth + spacing)
+	local y = startY + (row - 1) * (buttonHeight + spacing)
+
+	ui.Position = UDim2.new(0, x, 0, y)
 end
 
 local screenGui = Instance.new("ScreenGui")
@@ -231,13 +306,13 @@ screenGui.Name = "Stupid Rushed Script"
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-local function maketoggle(text, initialState, callback, offset)
+local function maketoggle(keybind, text, initialState, callback, row, col, totalRows, totalCols)
 	local toggled = initialState or false
 
 	local btn = Instance.new("TextButton")
 	btn.Size = UDim2.new(0, 90, 0, 55)
 	btn.TextStrokeTransparency = 1
-	repos(btn, 90, 55, offset)
+	repos(btn, row, col, totalRows, totalCols)
 	btn.BackgroundTransparency = 0.3
 	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
 	btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -258,7 +333,7 @@ local function maketoggle(text, initialState, callback, offset)
 	stroke.Parent = btn
 	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
-	local function updateVisual()
+	local function updvisual()
 		if toggled then
 			btn.TextColor3 = Color3.fromRGB(0, 255, 0)
 			stroke.Color = Color3.fromRGB(0, 255, 0)
@@ -268,29 +343,57 @@ local function maketoggle(text, initialState, callback, offset)
 		end
 	end
 
-	updateVisual()
+	updvisual()
 
 	local function toggleButton()
 		clik()
 		toggled = not toggled
-		updateVisual()
+		updvisual()
 		if callback then callback(toggled) end
 	end
 
 	btn.MouseButton1Click:Connect(toggleButton)
-
-	game["UserInputService"].InputBegan:Connect(function(input, gp)
-		if gp then return end
-		if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.R then
-			toggleButton()
-		end
-	end)
+	
+	if keybind then
+		game["UserInputService"].InputBegan:Connect(function(input, gp)
+			if gp then return end
+			if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.R then
+				toggleButton()
+			end
+		end)
+	end
 
 	return btn
 end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-maketoggle("Toggle Camlock [RC]", false, function(s) if s then toggle = true makecircle() else toggle = false removecircle() end end, 0)
+local buttons = {
+	{keybind = true, type = "toggle", text = "Toggle Camlock [R]", callback = function(s) toggle = s if s then makecircle() else removecircle() end end},
+	{type = "toggle", text = "Toggle ESP", callback = function(s) toggleESP(s) end}
+}
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+local maxcolumns = 5
+local maxbuttonspercolumn = 8
+local totalbuttons = #buttons
+
+local columns = math.min(maxbuttonspercolumn, math.ceil(totalbuttons / maxcolumns))
+local rows = math.ceil(totalbuttons / columns)
+
+local buttonindex = 1
+for col = 1, columns do
+	for row = 1, rows do
+		if buttonindex > totalbuttons then break end
+
+		local buttondata = buttons[buttonindex]
+		if buttondata.type == "toggle" then
+			maketoggle(buttondata.keybind, buttondata.text, false, buttondata.callback, row, col, rows, columns)
+		end
+
+		buttonindex = buttonindex + 1
+	end
+end
 
 -------------------------------------------------------------------------------------------------------------------------------
