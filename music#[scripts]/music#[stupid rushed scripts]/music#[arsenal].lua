@@ -177,12 +177,6 @@ end)
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-local screenGui = Instance.new("ScreenGui")
-screenGui.ResetOnSpawn = false
-screenGui.Parent = gethui() or game:GetService("CoreGui")
-if screenGui.Parent:FindFirstChild("Stupid Rushed Script") then screenGui.Parent:FindFirstChild("Stupid Rushed Script"):Destroy() end
-screenGui.Name = "Stupid Rushed Script"
-
 function clik() 
 	task.spawn(function()
 		local s = Instance.new("Sound") 
@@ -201,60 +195,65 @@ function repos(ui, w, h, off)
 	ui.Position = UDim2.new(0, cx + off, 0, cy)
 end
 
-local camlock = Instance.new("TextButton")
-camlock.Size = UDim2.new(0, 70, 0, 55)
-camlock.TextStrokeTransparency = 1
-repos(camlock, 70, 55)
-camlock.BackgroundTransparency = 0.3
-camlock.TextColor3 = Color3.fromRGB(255, 255, 255)
-camlock.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-camlock.Font = Enum.Font.Code
-camlock.BorderSizePixel = 0
-camlock.TextSize = 13
-camlock.TextXAlignment = Enum.TextXAlignment.Center
-camlock.TextYAlignment = Enum.TextYAlignment.Center
-camlock.Active = true
-camlock.Draggable = true
-camlock.TextWrapped = true
-camlock.Text = "Toggle Camlock"
-camlock.Parent = screenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.ResetOnSpawn = false
+screenGui.Parent = gethui() or game:GetService("CoreGui")
+if screenGui.Parent:FindFirstChild("Stupid Rushed Script") then screenGui.Parent:FindFirstChild("Stupid Rushed Script"):Destroy() end
+screenGui.Name = "Stupid Rushed Script"
 
-local camlockbord = Instance.new("UIStroke")
-camlockbord.Thickness = 1
-camlockbord.Color = Color3.new(1, 1, 1)
-camlockbord.Parent = camlock
-camlockbord.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+-------------------------------------------------------------------------------------------------------------------------------
 
-camlock.MouseButton1Click:Connect(function()
-	clik()
-	toggle = not toggle
-	if toggle then
-		camlock.TextColor3 = Color3.fromRGB(0, 255, 0)
-		camlockbord.Color = Color3.new(0, 1, 0)
-		makecircle()
-	else
-		camlock.TextColor3 = Color3.fromRGB(255, 255, 255)
-		camlockbord.Color = Color3.new(1, 1, 1)
-		removecircle()
-	end
-end)
+local function maketoggle(text, initialState, callback, offset)
+	local toggled = initialState or false
 
-game["UserInputService"].InputBegan:Connect(function(input, gameProcessed)
-	if gameProcessed then return end
-	local key = input.KeyCode
-	if key == Enum.KeyCode.R then
-		clik()
-		toggle = not toggle
-		if toggle then
-			camlock.TextColor3 = Color3.fromRGB(0, 255, 0)
-			camlockbord.Color = Color3.new(0, 1, 0)
-			makecircle()
+	local btn = Instance.new("TextButton")
+	btn.Size = UDim2.new(0, 90, 0, 55)
+	btn.TextStrokeTransparency = 1
+	repos(btn, 90, 55, offset)
+	btn.BackgroundTransparency = 0.3
+	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	btn.Font = Enum.Font.Code
+	btn.BorderSizePixel = 0
+	btn.TextSize = 13
+	btn.TextXAlignment = Enum.TextXAlignment.Center
+	btn.TextYAlignment = Enum.TextYAlignment.Center
+	btn.Active = true
+	btn.Draggable = true
+	btn.TextWrapped = true
+	btn.Text = text
+	btn.Parent = screenGui
+
+	local stroke = Instance.new("UIStroke")
+	stroke.Thickness = 1
+	stroke.Color = Color3.new(1, 1, 1)
+	stroke.Parent = btn
+	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+	local function updateVisual()
+		if toggled then
+			btn.TextColor3 = Color3.fromRGB(0, 255, 0)
+			stroke.Color = Color3.fromRGB(0, 255, 0)
 		else
-			camlock.TextColor3 = Color3.fromRGB(255, 255, 255)
-			camlockbord.Color = Color3.new(1, 1, 1)
-			removecircle()
+			btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+			stroke.Color = Color3.fromRGB(255, 255, 255)
 		end
 	end
-end)
+
+	updateVisual()
+
+	btn.MouseButton1Click:Connect(function()
+		clik()
+		toggled = not toggled
+		updateVisual()
+		if callback then callback(toggled) end
+	end)
+
+	return btn
+end
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+maketoggle("Toggle Camlock", false, function(s) if s then toggle = true makecircle() else toggle = false removecircle() end end, 0)
 
 -------------------------------------------------------------------------------------------------------------------------------
