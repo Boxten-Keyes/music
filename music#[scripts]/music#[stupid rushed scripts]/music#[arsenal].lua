@@ -28,7 +28,7 @@ local function makecircle()
 
 	circle = Instance.new("Frame")
 	circle.AnchorPoint = Vector2.new(0.5, 0.5)
-	circle.Size = UDim2.new(0, 921, 0, 921)
+	circle.Size = UDim2.new(0, 421, 0, 421)
 	circle.Position = crosshair.Position
 	circle.BackgroundTransparency = 1
 	circle.ZIndex = crosshair.ZIndex - 1
@@ -39,9 +39,9 @@ local function makecircle()
 	corner.Parent = circle
 
 	local stroke = Instance.new("UIStroke")
-	stroke.Thickness = 2
-	stroke.Transparency = 0.4
-	stroke.Color = Color3.fromRGB(0, 0, 0)
+	stroke.Thickness = 1
+	stroke.Transparency = 0
+	stroke.Color = Color3.fromRGB(1, 1, 1)
 	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 	stroke.Parent = circle
 end
@@ -68,21 +68,8 @@ local function getclosestvisibleenemypart()
 		return nil 
 	end
 
-	local mypos = mychar.HumanoidRootPart.Position
-
-	local screengui = player:FindFirstChildOfClass("PlayerGui")
-	if not screengui then return nil end
-	local gui = screengui:FindFirstChild("GUI")
-	if not gui then return nil end
-	local crosshairs = gui:FindFirstChild("Crosshairs")
-	if not crosshairs then return nil end
-	local crosshair = crosshairs:FindFirstChild("Crosshair"):FindFirstChild("Dot")
-	if not crosshair then return nil end
-
-	local crosspos = Vector2.new(
-		crosshair.AbsolutePosition.X + crosshair.AbsoluteSize.X / 2,
-		crosshair.AbsolutePosition.Y + crosshair.AbsoluteSize.Y / 2
-	)
+	local myhrp = mychar.HumanoidRootPart
+	local mypos = myhrp.Position
 
 	local function isVisible(targetPart, char)
 		local rayorigin = camera.CFrame.Position
@@ -102,48 +89,70 @@ local function getclosestvisibleenemypart()
 		local humanoid = lockedTarget.Parent:FindFirstChildOfClass("Humanoid")
 		if humanoid and humanoid.Health > 0 then
 			local screenpos, onscreen = camera:WorldToViewportPoint(lockedTarget.Position)
-			if onscreen then
-				local target2d = Vector2.new(screenpos.X, screenpos.Y)
-				local distpixels = (target2d - crosspos).Magnitude
-				if distpixels <= circle.Size.X.Offset and isVisible(lockedTarget, lockedTarget.Parent) then
-					return lockedTarget
-				end
+			if onscreen and isVisible(lockedTarget, lockedTarget.Parent) then
+				return lockedTarget
 			end
 		end
 	end
 	lockedTarget = nil
 
 	local bestPart = nil
+	local bestDistance = math.huge
 	local lowestHealth = math.huge
-	local closestScreenDist = math.huge
 
 	for _, p in ipairs(players:GetPlayers()) do
 		if p ~= player and p.Character and p.Character:FindFirstChild("Humanoid") and p.Character:FindFirstChild("HumanoidRootPart") then
-			local hwrap = player:FindFirstChild("NRPBS"):FindFirstChild("EquippedTool")
-
 			local char = p.Character
 			local humanoid = char:FindFirstChildOfClass("Humanoid")
+			if humanoid.Health <= 0 then continue end
+			if p.Team and p.Team == player.Team then continue end
+			if char:FindFirstChildOfClass("ForceField") then continue end
 
-			if humanoid.Health > 0 and (not p.Team or p.Team ~= player.Team) and not char:FindFirstChildOfClass("ForceField") then
-				local head = char:FindFirstChild("Head")
-				local torso = char:FindFirstChild("UpperTorso") or char:FindFirstChild("HumanoidRootPart")
-				local targetpart = math.random() < 0.3 and head or torso
+			local head = char:FindFirstChild("Head")
+			local hrp = char:FindFirstChild("HumanoidRootPart")
+			if not hrp then continue end
 
-				if targetpart then
-					local screenpos, onscreen = camera:WorldToViewportPoint(targetpart.Position)
-					if onscreen then
-						local target2d = Vector2.new(screenpos.X, screenpos.Y)
-						local distpixels = (target2d - crosspos).Magnitude
+			local distToHRP = (hrp.Position - mypos).Magnitude
 
-						if distpixels <= circle.Size.X.Offset and isVisible(targetpart, char) then
-							if humanoid.Health < lowestHealth or (humanoid.Health == lowestHealth and distpixels < closestScreenDist) then
-								bestPart = targetpart
-								lowestHealth = humanoid.Health
-								closestScreenDist = distpixels
-							end
-						end
+			local targetPart = nil
+			local parts = {}
+			for _, part in ipairs(char:GetDescendants()) do
+				if part:IsA("BasePart") then
+					table.insert(parts, part)
+				end
+			end
+
+			for _, part in ipairs(parts) do
+				local screenpos, onscreen = camera:WorldToViewportPoint(part.Position)
+				if not onscreen then continue end
+				if not isVisible(part, char) then continue end
+
+				local yDiff = math.abs(part.Position.Y - mypos.Y)
+				if yDiff > 200 then continue end
+
+				local dist = (part.Position - mypos).Magnitude
+
+				if part.Name == "HumanoidRootPart" then
+					if dist <= 20 and head and isVisible(head, char) then
+						lockedTarget = head
+						return head
+					else
+						lockedTarget = part
+						return part
 					end
 				end
+
+				if dist < bestDistance or (dist == bestDistance and humanoid.Health < lowestHealth) then
+					bestPart = part
+					bestDistance = dist
+					lowestHealth = humanoid.Health
+				end
+			end
+
+			if distToHRP <= 20 and head and isVisible(head, char) then
+				bestPart = head
+				bestDistance = distToHRP
+				lowestHealth = humanoid.Health
 			end
 		end
 	end
@@ -152,7 +161,9 @@ local function getclosestvisibleenemypart()
 	return bestPart
 end
 
-runservice.RenderStepped:Connect(function()
+local smoothSpeed = 21
+
+runservice.RenderStepped:Connect(function(dt)
 	if toggle then
 		local target = getclosestvisibleenemypart()
 		if target then
@@ -160,15 +171,16 @@ runservice.RenderStepped:Connect(function()
 			local newlookvector = (target.Position - campos).Unit
 			local newcf = CFrame.new(campos, campos + newlookvector)
 
-			local alpha = 0.25
-			local easedalpha
+			local alpha = math.clamp(dt * smoothSpeed, 0, 1)
+
+			local easedAlpha
 			if alpha < 0.5 then
-				easedalpha = 2 * alpha * alpha
+				easedAlpha = 4 * alpha * alpha * alpha
 			else
-				easedalpha = -1 + (4 - 2 * alpha) * alpha
+				easedAlpha = 1 - (-2 * alpha + 2)^3 / 2
 			end
 
-			camera.CFrame = camera.CFrame:Lerp(newcf, easedalpha)
+			camera.CFrame = camera.CFrame:Lerp(newcf, easedAlpha)
 		end
 	end
 end)
@@ -228,7 +240,7 @@ local function maketoggle(text, initialState, callback, offset)
 	stroke.Parent = btn
 	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
-	local function updvisual()
+	local function updateVisual()
 		if toggled then
 			btn.TextColor3 = Color3.fromRGB(0, 255, 0)
 			stroke.Color = Color3.fromRGB(0, 255, 0)
@@ -238,21 +250,21 @@ local function maketoggle(text, initialState, callback, offset)
 		end
 	end
 
-	updvisual()
+	updateVisual()
 
-	local function togglebutton()
+	local function toggleButton()
 		clik()
 		toggled = not toggled
-		updvisual()
+		updateVisual()
 		if callback then callback(toggled) end
 	end
 
-	btn.MouseButton1Click:Connect(togglebutton)
+	btn.MouseButton1Click:Connect(toggleButton)
 
 	game["UserInputService"].InputBegan:Connect(function(input, gp)
 		if gp then return end
 		if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.R then
-			togglebutton()
+			toggleButton()
 		end
 	end)
 
@@ -261,6 +273,6 @@ end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-maketoggle("Toggle Camlock [R]", false, function(s) if s then toggle = true makecircle() else toggle = false removecircle() end end, 0)
+maketoggle("Toggle Camlock [RC]", false, function(s) if s then toggle = true makecircle() else toggle = false removecircle() end end, 0)
 
 -------------------------------------------------------------------------------------------------------------------------------
