@@ -140,6 +140,43 @@ function disableafb()
 	end
 end
 
+autofarmenabled = false
+
+function startautofarm()
+	if autofarmenabled then return end 
+	autofarmenabled = true
+
+	task.spawn(function()
+		while autofarmenabled do
+			togen()
+			task.wait(0.6)
+		end
+	end)
+	
+	task.spawn(function()
+		while autofarmenabled do
+			if game.Workspace.Info.Panic.Value then toelevator() end task.wait()
+		end
+	end)
+	
+	task.spawn(function()
+		while autofarmenabled do
+			if plr.Character.Humanoid.Health == 2 or plr.Character.Humanoid.Health == 1 then usebandage() end task.wait(2)
+		end
+	end)
+	
+	task.spawn(function()
+		while autofarmenabled do
+			useextractionspeedcandy() task.wait(0.1)
+		end
+	end)
+end
+
+function stopautofarm()
+	if not autofarmenabled then return end 
+	autofarmenabled = false
+end
+
 -------------------------------------------------------------------------------------------------------------------------------
 
 local function clik() 
@@ -163,8 +200,8 @@ end
 local screenGui = Instance.new("ScreenGui")
 screenGui.ResetOnSpawn = false
 screenGui.Parent = gethui() or game:GetService("CoreGui")
-if screenGui.Parent:FindFirstChild("lol") then screenGui.Parent:FindFirstChild("lol"):Destroy() end
-screenGui.Name = "lol"
+if screenGui.Parent:FindFirstChild("Stupid Rushed Script") then screenGui.Parent:FindFirstChild("Stupid Rushed Script"):Destroy() end
+screenGui.Name = "Stupid Rushed Script"
 
 -------------------------------------------------------------------------------------------------------------------------------
 
@@ -263,8 +300,7 @@ makebutton("Use Bandage", usebandage, 0)
 makebutton("Complete Generator", togen, 0)
 makebutton("Teleport To Elevator", toelevator, 0)
 
-maketoggle("Toggle Fullbright", false, function(state)
-	if state then enableafb() else disableafb() end
-end, 0)
+maketoggle("Toggle Fullbright", false, function(s) if s then enableafb() else disableafb() end end, 0)
+maketoggle("Toggle Autofarm", false, function(s) if s then startautofarm() else stopautofarm() end end, 0)
 
 -------------------------------------------------------------------------------------------------------------------------------
