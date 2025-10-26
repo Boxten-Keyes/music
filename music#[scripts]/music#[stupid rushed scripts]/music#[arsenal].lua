@@ -27,7 +27,6 @@ local function makecircle()
 	if not crosshair then return end
 
 	circle = Instance.new("Frame")
-	circle.Name = "AimCircle"
 	circle.AnchorPoint = Vector2.new(0.5, 0.5)
 	circle.Size = UDim2.new(0, 421, 0, 421)
 	circle.Position = crosshair.Position
@@ -120,8 +119,7 @@ local function getclosestvisibleenemypart()
 
 	for _, p in ipairs(players:GetPlayers()) do
 		if p ~= player and p.Character and p.Character:FindFirstChild("Humanoid") and p.Character:FindFirstChild("HumanoidRootPart") then
-			local hwrap = workspace:FindFirstChild("HWRAP_" .. player.Name):WaitForChild("Gun"):WaitForChild("Empty")
-			if not hwrap or not hwrap:IsA("StringValue") then continue end
+			local hwrap = player:FindFirstChild("NRPBS"):FindFirstChild("EquippedTool")
 
 			local char = p.Character
 			local humanoid = char:FindFirstChildOfClass("Humanoid")
@@ -242,11 +240,20 @@ local function maketoggle(text, initialState, callback, offset)
 
 	updateVisual()
 
-	btn.MouseButton1Click:Connect(function()
+	local function toggleButton()
 		clik()
 		toggled = not toggled
 		updateVisual()
 		if callback then callback(toggled) end
+	end
+
+	btn.MouseButton1Click:Connect(toggleButton)
+	
+	game["UserInputService"].InputBegan:Connect(function(input, gp)
+		if gp then return end
+		if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.R then
+			toggleButton()
+		end
 	end)
 
 	return btn
@@ -254,6 +261,6 @@ end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-maketoggle("Toggle Camlock", false, function(s) if s then toggle = true makecircle() else toggle = false removecircle() end end, 0)
+maketoggle("Toggle Camlock [R]", false, function(s) if s then toggle = true makecircle() else toggle = false removecircle() end end, 0)
 
 -------------------------------------------------------------------------------------------------------------------------------
