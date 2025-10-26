@@ -236,7 +236,7 @@ function startautofarm()
 	
 	task.spawn(function()
 		while autofarmenabled do
-			if game.Workspace.Info.Panic.Value then toelevator() end task.wait()
+			if game.Workspace.Info.RequiredGenerators.Value == game.Workspace.Info.GeneratorsCompleted.Value then toelevator() end task.wait()
 		end
 	end)
 	
