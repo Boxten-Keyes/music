@@ -120,9 +120,9 @@ local function getclosestvisibleenemypart()
 
 	for _, p in ipairs(players:GetPlayers()) do
 		if p ~= player and p.Character and p.Character:FindFirstChild("Humanoid") and p.Character:FindFirstChild("HumanoidRootPart") then
-			local hwrap = workspace:FindFirstChild("HWRAP_" .. player.Name):WaitForChild("Gun")
-			if not hwrap or not hwrap:IsA("MeshPart") then continue end
-			
+			local hwrap = workspace:FindFirstChild("HWRAP_" .. player.Name):WaitForChild("Gun"):WaitForChild("Empty")
+			if not hwrap or not hwrap:IsA("StringValue") then continue end
+
 			local char = p.Character
 			local humanoid = char:FindFirstChildOfClass("Humanoid")
 
