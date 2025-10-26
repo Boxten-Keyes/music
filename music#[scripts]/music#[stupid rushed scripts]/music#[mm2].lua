@@ -416,11 +416,22 @@ function clik()
 	end)
 end
 
-function repos(ui, w, h, off)
-	off = off or 0
+function repos(ui, row, col, totalRows, totalCols)
+	local buttonWidth = 90
+	local buttonHeight = 55
+	local spacing = 10
+
+	local totalWidth = (buttonWidth * totalCols) + (spacing * (totalCols - 1))
+	local totalHeight = (buttonHeight * totalRows) + (spacing * (totalRows - 1))
+
 	local sw, sh = game.Workspace.CurrentCamera.ViewportSize.X, game.Workspace.CurrentCamera.ViewportSize.Y
-	local cx, cy = (sw - w) / 2, (sh - h) / 2 - 56
-	ui.Position = UDim2.new(0, cx + off, 0, cy)
+	local startX = (sw - totalWidth) / 2
+	local startY = (sh - totalHeight) / 2 - 56
+
+	local x = startX + (col - 1) * (buttonWidth + spacing)
+	local y = startY + (row - 1) * (buttonHeight + spacing)
+
+	ui.Position = UDim2.new(0, x, 0, y)
 end
 
 local screenGui = Instance.new("ScreenGui")
@@ -431,11 +442,11 @@ screenGui.Name = "Stupid Rushed Script"
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-local function makebutton(text, callback, offset)
+local function makebutton(text, callback, row, col, totalRows, totalCols)
 	local btn = Instance.new("TextButton")
 	btn.Size = UDim2.new(0, 90, 0, 55)
 	btn.TextStrokeTransparency = 1
-	repos(btn, 90, 55, offset)
+	repos(btn, row, col, totalRows, totalCols)
 	btn.BackgroundTransparency = 0.3
 	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
 	btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -464,13 +475,13 @@ local function makebutton(text, callback, offset)
 	return btn
 end
 
-local function maketoggle(text, initialState, callback, offset)
+local function maketoggle(text, initialState, callback, row, col, totalRows, totalCols)
 	local toggled = initialState or false
 
 	local btn = Instance.new("TextButton")
 	btn.Size = UDim2.new(0, 90, 0, 55)
 	btn.TextStrokeTransparency = 1
-	repos(btn, 90, 55, offset)
+	repos(btn, row, col, totalRows, totalCols)
 	btn.BackgroundTransparency = 0.3
 	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
 	btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -491,7 +502,7 @@ local function maketoggle(text, initialState, callback, offset)
 	stroke.Parent = btn
 	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
-	local function updateVisual()
+	local function updvisual()
 		if toggled then
 			btn.TextColor3 = Color3.fromRGB(0, 255, 0)
 			stroke.Color = Color3.fromRGB(0, 255, 0)
@@ -501,12 +512,12 @@ local function maketoggle(text, initialState, callback, offset)
 		end
 	end
 
-	updateVisual()
+	updvisual()
 
 	btn.MouseButton1Click:Connect(function()
 		clik()
 		toggled = not toggled
-		updateVisual()
+		updvisual()
 		if callback then callback(toggled) end
 	end)
 
@@ -515,20 +526,46 @@ end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-makebutton("Grab Gun", bringgun, 0)
-makebutton("Kill Sheriff", stabsheriff, 0)
-makebutton("Shoot Murderer", shootmurderer, 0)
+local buttons = {
+	{type = "button", text = "Grab Gun", callback = bringgun},
+	{type = "button", text = "Kill Sheriff", callback = stabsheriff},
+	{type = "button", text = "Shoot Murderer", callback = shootmurderer},
+	{type = "toggle", text = "Toggle ESP", callback = function(s)
+		if s then
+			task.spawn(startplayeresp)
+			task.spawn(startnameesp)
+			task.spawn(gundropesp)
+		else
+			task.spawn(stopplayeresp)
+			task.spawn(stopnameesp)
+			task.spawn(stopgunesploop)
+		end
+	end}
+}
 
-maketoggle("Toggle ESP", false, function(s)
-	if s then
-		task.spawn(startplayeresp)
-		task.spawn(startnameesp)
-		task.spawn(gundropesp)
-	else
-		task.spawn(stopplayeresp)
-		task.spawn(stopnameesp)
-		task.spawn(stopgunesploop)
+-------------------------------------------------------------------------------------------------------------------------------
+
+local maxcolumns = 5
+local maxbuttonspercolumn = 8
+local totalbuttons = #buttons
+
+local columns = math.min(maxcolumns, math.ceil(totalbuttons / maxbuttonspercolumn))
+local rows = math.ceil(totalbuttons / columns)
+
+local buttonindex = 1
+for col = 1, columns do
+	for row = 1, rows do
+		if buttonindex > totalbuttons then break end
+
+		local buttondata = buttons[buttonindex]
+		if buttondata.type == "button" then
+			makebutton(buttondata.text, buttondata.callback, row, col, rows, columns)
+		elseif buttondata.type == "toggle" then
+			maketoggle(buttondata.text, false, buttondata.callback, row, col, rows, columns)
+		end
+
+		buttonindex = buttonindex + 1
 	end
-end, 0)
+end
 
 -------------------------------------------------------------------------------------------------------------------------------
