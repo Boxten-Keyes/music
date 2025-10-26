@@ -52,10 +52,18 @@ local function removecircle()
 end
 
 local function isobstructing(part)
-	if not part then return false end
-	if part.Transparency >= 1 then return false end
+	if not part then return true end
+	if part.Transparency >= 0.9 then return false end
 	if not part.CanCollide then return false end
 	if part:IsDescendantOf(player.Character) or part:IsDescendantOf(camera) then return false end
+	if part:IsA("TrussPart") or part:IsA("WedgePart") then return true end
+
+	local size = part.Size
+	local minDimension = math.min(size.X, size.Y, size.Z)
+	if minDimension < 1 then
+		return true
+	end
+
 	return true
 end
 
@@ -73,23 +81,40 @@ local function getclosestvisibleenemypart()
 
 	local function isVisible(targetPart, char)
 		local rayorigin = camera.CFrame.Position
-		local raydir = (targetPart.Position - rayorigin)
-		local ignorelist = {player.Character, camera}
-		local hit = workspace:FindPartOnRayWithIgnoreList(Ray.new(rayorigin, raydir.Unit * raydir.Magnitude), ignorelist)
+		local targetPos = targetPart.Position
+		local raydir = (targetPos - rayorigin)
+		local raylength = raydir.Magnitude
 
-		while hit and not hit:IsDescendantOf(char) and not isobstructing(hit) do
-			table.insert(ignorelist, hit)
-			hit = select(1, workspace:FindPartOnRayWithIgnoreList(Ray.new(rayorigin, raydir.Unit * raydir.Magnitude), ignorelist))
+		local raycastParams = RaycastParams.new()
+		raycastParams.FilterDescendantsInstances = {player.Character, camera, char}
+		raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+		raycastParams.IgnoreWater = true
+
+		local raycastResult = workspace:Raycast(rayorigin, raydir, raycastParams)
+
+		if raycastResult then
+			local hitPart = raycastResult.Instance
+			if hitPart and not hitPart:IsDescendantOf(char) then
+				return false
+			end
 		end
 
-		return hit and hit:IsDescendantOf(char)
+		return true
+	end
+
+	local function isPartVisible(targetPart, char)
+		if not targetPart then return false end
+
+		local screenpos, onscreen = camera:WorldToViewportPoint(targetPart.Position)
+		if not onscreen then return false end
+
+		return isVisible(targetPart, char)
 	end
 
 	if lockedTarget and lockedTarget.Parent then
 		local humanoid = lockedTarget.Parent:FindFirstChildOfClass("Humanoid")
 		if humanoid and humanoid.Health > 0 then
-			local screenpos, onscreen = camera:WorldToViewportPoint(lockedTarget.Position)
-			if onscreen and isVisible(lockedTarget, lockedTarget.Parent) then
+			if isPartVisible(lockedTarget, lockedTarget.Parent) then
 				return lockedTarget
 			end
 		end
@@ -102,6 +127,9 @@ local function getclosestvisibleenemypart()
 
 	for _, p in ipairs(players:GetPlayers()) do
 		if p ~= player and p.Character and p.Character:FindFirstChild("Humanoid") and p.Character:FindFirstChild("HumanoidRootPart") then
+			local hwrapClone = workspace:FindFirstChild("HWRAP_" .. p.Name)
+			if not hwrapClone or #hwrapClone:GetChildren() == 0 then return end
+			
 			local char = p.Character
 			local humanoid = char:FindFirstChildOfClass("Humanoid")
 			if humanoid.Health <= 0 then continue end
@@ -114,45 +142,35 @@ local function getclosestvisibleenemypart()
 
 			local distToHRP = (hrp.Position - mypos).Magnitude
 
-			local targetPart = nil
-			local parts = {}
-			for _, part in ipairs(char:GetDescendants()) do
-				if part:IsA("BasePart") then
-					table.insert(parts, part)
-				end
-			end
-
-			for _, part in ipairs(parts) do
-				local screenpos, onscreen = camera:WorldToViewportPoint(part.Position)
-				if not onscreen then continue end
-				if not isVisible(part, char) then continue end
-
-				local yDiff = math.abs(part.Position.Y - mypos.Y)
-				if yDiff > 200 then continue end
-
-				local dist = (part.Position - mypos).Magnitude
-
-				if part.Name == "HumanoidRootPart" then
-					if dist <= 20 and head and isVisible(head, char) then
-						lockedTarget = head
-						return head
-					else
-						lockedTarget = part
-						return part
-					end
-				end
-
+			if head and isPartVisible(head, char) then
+				local dist = (head.Position - mypos).Magnitude
 				if dist < bestDistance or (dist == bestDistance and humanoid.Health < lowestHealth) then
-					bestPart = part
+					bestPart = head
 					bestDistance = dist
 					lowestHealth = humanoid.Health
 				end
 			end
 
-			if distToHRP <= 20 and head and isVisible(head, char) then
-				bestPart = head
-				bestDistance = distToHRP
-				lowestHealth = humanoid.Health
+			if hrp and isPartVisible(hrp, char) then
+				local dist = (hrp.Position - mypos).Magnitude
+				if dist < bestDistance or (dist == bestDistance and humanoid.Health < lowestHealth) then
+					bestPart = hrp
+					bestDistance = dist
+					lowestHealth = humanoid.Health
+				end
+			end
+
+			for _, part in ipairs(char:GetDescendants()) do
+				if part:IsA("BasePart") and (part.Name == "UpperTorso" or part.Name == "LowerTorso") then
+					if isPartVisible(part, char) then
+						local dist = (part.Position - mypos).Magnitude
+						if dist < bestDistance or (dist == bestDistance and humanoid.Health < lowestHealth) then
+							bestPart = part
+							bestDistance = dist
+							lowestHealth = humanoid.Health
+						end
+					end
+				end
 			end
 		end
 	end
