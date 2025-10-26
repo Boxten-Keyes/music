@@ -30,7 +30,7 @@ function checkforgenpps()
 			mod = model
 		end
 	end
-		
+
 	local gens = mod:FindFirstChild("Generators")
 	if gens then
 		for _, v in ipairs(gens:GetDescendants()) do
@@ -45,49 +45,51 @@ function checkforgenpps()
 end
 
 local function togen()
-	local character = plr.Character or plr.CharacterAdded:Wait()
-	local hrp = character:WaitForChild("HumanoidRootPart")
+	task.spawn(function()
+		local character = plr.Character or plr.CharacterAdded:Wait()
+		local hrp = character:WaitForChild("HumanoidRootPart")
 
-	local room = workspace:FindFirstChild("CurrentFloor")
-	if not room then return end
+		local room = workspace:FindFirstChild("CurrentFloor")
+		if not room then return end
 
-	local roomModel
-	for _, model in pairs(room:GetChildren()) do
-		if model:IsA("Model") and model.Name:match("^%d+$") then
-			roomModel = model
+		local roomModel
+		for _, model in pairs(room:GetChildren()) do
+			if model:IsA("Model") and model.Name:match("^%d+$") then
+				roomModel = model
+			end
 		end
-	end
 
-	local generatorsFolder = roomModel:FindFirstChild("Generators")
-	if not generatorsFolder then return end
+		local generatorsFolder = roomModel:FindFirstChild("Generators")
+		if not generatorsFolder then return end
 
-	local availableGenerators = {}
-	for _, gen in ipairs(generatorsFolder:GetChildren()) do
-		if gen:FindFirstChild("Stats") then
-			local stats = gen.Stats
-			local active = stats:FindFirstChild("ActivePlayer")
-			local completed = stats:FindFirstChild("Completed")
+		local availableGenerators = {}
+		for _, gen in ipairs(generatorsFolder:GetChildren()) do
+			if gen:FindFirstChild("Stats") then
+				local stats = gen.Stats
+				local active = stats:FindFirstChild("ActivePlayer")
+				local completed = stats:FindFirstChild("Completed")
 
-			if active and completed then
-				if not active.Value and not completed.Value then
-					table.insert(availableGenerators, gen)
+				if active and completed then
+					if not active.Value and not completed.Value then
+						table.insert(availableGenerators, gen)
+					end
 				end
 			end
 		end
-	end
 
-	if #availableGenerators == 0 then return end
+		if #availableGenerators == 0 then return end
 
-	local randomGenerator = availableGenerators[math.random(1, #availableGenerators)]
-	if not randomGenerator.PrimaryPart then return end
+		local randomGenerator = availableGenerators[math.random(1, #availableGenerators)]
+		if not randomGenerator.PrimaryPart then return end
 
-	local genCFrame = randomGenerator.PrimaryPart.CFrame
-	local forwardPos = genCFrame.Position + genCFrame.LookVector * 4
-	local targetCFrame = CFrame.new(forwardPos, genCFrame.Position) * CFrame.new(0, 2.3, 0)
-	hrp.CFrame = targetCFrame
+		local genCFrame = randomGenerator.PrimaryPart.CFrame
+		local forwardPos = genCFrame.Position + genCFrame.LookVector * 4
+		local targetCFrame = CFrame.new(forwardPos, genCFrame.Position) * CFrame.new(0, 2.3, 0)
+		hrp.CFrame = targetCFrame
 
-	task.spawn(function() for _ = 1, 10 do checkforgenpps() task.wait(0.1) end end)
-	task.spawn(function() for _ = 1, 10 do usevalve() task.wait(0.1) end end)
+		task.spawn(function() for _ = 1, 10 do checkforgenpps() task.wait(0.1) end end)
+		task.spawn(function() for _ = 1, 10 do usevalve() task.wait(0.1) end end)
+	end)
 end
 
 function toelevator()
@@ -220,6 +222,14 @@ function unautovotebestcard()
 	alreadyVoted = false
 end
 
+function firepp()
+	for _, descendant in ipairs(workspace:GetDescendants()) do
+		if descendant:IsA("ProximityPrompt") then
+			fireproximityprompt(descendant)
+		end
+	end
+end
+
 autofarmenabled = false
 
 function startautofarm()
@@ -230,13 +240,19 @@ function startautofarm()
 	task.spawn(function()
 		while autofarmenabled do
 			togen()
-			task.wait(0.6)
+			task.wait(0.2)
 		end
 	end)
 	
 	task.spawn(function()
 		while autofarmenabled do
 			if game.Workspace.Info.RequiredGenerators.Value == game.Workspace.Info.GeneratorsCompleted.Value then toelevator() end task.wait()
+		end
+	end)
+	
+	task.spawn(function()
+		while autofarmenabled do
+			if game.Workspace.Info.GeneratorsCompleted.Value == 0 then task.spawn(firepp) end task.wait()
 		end
 	end)
 	
@@ -272,11 +288,22 @@ local function clik()
 	end)
 end
 
-local function repos(ui, w, h, off)
-	off = off or 0
+local function repos(ui, row, col, totalRows, totalCols)
+	local buttonWidth = 90
+	local buttonHeight = 55
+	local spacing = 10
+
+	local totalWidth = (buttonWidth * totalCols) + (spacing * (totalCols - 1))
+	local totalHeight = (buttonHeight * totalRows) + (spacing * (totalRows - 1))
+
 	local sw, sh = cam.ViewportSize.X, cam.ViewportSize.Y
-	local cx, cy = (sw - w) / 2, (sh - h) / 2 - 56
-	ui.Position = UDim2.new(0, cx + off, 0, cy)
+	local startX = (sw - totalWidth) / 2
+	local startY = (sh - totalHeight) / 2 - 56
+
+	local x = startX + (col - 1) * (buttonWidth + spacing)
+	local y = startY + (row - 1) * (buttonHeight + spacing)
+
+	ui.Position = UDim2.new(0, x, 0, y)
 end
 
 local screenGui = Instance.new("ScreenGui")
@@ -287,11 +314,11 @@ screenGui.Name = "Stupid Rushed Script"
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-local function makebutton(text, callback, offset)
+local function makebutton(text, callback, row, col, totalRows, totalCols)
 	local btn = Instance.new("TextButton")
 	btn.Size = UDim2.new(0, 90, 0, 55)
 	btn.TextStrokeTransparency = 1
-	repos(btn, 90, 55, offset)
+	repos(btn, row, col, totalRows, totalCols)
 	btn.BackgroundTransparency = 0.3
 	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
 	btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -320,13 +347,13 @@ local function makebutton(text, callback, offset)
 	return btn
 end
 
-local function maketoggle(text, initialState, callback, offset)
+local function maketoggle(text, initialState, callback, row, col, totalRows, totalCols)
 	local toggled = initialState or false
 
 	local btn = Instance.new("TextButton")
 	btn.Size = UDim2.new(0, 90, 0, 55)
 	btn.TextStrokeTransparency = 1
-	repos(btn, 90, 55, offset)
+	repos(btn, row, col, totalRows, totalCols)
 	btn.BackgroundTransparency = 0.3
 	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
 	btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -347,7 +374,7 @@ local function maketoggle(text, initialState, callback, offset)
 	stroke.Parent = btn
 	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
-	local function updateVisual()
+	local function updvisual()
 		if toggled then
 			btn.TextColor3 = Color3.fromRGB(0, 255, 0)
 			stroke.Color = Color3.fromRGB(0, 255, 0)
@@ -357,12 +384,12 @@ local function maketoggle(text, initialState, callback, offset)
 		end
 	end
 
-	updateVisual()
+	updvisual()
 
 	btn.MouseButton1Click:Connect(function()
 		clik()
 		toggled = not toggled
-		updateVisual()
+		updvisual()
 		if callback then callback(toggled) end
 	end)
 
@@ -371,18 +398,44 @@ end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-makebutton("Use Valve", usevalve, 0)
-makebutton("Use Air Horn", useairhorn, 0)
-makebutton("Use Instructions", useinstructions, 0)
-makebutton("Use Speed Candy", usespeedcandy, 0)
-makebutton("Use Smoke Bomb", usesmokebomb, 0)
-makebutton("Use Extraction Speed Candy", useextractionspeedcandy, 0)
-makebutton("Use Jumper Cable", usejumper, 0)
-makebutton("Use Bandage", usebandage, 0)
-makebutton("Complete Generator", togen, 0)
-makebutton("Teleport To Elevator", toelevator, 0)
+local buttons = {
+	{type = "button", text = "Use Valve", callback = usevalve},
+	{type = "button", text = "Use Air Horn", callback = useairhorn},
+	{type = "button", text = "Use Instructions", callback = useinstructions},
+	{type = "button", text = "Use Speed Candy", callback = usespeedcandy},
+	{type = "button", text = "Use Smoke Bomb", callback = usesmokebomb},
+	{type = "button", text = "Use Extraction Speed Candy", callback = useextractionspeedcandy},
+	{type = "button", text = "Use Jumper Cable", callback = usejumper},
+	{type = "button", text = "Use Bandage", callback = usebandage},
+	{type = "button", text = "Complete Generator", callback = togen},
+	{type = "button", text = "Teleport To Elevator", callback = toelevator},
+	{type = "toggle", text = "Toggle Fullbright", callback = function(s) if s then enableafb() else disableafb() end end},
+	{type = "toggle", text = "Toggle Autofarm", callback = function(s) if s then startautofarm() else stopautofarm() end end}
+}
 
-maketoggle("Toggle Fullbright", false, function(s) if s then enableafb() else disableafb() end end, 0)
-maketoggle("Toggle Autofarm", false, function(s) if s then startautofarm() else stopautofarm() end end, 0)
+-------------------------------------------------------------------------------------------------------------------------------
+
+local maxcolumns = 5
+local maxbuttonspercolumn = 8
+local totalbuttons = #buttons
+
+local columns = math.min(maxbuttonspercolumn, math.ceil(totalbuttons / maxcolumns))
+local rows = math.ceil(totalbuttons / columns)
+
+local buttonindex = 1
+for col = 1, columns do
+	for row = 1, rows do
+		if buttonindex > totalbuttons then break end
+
+		local buttondata = buttons[buttonindex]
+		if buttondata.type == "button" then
+			makebutton(buttondata.text, buttondata.callback, row, col, rows, columns)
+		elseif buttondata.type == "toggle" then
+			maketoggle(buttondata.text, false, buttondata.callback, row, col, rows, columns)
+		end
+
+		buttonindex = buttonindex + 1
+	end
+end
 
 -------------------------------------------------------------------------------------------------------------------------------
