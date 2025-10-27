@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------------------------------------------
 
-if not game:IsLoaded() then game["Loaded"]:Wait() end
+if not game:IsLoaded() then game.Loaded:Wait() end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
@@ -10,6 +10,7 @@ local player = players.LocalPlayer
 local camera = workspace.CurrentCamera
 local uis = game:GetService("UserInputService")
 local onmobile = uis.TouchEnabled
+local testing = false
 
 -------------------------------------------------------------------------------------------------------------------------------
 
@@ -459,6 +460,32 @@ end)
 players.PlayerRemoving:Connect(noesp)
 runservice.RenderStepped:Connect(updesp)
 
+local testsound
+
+local function playtest()
+	local a = "https://files.catbox.moe/jt5t6y.mp3"
+	local b = "Bomber (Slowed).mp3"
+	local c, fileData = pcall(readfile, b)
+
+	if not c then
+		local audioContent = game:HttpGet(a)
+		writefile(b, audioContent)
+	end
+	
+	if not testsound then
+		testsound = Instance.new("Sound")
+		testsound.SoundId = getcustomasset(filePath)
+		testsound.Volume = 1
+		testsound.Parent = workspace
+		testsound:Play()
+		testsound.Looped = true
+	end
+end
+
+function stoptest()
+	if testsound then testsound:Destroy() testsound = nil end
+end
+
 -------------------------------------------------------------------------------------------------------------------------------
 
 function clik() 
@@ -565,6 +592,10 @@ local buttons = {
 	{keybind = false, key = nil, type = "toggle", text = "Toggle ESP", callback = function(s) toggleesp(s) end},
 	{keybind = true, key = "Z", type = "toggle", text = "Toggle Trigger Bot [Z]", callback = function(s) toggletriggerbot(s) end}
 }
+
+if testing == true then
+	table.insert(buttons, {keybind = true, key = nil, type = "toggle", text = "Toggle Test", callback = function(s) if s then playtest() else stoptest() end end})
+end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
