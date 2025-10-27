@@ -474,7 +474,7 @@ local function playtest()
 	
 	if not testsound then
 		testsound = Instance.new("Sound")
-		testsound.SoundId = getcustomasset(filePath)
+		testsound.SoundId = getcustomasset(a)
 		testsound.Volume = 1
 		testsound.Parent = workspace
 		testsound:Play()
