@@ -175,7 +175,7 @@ local function getclosestvisibleenemypart()
         local humanoid = lockedTarget.Parent:FindFirstChildOfClass("Humanoid")
         if humanoid and humanoid.Health > 0 then
             if isPartVisible(lockedTarget, lockedTarget.Parent) then
-                if lockedTarget.Position.Y - mypos.Y <= 400 then
+                if lockedTarget.Position.Y - mypos.Y <= 700 then
                     return lockedTarget
                 end
             end
@@ -201,7 +201,7 @@ local function getclosestvisibleenemypart()
         if char:FindFirstChildOfClass("ForceField") then continue end
 
         local yDiff = hrp.Position.Y - mypos.Y
-        if yDiff > 500 then continue end
+        if yDiff > 800 then continue end
 
         local targetPart
         if head and math.random() <= 0.3 and isPartVisible(head, char) then
@@ -240,7 +240,7 @@ local function getclosestvisibleenemypart()
 end
 
 local smoothSpeed = 22
-local preLockDelay = 0.3
+local preLockDelay = 0.15
 local pendingTarget = nil
 local lockStartTime = 0
 
