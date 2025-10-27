@@ -8,6 +8,7 @@ local players = game:GetService("Players")
 local runservice = game:GetService("RunService")
 local player = players.LocalPlayer
 local camera = workspace.CurrentCamera
+local uis = game:GetService("UserInputService")
 
 -------------------------------------------------------------------------------------------------------------------------------
 
@@ -46,6 +47,17 @@ local function makecircle()
 	stroke.Parent = circle
 end
 
+local function isOnCrosshair(worldPos)
+	local screenPos, onScreen = camera:WorldToViewportPoint(worldPos)
+	if not onScreen then return false end
+
+	local crossX = camera.ViewportSize.X/2
+	local crossY = camera.ViewportSize.Y/2
+
+	local delta = Vector2.new(screenPos.X - crossX, screenPos.Y - crossY)
+	return delta.Magnitude <= 3
+end
+
 local function removecircle()
 	if circle then circle:Destroy() end
 	circle = nil
@@ -53,21 +65,49 @@ end
 
 local function isobstructing(part)
 	if not part then return true end
-	if part.Transparency >= 0.9 then return false end
-	if not part.CanCollide then return false end
-	if part:IsDescendantOf(player.Character) or part:IsDescendantOf(camera) then return false end
-	if part:IsA("TrussPart") or part:IsA("WedgePart") then return true end
+
+	if part.Transparency >= 0.9 then
+		return false
+	end
+
+	if not part.CanCollide then
+		return false
+	end
+
+	if part:IsDescendantOf(player.Character) or part:IsDescendantOf(camera) then
+		return false
+	end
+
+	if part:IsA("TrussPart") or part:IsA("WedgePart") then
+		return true
+	end
 
 	local size = part.Size
 	local minDimension = math.min(size.X, size.Y, size.Z)
 	if minDimension < 1 then
-		return true
+		return false
 	end
 
 	return true
 end
 
+local triggerEnabled = false
 local lockedTarget = nil
+local holdingon = false
+
+local function simulateMouseDown()
+	if not holdingon then 
+		game:GetService("VirtualInputManager"):SendMouseButtonEvent(camera.ViewportSize.X/2, camera.ViewportSize.Y/2, 0, true, game, 0) 
+		holdingon = true 
+	end
+end
+
+local function simulateMouseUp()
+	if holdingon then task.wait()
+		game:GetService("VirtualInputManager"):SendMouseButtonEvent(camera.ViewportSize.X/2, camera.ViewportSize.Y/2, 0, false, game, 0) 
+		holdingon = false 
+	end
+end
 
 local function getclosestvisibleenemypart()
 	local mychar = player.Character
@@ -110,7 +150,7 @@ local function getclosestvisibleenemypart()
 		local humanoid = lockedTarget.Parent:FindFirstChildOfClass("Humanoid")
 		if humanoid and humanoid.Health > 0 then
 			if isPartVisible(lockedTarget, lockedTarget.Parent) then
-				if lockedTarget.Position.Y - mypos.Y <= 100 then
+				if lockedTarget.Position.Y - mypos.Y <= 400 then
 					return lockedTarget
 				end
 			end
@@ -128,25 +168,22 @@ local function getclosestvisibleenemypart()
 		if not char then continue end
 
 		local humanoid = char:FindFirstChildOfClass("Humanoid")
-		local hrp = char:FindFirstChild("HumanoidRootPart")
+		local hrp = char:FindFirstChild("HumanoidRootPart") or char:FindFirstChild("UpperTorso")
 		local head = char:FindFirstChild("Head")
 		if not humanoid or humanoid.Health <= 0 or not hrp then continue end
 		if p.Team and p.Team == player.Team then continue end
 		if char:FindFirstChildOfClass("ForceField") then continue end
 
 		local yDiff = hrp.Position.Y - mypos.Y
-		if yDiff > 100 then continue end
+		if yDiff > 500 then continue end
 
 		local targetPart
+		local backOffset = -hrp.CFrame.LookVector * 1.5
+
 		if head and math.random() <= 0.3 and isPartVisible(head, char) then
 			targetPart = head
 		elseif isPartVisible(hrp, char) then
-			local backOffset = -hrp.CFrame.LookVector * 1.5
-			targetPart = Instance.new("Part")
-			targetPart.Anchored = true
-			targetPart.CanCollide = false
-			targetPart.Transparency = 1
-			targetPart.Position = hrp.Position + backOffset
+			targetPart = hrp
 		else
 			continue
 		end
@@ -169,12 +206,13 @@ runservice.RenderStepped:Connect(function(dt)
 	if toggle then
 		local target = getclosestvisibleenemypart()
 		if target then
+			lockedTarget = target
+
 			local campos = camera.CFrame.Position
 			local newlookvector = (target.Position - campos).Unit
 			local newcf = CFrame.new(campos, campos + newlookvector)
 
 			local alpha = math.clamp(dt * smoothSpeed, 0, 1)
-
 			local easedAlpha
 			if alpha < 0.5 then
 				easedAlpha = 4 * alpha * alpha * alpha
@@ -183,9 +221,54 @@ runservice.RenderStepped:Connect(function(dt)
 			end
 
 			camera.CFrame = camera.CFrame:Lerp(newcf, easedAlpha)
+		else
+			lockedTarget = nil
+			simulateMouseUp()
 		end
 	end
 end)
+
+local triggerDelay = 0.3
+local timeOnCrosshair = 0
+local isShooting = false
+
+runservice.RenderStepped:Connect(function(dt)
+	if not triggerEnabled then 
+		timeOnCrosshair = 0
+		if isShooting then
+			simulateMouseUp()
+			isShooting = false
+		end
+		return 
+	end
+
+	local shouldShoot = false
+
+	if lockedTarget and lockedTarget.Parent and lockedTarget.Position then
+		if isOnCrosshair(lockedTarget.Position) then
+			shouldShoot = true
+		end
+	end
+
+	if shouldShoot then
+		timeOnCrosshair = timeOnCrosshair + dt
+
+		if timeOnCrosshair >= triggerDelay and not isShooting then
+			simulateMouseDown()
+			isShooting = true
+		end
+	else
+		timeOnCrosshair = 0
+		if isShooting then
+			simulateMouseUp()
+			isShooting = false
+		end
+	end
+end)
+
+local function toggleTriggerBot(state)
+	triggerEnabled = state
+end
 
 local highlights = {}
 local espEnabled = false
@@ -293,7 +376,7 @@ screenGui.Name = "Stupid Rushed Script"
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-local function maketoggle(keybind, text, initialState, callback, row, col, totalRows, totalCols)
+local function maketoggle(keybind, key, text, initialState, callback, row, col, totalRows, totalCols)
 	local toggled = initialState or false
 
 	local btn = Instance.new("TextButton")
@@ -341,10 +424,10 @@ local function maketoggle(keybind, text, initialState, callback, row, col, total
 
 	btn.MouseButton1Click:Connect(toggleButton)
 	
-	if keybind then
+	if keybind and key then
 		game["UserInputService"].InputBegan:Connect(function(input, gp)
 			if gp then return end
-			if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.R then
+			if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode[key] then
 				toggleButton()
 			end
 		end)
@@ -356,8 +439,9 @@ end
 -------------------------------------------------------------------------------------------------------------------------------
 
 local buttons = {
-	{keybind = true, type = "toggle", text = "Toggle Camlock [R]", callback = function(s) toggle = s if s then makecircle() else removecircle() end end},
-	{type = "toggle", text = "Toggle ESP", callback = function(s) toggleESP(s) end}
+	{keybind = true, key = "R", type = "toggle", text = "Toggle Camlock [R]", callback = function(s) toggle = s if s then makecircle() else removecircle() end end},
+	{keybind = false, key = nil, type = "toggle", text = "Toggle ESP", callback = function(s) toggleESP(s) end},
+	{keybind = true, key = "Z", type = "toggle", text = "Toggle Trigger Bot [Z]", callback = function(s) toggleTriggerBot(s) end}
 }
 
 -------------------------------------------------------------------------------------------------------------------------------
@@ -376,7 +460,7 @@ for col = 1, columns do
 
 		local buttondata = buttons[buttonindex]
 		if buttondata.type == "toggle" then
-			maketoggle(buttondata.keybind, buttondata.text, false, buttondata.callback, row, col, rows, columns)
+			maketoggle(buttondata.keybind, buttondata.key, buttondata.text, false, buttondata.callback, row, col, rows, columns)
 		end
 
 		buttonindex = buttonindex + 1
