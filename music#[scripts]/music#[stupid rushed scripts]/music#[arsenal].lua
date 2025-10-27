@@ -271,69 +271,102 @@ local function toggleTriggerBot(state)
 	triggerEnabled = state
 end
 
-local highlights = {}
 local espEnabled = false
+local boxes = {}
 
-local function highlightCharacter(plr)
-	if plr == player then return end
-	local char = plr.Character
-	if not char then return end
-
-	if highlights[plr] then
-		highlights[plr]:Destroy()
+local function removeBox(plr)
+	if boxes[plr] then
+		boxes[plr]:Destroy()
+		boxes[plr] = nil
 	end
+end
 
-	local hl = Instance.new("Highlight")
-	hl.Parent = char
-	hl.Adornee = char
-	hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-	hl.FillTransparency = 0.4
-	hl.OutlineTransparency = 0
+local function createBox(plr)
+	removeBox(plr)
+
+	local gui = Instance.new("BillboardGui")
+	gui.Name = "BoxESP"
+	gui.AlwaysOnTop = true
+	gui.Size = UDim2.new(4, 0, 6, 0)
+	gui.LightInfluence = 0
+	gui.Adornee = plr.Character:FindFirstChild("HumanoidRootPart")
+	gui.Parent = plr.Character
+
+	local boxFrame = Instance.new("Frame")
+	boxFrame.Size = UDim2.new(1, 0, 1, 0)
+	boxFrame.BackgroundTransparency = 1
+	boxFrame.BorderMode = Enum.BorderMode.Outline
+	boxFrame.BorderSizePixel = 2
 
 	if plr.Team then
-		hl.FillColor = plr.Team.TeamColor.Color
-		hl.OutlineColor = Color3.fromRGB(255, 255, 255)
+		boxFrame.BorderColor3 = plr.Team.TeamColor.Color
 	else
-		hl.FillColor = Color3.fromRGB(255, 255, 255)
-		hl.OutlineColor = Color3.fromRGB(255, 255, 255)
+		boxFrame.BorderColor3 = Color3.fromRGB(255, 255, 255)
 	end
 
-	highlights[plr] = hl
+	boxFrame.Parent = gui
+	boxes[plr] = gui
 end
 
-local function removeHighlight(plr)
-	if highlights[plr] then
-		highlights[plr]:Destroy()
-		highlights[plr] = nil
+local function updateBox(plr)
+	if not espEnabled then return end
+	local char = plr.Character
+	if not char or not char:FindFirstChild("HumanoidRootPart") then
+		removeBox(plr)
+		return
+	end
+
+	local rootPart = char:FindFirstChild("HumanoidRootPart")
+	local head = char:FindFirstChild("Head")
+
+	if not boxes[plr] then
+		createBox(plr)
+	end
+
+	local gui = boxes[plr]
+	if not gui then return end
+
+	-- Visibility check
+	local rootPos, rootOnScreen = camera:WorldToViewportPoint(rootPart.Position)
+	gui.Enabled = rootOnScreen
+
+	if rootOnScreen then
+		local headPos = camera:WorldToViewportPoint(head.Position + Vector3.new(0, 0.5, 0))
+		local footPos = camera:WorldToViewportPoint(rootPart.Position - Vector3.new(0, 3, 0))
+
+		local height = math.abs(headPos.Y - footPos.Y)
+		local width = height / 2
+
+		gui.Size = UDim2.new(0, width, 0, height)
 	end
 end
 
-local function updateHighlights()
+local function updateAll()
+	if not espEnabled then return end
 	for _, plr in ipairs(players:GetPlayers()) do
-		if espEnabled and plr.Character then
-			highlightCharacter(plr)
-		else
-			removeHighlight(plr)
+		if plr ~= player then
+			updateBox(plr)
 		end
 	end
 end
+
+runservice.RenderStepped:Connect(updateAll)
 
 players.PlayerAdded:Connect(function(plr)
 	plr.CharacterAdded:Connect(function()
 		if espEnabled then
-			highlightCharacter(plr)
+			createBox(plr)
 		end
 	end)
 end)
 
-players.PlayerRemoving:Connect(removeHighlight)
-runservice.RenderStepped:Connect(updateHighlights)
+players.PlayerRemoving:Connect(removeBox)
 
 local function toggleESP(state)
 	espEnabled = state
 	if not espEnabled then
-		for plr, _ in pairs(highlights) do
-			removeHighlight(plr)
+		for plr, _ in pairs(boxes) do
+			removeBox(plr)
 		end
 	end
 end
