@@ -201,7 +201,7 @@ local function getclosestvisibleenemypart()
 	return bestTarget
 end
 
-local smoothSpeed = 23
+local smoothSpeed = 22
 
 runservice.RenderStepped:Connect(function(dt)
 	if toggle then
@@ -228,6 +228,10 @@ runservice.RenderStepped:Connect(function(dt)
 		end
 	end
 end)
+
+local function togglecamlock(state)
+	toggle = state
+end
 
 local triggerDelay = 0.3
 local timeOnCrosshair = 0
@@ -267,124 +271,167 @@ runservice.RenderStepped:Connect(function(dt)
 	end
 end)
 
-local function toggleTriggerBot(state)
+local function toggletriggerbot(state)
 	triggerEnabled = state
+	if state then makecircle() else removecircle() end
 end
 
-local players = game:GetService("Players")
-local runservice = game:GetService("RunService")
-local camera = workspace.CurrentCamera
-local localPlayer = players.LocalPlayer
+local esptargets = {}
+local espenabled = false
 
-local espEnabled = false
-local boxes = {}
+local function makebox(plr)
+	if plr == player then return end
 
--- Create a GUI container for all boxes
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "BoxESP_GUI"
-screenGui.IgnoreGuiInset = true
-screenGui.ResetOnSpawn = false
-screenGui.Parent = game:GetService("CoreGui")
+	local char = plr.Character
+	if not char then return end
 
-local function removeBox(plr)
-	if boxes[plr] then
-		boxes[plr]:Destroy()
-		boxes[plr] = nil
+	if esptargets[plr] then
+		esptargets[plr].ScreenGui:Destroy()
+	end
+
+	local sc = Instance.new("ScreenGui")
+	sc.ResetOnSpawn = false
+	sc.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+	sc.IgnoreGuiInset = true
+	sc.Parent = gethui() or game:GetService("CoreGui")
+
+	local boxFrame = Instance.new("Frame")
+	boxFrame.BackgroundTransparency = 1
+	boxFrame.Size = UDim2.new(0, 100, 0, 200)
+	boxFrame.Position = UDim2.new(0, 0, 0, 0)
+	boxFrame.Visible = false
+	boxFrame.Parent = sc
+
+	local boxStroke = Instance.new("UIStroke")
+	boxStroke.Thickness = 2
+	boxStroke.Transparency = 0
+	boxStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	boxStroke.Parent = boxFrame
+
+	if plr.Team then
+		boxStroke.Color = plr.Team.TeamColor.Color
+	else
+		boxStroke.Color = Color3.fromRGB(255, 255, 255)
+	end
+
+	esptargets[plr] = {
+		ScreenGui = sc,
+		BoxFrame = boxFrame,
+		BoxStroke = boxStroke,
+	}
+end
+
+local function noesp(plr)
+	if esptargets[plr] then
+		esptargets[plr].ScreenGui:Destroy()
+		esptargets[plr] = nil
 	end
 end
 
-local function createBox(plr)
-	removeBox(plr)
+local function updateBoxESP(plr)
+	if not espenabled or plr == player then return end
 
-	local box = Instance.new("Frame")
-	box.BackgroundTransparency = 1
-	box.BorderSizePixel = 2
-	box.BorderColor3 = plr.Team and plr.Team.TeamColor.Color or Color3.fromRGB(255, 255, 255)
-	box.Visible = false
-	box.ZIndex = 10
-	box.Parent = screenGui
+	local data = esptargets[plr]
+	if not data then return end
 
-	boxes[plr] = box
-end
-
-local function updateBox(plr)
-	if not espEnabled then return end
 	local char = plr.Character
 	if not char then
-		removeBox(plr)
+		noesp(plr)
 		return
 	end
 
 	local hrp = char:FindFirstChild("HumanoidRootPart")
-	local head = char:FindFirstChild("Head")
-	local humanoid = char:FindFirstChildOfClass("Humanoid")
-
-	if not hrp or not head or not humanoid then
-		removeBox(plr)
+	if not hrp then
+		noesp(plr)
 		return
 	end
 
-	local box = boxes[plr]
-	if not box then
-		createBox(plr)
-		box = boxes[plr]
+	local cf, size = char:GetBoundingBox()
+
+	local corners = {}
+	for x = -0.5, 0.5, 1 do
+		for y = -0.5, 0.5, 1 do
+			for z = -0.5, 0.5, 1 do
+				table.insert(corners, (cf.Position + (cf.RightVector * size.X * x) + (cf.UpVector * size.Y * y) + (cf.LookVector * size.Z * z)))
+			end
+		end
 	end
 
-	local hrpPos, onScreen = camera:WorldToViewportPoint(hrp.Position)
-	if not onScreen then
-		box.Visible = false
+	local minX, minY, maxX, maxY
+	local onscreen = false
+	for _, corner in ipairs(corners) do
+		local screenPos, onScreen = camera:WorldToViewportPoint(corner)
+		if onScreen then
+			onscreen = true
+			if not minX or screenPos.X < minX then minX = screenPos.X end
+			if not maxX or screenPos.X > maxX then maxX = screenPos.X end
+			if not minY or screenPos.Y < minY then minY = screenPos.Y end
+			if not maxY or screenPos.Y > maxY then maxY = screenPos.Y end
+		end
+	end
+
+	if not onscreen or not minX then
+		data.BoxFrame.Visible = false
 		return
 	end
 
-	-- Calculate the bounding box in 2D space
-	local _, headPosOnScreen = camera:WorldToViewportPoint(head.Position + Vector3.new(0, 0.5, 0))
-	local _, footPosOnScreen = camera:WorldToViewportPoint(hrp.Position - Vector3.new(0, 3, 0))
+	data.BoxFrame.Visible = true
 
-	local height = math.abs(headPosOnScreen.Y - footPosOnScreen.Y)
-	local width = height / 2
-	local x = hrpPos.X - width / 2
-	local y = headPosOnScreen.Y
+	local boxWidth = maxX - minX
+	local boxHeight = maxY - minY
+	local centerX = (minX + maxX) / 2
+	local centerY = (minY + maxY) / 2
 
-	box.Size = UDim2.new(0, width, 0, height)
-	box.Position = UDim2.new(0, x, 0, y)
-	box.Visible = true
-end
+	data.BoxFrame.Size = UDim2.new(0, boxWidth, 0, boxHeight)
+	data.BoxFrame.Position = UDim2.new(0, centerX - boxWidth / 2, 0, centerY - boxHeight / 2)
 
-local function updateAll()
-	if not espEnabled then return end
-	for _, plr in ipairs(players:GetPlayers()) do
-		if plr ~= localPlayer then
-			updateBox(plr)
-		end
-	end
-end
-
-runservice.RenderStepped:Connect(updateAll)
-
-players.PlayerAdded:Connect(function(plr)
-	plr.CharacterAdded:Connect(function()
-		if espEnabled then
-			createBox(plr)
-		end
-	end)
-end)
-
-players.PlayerRemoving:Connect(removeBox)
-
-local function toggleESP(state)
-	espEnabled = state
-	if not espEnabled then
-		for plr, _ in pairs(boxes) do
-			removeBox(plr)
-		end
+	if plr.Team then
+		data.BoxStroke.Color = plr.Team.TeamColor.Color
 	else
-		for _, plr in ipairs(players:GetPlayers()) do
-			if plr ~= localPlayer and plr.Character then
-				createBox(plr)
+		data.BoxStroke.Color = Color3.fromRGB(255, 255, 255)
+	end
+end
+
+local function updesp()
+	for _, plr in ipairs(players:GetPlayers()) do
+		if plr ~= player then
+			if espenabled then
+				if not esptargets[plr] then
+					makebox(plr)
+				end
+				updateBoxESP(plr)
+			else
+				noesp(plr)
 			end
 		end
 	end
 end
+
+local function toggleesp(state)
+	espenabled = state
+	if not espenabled then
+		for plr in pairs(esptargets) do
+			noesp(plr)
+		end
+	else
+		for _, plr in ipairs(players:GetPlayers()) do
+			if plr ~= player and plr.Character then
+				makebox(plr)
+			end
+		end
+	end
+end
+
+players.PlayerAdded:Connect(function(plr)
+	plr.CharacterAdded:Connect(function()
+		if espenabled then
+			makebox(plr)
+		end
+	end)
+end)
+
+players.PlayerRemoving:Connect(noesp)
+runservice.RenderStepped:Connect(updesp)
 
 -------------------------------------------------------------------------------------------------------------------------------
 
@@ -472,7 +519,7 @@ local function maketoggle(keybind, key, text, initialState, callback, row, col, 
 	end
 
 	btn.MouseButton1Click:Connect(toggleButton)
-	
+
 	if keybind and key then
 		game["UserInputService"].InputBegan:Connect(function(input, gp)
 			if gp then return end
@@ -488,9 +535,9 @@ end
 -------------------------------------------------------------------------------------------------------------------------------
 
 local buttons = {
-	{keybind = true, key = "R", type = "toggle", text = "Toggle Camlock [R]", callback = function(s) toggle = s if s then makecircle() else removecircle() end end},
-	{keybind = false, key = nil, type = "toggle", text = "Toggle ESP", callback = function(s) toggleESP(s) end},
-	{keybind = true, key = "Z", type = "toggle", text = "Toggle Trigger Bot [Z]", callback = function(s) toggleTriggerBot(s) end}
+	{keybind = true, key = "R", type = "toggle", text = "Toggle Camlock [R]", callback = function(s) togglecamlock(s) end},
+	{keybind = false, key = nil, type = "toggle", text = "Toggle ESP", callback = function(s) toggleesp(s) end},
+	{keybind = true, key = "Z", type = "toggle", text = "Toggle Trigger Bot [Z]", callback = function(s) toggletriggerbot(s) end}
 }
 
 -------------------------------------------------------------------------------------------------------------------------------
