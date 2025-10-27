@@ -9,7 +9,7 @@ local runservice = game:GetService("RunService")
 local player = players.LocalPlayer
 local camera = workspace.CurrentCamera
 local uis = game:GetService("UserInputService")
-local onmobile = uis:TouchEnabled
+local onmobile = uis:TouchEnabled()
 
 -------------------------------------------------------------------------------------------------------------------------------
 
