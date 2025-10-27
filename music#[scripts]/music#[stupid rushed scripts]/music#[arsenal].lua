@@ -9,6 +9,7 @@ local runservice = game:GetService("RunService")
 local player = players.LocalPlayer
 local camera = workspace.CurrentCamera
 local uis = game:GetService("UserInputService")
+local onmobile = uis:TouchEnabled
 
 -------------------------------------------------------------------------------------------------------------------------------
 
@@ -29,7 +30,7 @@ local function makecircle()
 
 	circle = Instance.new("Frame")
 	circle.AnchorPoint = Vector2.new(0.5, 0.5)
-	circle.Size = UDim2.new(0, 421, 0, 421)
+	circle.Size = onmobile and UDim2.new(0, 221, 0, 221) or UDim2.new(0, 421, 0, 421)
 	circle.Position = crosshair.Position
 	circle.BackgroundTransparency = 1
 	circle.ZIndex = crosshair.ZIndex - 1
