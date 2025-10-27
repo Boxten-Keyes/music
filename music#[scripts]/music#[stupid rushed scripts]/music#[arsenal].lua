@@ -240,15 +240,29 @@ local function getclosestvisibleenemypart()
 end
 
 local smoothSpeed = 22
+local preLockDelay = 0.3
+local pendingTarget = nil
+local lockStartTime = 0
 
 runservice.RenderStepped:Connect(function(dt)
 	if toggle then
 		local target = getclosestvisibleenemypart()
+
 		if target then
-			lockedTarget = target
+			if target ~= pendingTarget then
+				pendingTarget = target
+				lockStartTime = tick()
+				return
+			end
+
+			if tick() - lockStartTime < preLockDelay then
+				return
+			end
+
+			lockedTarget = pendingTarget
 
 			local campos = camera.CFrame.Position
-			local newlookvector = (target.Position - campos).Unit
+			local newlookvector = (lockedTarget.Position - campos).Unit
 			local newcf = CFrame.new(campos, campos + newlookvector)
 
 			local alpha = math.clamp(dt * smoothSpeed, 0, 1)
@@ -260,7 +274,10 @@ runservice.RenderStepped:Connect(function(dt)
 			end
 
 			camera.CFrame = camera.CFrame:Lerp(newcf, easedAlpha)
+
 		else
+			pendingTarget = nil
+			lockStartTime = 0
 			lockedTarget = nil
 			simulateMouseUp()
 		end
