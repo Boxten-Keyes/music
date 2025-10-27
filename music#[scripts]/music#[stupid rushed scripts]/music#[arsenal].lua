@@ -180,6 +180,7 @@ local function getclosestvisibleenemypart()
 			end
 		end
 	end
+
 	lockedTarget = nil
 
 	local bestTarget = nil
@@ -474,7 +475,7 @@ local function playtest()
 	
 	if not testsound then
 		testsound = Instance.new("Sound")
-		testsound.SoundId = getcustomasset(a)
+		testsound.SoundId = getcustomasset(b)
 		testsound.Volume = 1
 		testsound.Parent = workspace
 		testsound:Play()
