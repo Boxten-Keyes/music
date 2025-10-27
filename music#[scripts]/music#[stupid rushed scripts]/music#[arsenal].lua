@@ -49,6 +49,11 @@ local function makecircle()
 	stroke.Parent = circle
 end
 
+local function removecircle()
+	if circle then circle:Destroy() end
+	circle = nil
+end
+
 local function isOnCrosshair(worldPos)
 	local screenPos, onScreen = camera:WorldToViewportPoint(worldPos)
 	if not onScreen then return false end
@@ -58,11 +63,6 @@ local function isOnCrosshair(worldPos)
 
 	local delta = Vector2.new(screenPos.X - crossX, screenPos.Y - crossY)
 	return delta.Magnitude <= 3
-end
-
-local function removecircle()
-	if circle then circle:Destroy() end
-	circle = nil
 end
 
 local function isobstructing(part)
@@ -134,95 +134,109 @@ local function simulateMouseUp()
 end
 
 local function getclosestvisibleenemypart()
-	local mychar = player.Character
-	if not mychar or not mychar:FindFirstChild("HumanoidRootPart") then 
-		lockedTarget = nil
-		return nil 
-	end
+    local mychar = player.Character
+    if not mychar or not mychar:FindFirstChild("HumanoidRootPart") then 
+        lockedTarget = nil
+        return nil 
+    end
 
-	local myhrp = mychar.HumanoidRootPart
-	local mypos = myhrp.Position
+    local myhrp = mychar.HumanoidRootPart
+    local mypos = myhrp.Position
+    local myLookVector = camera.CFrame.LookVector
 
-	local function isVisible(targetPart, char)
-		local rayorigin = camera.CFrame.Position
-		local raydir = targetPart.Position - rayorigin
+    local function isVisible(targetPart, char)
+        local rayorigin = camera.CFrame.Position
+        local raydir = targetPart.Position - rayorigin
 
-		local raycastParams = RaycastParams.new()
-		raycastParams.FilterDescendantsInstances = {player.Character, camera, char}
-		raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
-		raycastParams.IgnoreWater = true
+        local raycastParams = RaycastParams.new()
+        raycastParams.FilterDescendantsInstances = {player.Character, camera, char}
+        raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+        raycastParams.IgnoreWater = true
 
-		local raycastResult = workspace:Raycast(rayorigin, raydir, raycastParams)
-		if raycastResult then
-			local hitPart = raycastResult.Instance
-			if hitPart and not hitPart:IsDescendantOf(char) then
-				return false
-			end
-		end
+        local raycastResult = workspace:Raycast(rayorigin, raydir, raycastParams)
+        if raycastResult then
+            local hitPart = raycastResult.Instance
+            if hitPart and not hitPart:IsDescendantOf(char) then
+                return false
+            end
+        end
 
-		return true
-	end
+        return true
+    end
 
-	local function isPartVisible(targetPart, char)
-		if not targetPart then return false end
-		local screenpos, onscreen = camera:WorldToViewportPoint(targetPart.Position)
-		if not onscreen then return false end
-		return isVisible(targetPart, char)
-	end
+    local function isPartVisible(targetPart, char)
+        if not targetPart then return false end
+        local screenpos, onscreen = camera:WorldToViewportPoint(targetPart.Position)
+        if not onscreen then return false end
+        return isVisible(targetPart, char)
+    end
 
-	if lockedTarget and lockedTarget.Parent then
-		local humanoid = lockedTarget.Parent:FindFirstChildOfClass("Humanoid")
-		if humanoid and humanoid.Health > 0 then
-			if isPartVisible(lockedTarget, lockedTarget.Parent) then
-				if lockedTarget.Position.Y - mypos.Y <= 400 then
-					return lockedTarget
-				end
-			end
-		end
-	end
+    if lockedTarget and lockedTarget.Parent then
+        local humanoid = lockedTarget.Parent:FindFirstChildOfClass("Humanoid")
+        if humanoid and humanoid.Health > 0 then
+            if isPartVisible(lockedTarget, lockedTarget.Parent) then
+                if lockedTarget.Position.Y - mypos.Y <= 400 then
+                    return lockedTarget
+                end
+            end
+        end
+    end
 
-	lockedTarget = nil
+    lockedTarget = nil
 
-	local bestTarget = nil
-	local bestDistance = math.huge
-	local lowestHealth = math.huge
+    local bestTarget = nil
+    local bestScore = -math.huge
+    local closestDistance = math.huge
 
-	for _, p in ipairs(players:GetPlayers()) do
-		if p == player then continue end
-		local char = p.Character
-		if not char then continue end
+    for _, p in ipairs(players:GetPlayers()) do
+        if p == player then continue end
+        local char = p.Character
+        if not char then continue end
 
-		local humanoid = char:FindFirstChildOfClass("Humanoid")
-		local hrp = char:FindFirstChild("HumanoidRootPart") or char:FindFirstChild("UpperTorso")
-		local head = char:FindFirstChild("Head")
-		if not humanoid or humanoid.Health <= 0 or not hrp then continue end
-		if p.Team and p.Team == player.Team then continue end
-		if char:FindFirstChildOfClass("ForceField") then continue end
+        local humanoid = char:FindFirstChildOfClass("Humanoid")
+        local hrp = char:FindFirstChild("HumanoidRootPart") or char:FindFirstChild("UpperTorso")
+        local head = char:FindFirstChild("Head")
+        if not humanoid or humanoid.Health <= 0 or not hrp then continue end
+        if p.Team and p.Team == player.Team then continue end
+        if char:FindFirstChildOfClass("ForceField") then continue end
 
-		local yDiff = hrp.Position.Y - mypos.Y
-		if yDiff > 500 then continue end
+        local yDiff = hrp.Position.Y - mypos.Y
+        if yDiff > 500 then continue end
 
-		local targetPart
-		local backOffset = -hrp.CFrame.LookVector * 1.5
+        local targetPart
+        if head and math.random() <= 0.3 and isPartVisible(head, char) then
+            targetPart = head
+        elseif isPartVisible(hrp, char) then
+            targetPart = hrp
+        else
+            continue
+        end
 
-		if head and math.random() <= 0.3 and isPartVisible(head, char) then
-			targetPart = head
-		elseif isPartVisible(hrp, char) then
-			targetPart = hrp
-		else
-			continue
-		end
+        local dist = (targetPart.Position - mypos).Magnitude
+        local toTarget = (targetPart.Position - mypos).Unit
+        
+        local dotProduct = myLookVector:Dot(toTarget)
+        local score
+        
+        if dist > 50 then
+            score = dotProduct * 100 + (100 - dist * 0.5)
+        else
+            local sidePriority = 1 - math.abs(dotProduct - 0.3)
+            score = sidePriority * 80 + (100 - dist)
+        end
+        
+        local healthBonus = (100 - humanoid.Health) * 0.1
+        local finalScore = score + healthBonus
+        
+        if finalScore > bestScore or (finalScore == bestScore and dist < closestDistance) then
+            bestTarget = targetPart
+            bestScore = finalScore
+            closestDistance = dist
+        end
+    end
 
-		local dist = (targetPart.Position - mypos).Magnitude
-		if dist < bestDistance or (dist == bestDistance and humanoid.Health < lowestHealth) then
-			bestTarget = targetPart
-			bestDistance = dist
-			lowestHealth = humanoid.Health
-		end
-	end
-
-	lockedTarget = bestTarget
-	return bestTarget
+    lockedTarget = bestTarget
+    return bestTarget
 end
 
 local smoothSpeed = 22
