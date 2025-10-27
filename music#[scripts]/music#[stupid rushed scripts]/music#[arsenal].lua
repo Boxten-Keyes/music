@@ -271,8 +271,20 @@ local function toggleTriggerBot(state)
 	triggerEnabled = state
 end
 
+local players = game:GetService("Players")
+local runservice = game:GetService("RunService")
+local camera = workspace.CurrentCamera
+local localPlayer = players.LocalPlayer
+
 local espEnabled = false
 local boxes = {}
+
+-- Create a GUI container for all boxes
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "BoxESP_GUI"
+screenGui.IgnoreGuiInset = true
+screenGui.ResetOnSpawn = false
+screenGui.Parent = game:GetService("CoreGui")
 
 local function removeBox(plr)
 	if boxes[plr] then
@@ -284,67 +296,64 @@ end
 local function createBox(plr)
 	removeBox(plr)
 
-	local gui = Instance.new("BillboardGui")
-	gui.Name = "BoxESP"
-	gui.AlwaysOnTop = true
-	gui.Size = UDim2.new(4, 0, 6, 0)
-	gui.LightInfluence = 0
-	gui.Adornee = plr.Character:FindFirstChild("HumanoidRootPart")
-	gui.Parent = plr.Character
+	local box = Instance.new("Frame")
+	box.BackgroundTransparency = 1
+	box.BorderSizePixel = 2
+	box.BorderColor3 = plr.Team and plr.Team.TeamColor.Color or Color3.fromRGB(255, 255, 255)
+	box.Visible = false
+	box.ZIndex = 10
+	box.Parent = screenGui
 
-	local boxFrame = Instance.new("Frame")
-	boxFrame.Size = UDim2.new(1, 0, 1, 0)
-	boxFrame.BackgroundTransparency = 1
-	boxFrame.BorderMode = Enum.BorderMode.Outline
-	boxFrame.BorderSizePixel = 2
-
-	if plr.Team then
-		boxFrame.BorderColor3 = plr.Team.TeamColor.Color
-	else
-		boxFrame.BorderColor3 = Color3.fromRGB(255, 255, 255)
-	end
-
-	boxFrame.Parent = gui
-	boxes[plr] = gui
+	boxes[plr] = box
 end
 
 local function updateBox(plr)
 	if not espEnabled then return end
 	local char = plr.Character
-	if not char or not char:FindFirstChild("HumanoidRootPart") then
+	if not char then
 		removeBox(plr)
 		return
 	end
 
-	local rootPart = char:FindFirstChild("HumanoidRootPart")
+	local hrp = char:FindFirstChild("HumanoidRootPart")
 	local head = char:FindFirstChild("Head")
+	local humanoid = char:FindFirstChildOfClass("Humanoid")
 
-	if not boxes[plr] then
+	if not hrp or not head or not humanoid then
+		removeBox(plr)
+		return
+	end
+
+	local box = boxes[plr]
+	if not box then
 		createBox(plr)
+		box = boxes[plr]
 	end
 
-	local gui = boxes[plr]
-	if not gui then return end
-
-	-- Visibility check
-	local rootPos, rootOnScreen = camera:WorldToViewportPoint(rootPart.Position)
-	gui.Enabled = rootOnScreen
-
-	if rootOnScreen then
-		local headPos = camera:WorldToViewportPoint(head.Position + Vector3.new(0, 0.5, 0))
-		local footPos = camera:WorldToViewportPoint(rootPart.Position - Vector3.new(0, 3, 0))
-
-		local height = math.abs(headPos.Y - footPos.Y)
-		local width = height / 2
-
-		gui.Size = UDim2.new(0, width, 0, height)
+	local hrpPos, onScreen = camera:WorldToViewportPoint(hrp.Position)
+	if not onScreen then
+		box.Visible = false
+		return
 	end
+
+	-- Calculate the bounding box in 2D space
+	local _, headPosOnScreen = camera:WorldToViewportPoint(head.Position + Vector3.new(0, 0.5, 0))
+	local _, footPosOnScreen = camera:WorldToViewportPoint(hrp.Position - Vector3.new(0, 3, 0))
+
+	local height = math.abs(headPosOnScreen.Y - footPosOnScreen.Y)
+	local width = height / 2
+	local x = hrpPos.X - width / 2
+	local y = headPosOnScreen.Y
+
+	box.Size = UDim2.new(0, width, 0, height)
+	box.Position = UDim2.new(0, x, 0, y)
+	box.Visible = true
 end
 
 local function updateAll()
 	if not espEnabled then return end
 	for _, plr in ipairs(players:GetPlayers()) do
-		if plr ~= player then
+		if plr ~= localPlayer then
 			updateBox(plr)
 		end
 	end
@@ -367,6 +376,12 @@ local function toggleESP(state)
 	if not espEnabled then
 		for plr, _ in pairs(boxes) do
 			removeBox(plr)
+		end
+	else
+		for _, plr in ipairs(players:GetPlayers()) do
+			if plr ~= localPlayer and plr.Character then
+				createBox(plr)
+			end
 		end
 	end
 end
