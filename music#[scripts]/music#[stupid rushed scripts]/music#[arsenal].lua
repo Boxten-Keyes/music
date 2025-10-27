@@ -67,7 +67,15 @@ end
 local function isobstructing(part)
 	if not part then return true end
 
-	if part.Transparency >= 0.9 then
+	if part.Transparency == 1 then
+		return false
+	end
+
+	if not part:IsDescendantOf(workspace) then
+		return false
+	end
+
+	if not part:IsA("BasePart") then
 		return false
 	end
 
@@ -85,7 +93,21 @@ local function isobstructing(part)
 
 	local size = part.Size
 	local minDimension = math.min(size.X, size.Y, size.Z)
-	if minDimension < 1 then
+	if minDimension < 0.5 then
+		return false
+	end
+
+	local hasVisuals = false
+	for _, child in ipairs(part:GetDescendants()) do
+		if child:IsA("SpecialMesh") or child:IsA("Decal") or child:IsA("Texture") then
+			if child.Transparency < 1 then
+				hasVisuals = true
+				break
+			end
+		end
+	end
+
+	if part.Transparency >= 0.8 and not hasVisuals then
 		return false
 	end
 
