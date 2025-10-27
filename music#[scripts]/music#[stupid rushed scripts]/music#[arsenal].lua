@@ -231,6 +231,10 @@ end)
 
 local function togglecamlock(state)
 	toggle = state
+	if not state then
+		lockedTarget = nil
+		simulateMouseUp()
+	end
 end
 
 local triggerDelay = 0.3
