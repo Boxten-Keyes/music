@@ -92,17 +92,7 @@ local function isobstructing(part)
 		return true
 	end
 
-	local hasVisuals = false
-	for _, child in ipairs(part:GetDescendants()) do
-		if child:IsA("SpecialMesh") or child:IsA("Decal") or child:IsA("Texture") then
-			if child.Transparency < 1 then
-				hasVisuals = true
-				break
-			end
-		end
-	end
-
-	if part.Transparency >= 0.95 and not hasVisuals then
+	if part.Transparency >= 0.95 then
 		return false
 	end
 
@@ -192,7 +182,7 @@ local function getclosestvisibleenemypart()
 		local head = char:FindFirstChild("Head")
 
 		if not humanoid or humanoid.Health <= 0 or not hrp then continue end
-		if p.Team and p.Team == player.Team then continue end
+		if teamcheck and p.Team and p.Team == player.Team then continue end
 		if char:FindFirstChildOfClass("ForceField") then continue end
 
 		local dist = (hrp.Position - mypos).Magnitude
