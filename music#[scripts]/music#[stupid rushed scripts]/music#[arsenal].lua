@@ -92,12 +92,6 @@ local function isobstructing(part)
 		return true
 	end
 
-	local size = part.Size
-	local minDimension = math.min(size.X, size.Y, size.Z)
-	if minDimension < 0.5 then
-		return false
-	end
-
 	local hasVisuals = false
 	for _, child in ipairs(part:GetDescendants()) do
 		if child:IsA("SpecialMesh") or child:IsA("Decal") or child:IsA("Texture") then
@@ -108,7 +102,7 @@ local function isobstructing(part)
 		end
 	end
 
-	if part.Transparency >= 0.8 and not hasVisuals then
+	if part.Transparency >= 0.95 and not hasVisuals then
 		return false
 	end
 
@@ -118,6 +112,7 @@ end
 local triggerEnabled = false
 local lockedTarget = nil
 local holdingon = false
+local teamcheck = true
 
 local function simulateMouseDown()
 	if not holdingon then 
@@ -174,8 +169,8 @@ local function getclosestvisibleenemypart()
 	if lockedTarget and lockedTarget.Parent then
 		local humanoid = lockedTarget.Parent:FindFirstChildOfClass("Humanoid")
 		if humanoid and humanoid.Health > 0 and isPartVisible(lockedTarget, lockedTarget.Parent) then
-			local verticalDist = math.abs(lockedTarget.Position.Y - mypos.Y)
-			if verticalDist <= 500 then
+			local dist = (lockedTarget.Position - mypos).Magnitude
+			if dist <= 500 then
 				return lockedTarget
 			end
 		end
@@ -183,52 +178,38 @@ local function getclosestvisibleenemypart()
 
 	lockedTarget = nil
 
-	local bestTarget, bestScore, closestDistance = nil, -math.huge, math.huge
+	local bestTarget = nil
+	local closestDistance = math.huge
 
 	for _, p in ipairs(players:GetPlayers()) do
 		if p == player then continue end
+
 		local char = p.Character
 		if not char then continue end
 
 		local humanoid = char:FindFirstChildOfClass("Humanoid")
 		local hrp = char:FindFirstChild("HumanoidRootPart") or char:FindFirstChild("UpperTorso")
 		local head = char:FindFirstChild("Head")
+
 		if not humanoid or humanoid.Health <= 0 or not hrp then continue end
 		if p.Team and p.Team == player.Team then continue end
 		if char:FindFirstChildOfClass("ForceField") then continue end
 
-		local yDiff = math.abs(hrp.Position.Y - mypos.Y)
-		if yDiff > 500 then continue end
+		local dist = (hrp.Position - mypos).Magnitude
+		if dist > 500 then continue end
 
 		local targetPart
-		if head and math.random() <= 0.3 and isPartVisible(head, char) then
+		if head and isPartVisible(head, char) then
 			targetPart = head
 		elseif isPartVisible(hrp, char) then
 			targetPart = hrp
-		else
-			continue
 		end
 
-		local dist = (targetPart.Position - mypos).Magnitude
-		local toTarget = (targetPart.Position - mypos).Unit
-		
-		local dotProduct = myLookVector:Dot(toTarget)
-		local score
-		
-		if dist > 50 then
-			score = dotProduct * 100 + (100 - dist * 0.5)
-		else
-			local sidePriority = 1 - math.abs(dotProduct - 0.3)
-			score = sidePriority * 80 + (100 - dist)
-		end
-		
-		local healthBonus = (100 - humanoid.Health) * 0.1
-		local finalScore = score + healthBonus
-		
-		if finalScore > bestScore or (finalScore == bestScore and dist < closestDistance) then
-			bestTarget = targetPart
-			bestScore = finalScore
-			closestDistance = dist
+		if targetPart then
+			if dist < closestDistance then
+				closestDistance = dist
+				bestTarget = targetPart
+			end
 		end
 	end
 
@@ -287,6 +268,7 @@ local function togglecamlock(state)
 		lockedTarget = nil
 		simulateMouseUp()
 	end
+	if state then makecircle() else removecircle() end
 end
 
 local triggerDelay = 0.3
@@ -329,7 +311,6 @@ end)
 
 local function toggletriggerbot(state)
 	triggerEnabled = state
-	if state then makecircle() else removecircle() end
 end
 
 local esptargets = {}
@@ -500,7 +481,7 @@ local function playtest()
 		local audioContent = game:HttpGet(a)
 		writefile(b, audioContent)
 	end
-	
+
 	if not testsound then
 		testsound = Instance.new("Sound")
 		testsound.SoundId = getcustomasset(b)
@@ -619,6 +600,7 @@ end
 local buttons = {
 	{keybind = true, key = "R", type = "toggle", text = "Toggle Camlock [R]", callback = function(s) togglecamlock(s) end},
 	{keybind = false, key = nil, type = "toggle", text = "Toggle ESP", callback = function(s) toggleesp(s) end},
+	{keybind = false, key = nil, type = "toggle", text = "Toggle No Team Check", callback = function(s) teamcheck = not s end},
 	{keybind = true, key = "Z", type = "toggle", text = "Toggle Trigger Bot [Z]", callback = function(s) toggletriggerbot(s) end}
 }
 
