@@ -109,9 +109,29 @@ local function gettgt()
 
 		local rr = workspace:Raycast(ro, rd, rp)
 		if rr then
-			local hp = rr.Instance
-			if hp and not hp:IsDescendantOf(ch) then
-				return false
+			local hitPart = rr.Instance
+			if hitPart then
+				local t = hitPart.Transparency
+				local c = hitPart.CanCollide
+				local q = hitPart.CanQuery
+				if t >= 1 or not c or not q then
+					local remainDist = (tp.Position - rr.Position).Magnitude
+					if remainDist > 1 then
+						local newOrigin = rr.Position + (rd.Unit * 0.05)
+						local newDir = tp.Position - newOrigin
+						rp.FilterDescendantsInstances = {lp.Character, cam, ch, hitPart}
+						local rr2 = workspace:Raycast(newOrigin, newDir, rp)
+						if rr2 then
+							local hp2 = rr2.Instance
+							if hp2 and not hp2:IsDescendantOf(ch) then
+								return false
+							end
+						end
+					end
+					return true
+				elseif not hitPart:IsDescendantOf(ch) then
+					return false
+				end
 			end
 		end
 
@@ -129,7 +149,7 @@ local function gettgt()
 		local h = lt.Parent:FindFirstChildOfClass("Humanoid")
 		if h and h.Health > 0 and pvis(lt, lt.Parent) then
 			local d = (lt.Position - mp).Magnitude
-			if d <= 500 then
+			if d <= 700 then
 				return lt
 			end
 		end
@@ -155,7 +175,7 @@ local function gettgt()
 		if ch:FindFirstChildOfClass("ForceField") then continue end
 
 		local d = (hrp.Position - mp).Magnitude
-		if d > 500 then continue end
+		if d > 700 then continue end
 
 		local tp
 		if hd and pvis(hd, ch) then
