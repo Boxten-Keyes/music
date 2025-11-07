@@ -103,17 +103,18 @@ local triggerEnabled = false
 local lockedTarget = nil
 local holdingon = false
 local teamcheck = true
+local vim = cloneref(game:GetService("VirtualInputManager"))
 
 local function simulateMouseDown()
 	if not holdingon then 
-		game:GetService("VirtualInputManager"):SendMouseButtonEvent(camera.ViewportSize.X/2, camera.ViewportSize.Y/2, 0, true, game, 0) 
+		vim:SendMouseButtonEvent(camera.ViewportSize.X/2, camera.ViewportSize.Y/2, 0, true, game, 0) 
 		holdingon = true 
 	end
 end
 
 local function simulateMouseUp()
 	if holdingon then task.wait()
-		game:GetService("VirtualInputManager"):SendMouseButtonEvent(camera.ViewportSize.X/2, camera.ViewportSize.Y/2, 0, false, game, 0) 
+		vim:SendMouseButtonEvent(camera.ViewportSize.X/2, camera.ViewportSize.Y/2, 0, false, game, 0) 
 		holdingon = false 
 	end
 end
