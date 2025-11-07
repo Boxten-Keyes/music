@@ -4,145 +4,113 @@ if not game:IsLoaded() then game.Loaded:Wait() end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-local players = game:GetService("Players")
-local runservice = game:GetService("RunService")
-local player = players.LocalPlayer
-local camera = workspace.CurrentCamera
-local uis = game:GetService("UserInputService")
-local onmobile = uis.TouchEnabled
-local testing = false
+local plr = game:GetService("Players")
+local rs = game:GetService("RunService")
+local lp = plr.LocalPlayer
+local cam = workspace.CurrentCamera
+local ui = game:GetService("UserInputService")
+local mob = ui.TouchEnabled
+local test = false
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-local toggle = false
-local circle = nil
+local tgl = false
+local circ = nil
 
-local function makecircle()
-	if circle then circle:Destroy() end
+local function mcirc()
+	if circ then circ:Destroy() end
 
-	local screengui = player:FindFirstChildOfClass("PlayerGui")
-	if not screengui then return end
-	local gui = screengui:FindFirstChild("GUI")
-	if not gui then return end
-	local crosshairs = gui:FindFirstChild("Crosshairs")
-	if not crosshairs then return end
-	local crosshair = crosshairs:FindFirstChild("Crosshair"):FindFirstChild("Dot")
-	if not crosshair then return end
+	local sg = lp:FindFirstChildOfClass("PlayerGui")
+	if not sg then return end
+	local g = sg:FindFirstChild("GUI")
+	if not g then return end
+	local ch = g:FindFirstChild("Crosshairs")
+	if not ch then return end
+	local dot = ch:FindFirstChild("Crosshair"):FindFirstChild("Dot")
+	if not dot then return end
 
-	circle = Instance.new("Frame")
-	circle.AnchorPoint = Vector2.new(0.5, 0.5)
-	circle.Size = onmobile and UDim2.new(0, 221, 0, 221) or UDim2.new(0, 421, 0, 421)
-	circle.Position = crosshair.Position
-	circle.BackgroundTransparency = 1
-	circle.ZIndex = crosshair.ZIndex - 1
-	circle.Parent = crosshair
+	circ = Instance.new("Frame")
+	circ.AnchorPoint = Vector2.new(0.5, 0.5)
+	circ.Size = mob and UDim2.new(0, 221, 0, 221) or UDim2.new(0, 421, 0, 421)
+	circ.Position = dot.Position
+	circ.BackgroundTransparency = 1
+	circ.ZIndex = dot.ZIndex - 1
+	circ.Parent = dot
 
-	local corner = Instance.new("UICorner")
-	corner.CornerRadius = UDim.new(1, 0)
-	corner.Parent = circle
+	local crn = Instance.new("UICorner")
+	crn.CornerRadius = UDim.new(1, 0)
+	crn.Parent = circ
 
-	local stroke = Instance.new("UIStroke")
-	stroke.Thickness = 1
-	stroke.Transparency = 0
-	stroke.Color = Color3.fromRGB(255, 255, 255)
-	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-	stroke.Parent = circle
+	local strk = Instance.new("UIStroke")
+	strk.Thickness = 1
+	strk.Transparency = 0
+	strk.Color = Color3.fromRGB(255, 255, 255)
+	strk.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	strk.Parent = circ
 end
 
-local function removecircle()
-	if circle then circle:Destroy() end
-	circle = nil
+local function rcirc()
+	if circ then circ:Destroy() end
+	circ = nil
 end
 
-local function isOnCrosshair(worldPos)
-	local screenPos, onScreen = camera:WorldToViewportPoint(worldPos)
-	if not onScreen then return false end
+-------------------------------------------------------------------------------------------------------------------------------
 
-	local crossX = camera.ViewportSize.X/2
-	local crossY = camera.ViewportSize.Y/2
+local function onch(wp)
+	local sp, os = cam:WorldToViewportPoint(wp)
+	if not os then return false end
 
-	local delta = Vector2.new(screenPos.X - crossX, screenPos.Y - crossY)
-	return delta.Magnitude <= 3
+	local cx = cam.ViewportSize.X/2
+	local cy = cam.ViewportSize.Y/2
+
+	local d = Vector2.new(sp.X - cx, sp.Y - cy)
+	return d.Magnitude <= 3
 end
 
-local function isobstructing(part)
-	if not part then return true end
-
-	if part.Transparency == 1 then
-		return false
-	end
-
-	if not part:IsDescendantOf(workspace) then
-		return false
-	end
-
-	if not part:IsA("BasePart") then
-		return false
-	end
-
-	if not part.CanCollide then
-		return false
-	end
-
-	if part:IsDescendantOf(player.Character) or part:IsDescendantOf(camera) then
-		return false
-	end
-
-	if part:IsA("TrussPart") or part:IsA("WedgePart") then
-		return true
-	end
-
-	if part.Transparency >= 0.95 then
-		return false
-	end
-
-	return true
-end
-
-local triggerEnabled = false
-local lockedTarget = nil
-local holdingon = false
-local teamcheck = true
+local te = false
+local lt = nil
+local hon = false
+local tc = true
 local vim = cloneref(game:GetService("VirtualInputManager"))
 
-local function simulateMouseDown()
-	if not holdingon then 
-		vim:SendMouseButtonEvent(camera.ViewportSize.X/2, camera.ViewportSize.Y/2, 0, true, game, 0) 
-		holdingon = true 
+local function mdown()
+	if not hon then 
+		vim:SendMouseButtonEvent(cam.ViewportSize.X/2, cam.ViewportSize.Y/2, 0, true, game, 0) 
+		hon = true 
 	end
 end
 
-local function simulateMouseUp()
-	if holdingon then task.wait()
-		vim:SendMouseButtonEvent(camera.ViewportSize.X/2, camera.ViewportSize.Y/2, 0, false, game, 0) 
-		holdingon = false 
+local function mup()
+	if hon then task.wait()
+		vim:SendMouseButtonEvent(cam.ViewportSize.X/2, cam.ViewportSize.Y/2, 0, false, game, 0) 
+		hon = false 
 	end
 end
 
-local function getclosestvisibleenemypart()
-	local mychar = player.Character
-	if not mychar or not mychar:FindFirstChild("HumanoidRootPart") then 
-		lockedTarget = nil
+local function gettgt()
+	local c = lp.Character
+	if not c or not c:FindFirstChild("HumanoidRootPart") then 
+		lt = nil
 		return nil 
 	end
 
-	local myhrp = mychar.HumanoidRootPart
-	local mypos = myhrp.Position
-	local myLookVector = camera.CFrame.LookVector
+	local hrp = c.HumanoidRootPart
+	local mp = hrp.Position
+	local lv = cam.CFrame.LookVector
 
-	local function isVisible(targetPart, char)
-		local rayorigin = camera.CFrame.Position
-		local raydir = targetPart.Position - rayorigin
+	local function vis(tp, ch)
+		local ro = cam.CFrame.Position
+		local rd = tp.Position - ro
 
-		local raycastParams = RaycastParams.new()
-		raycastParams.FilterDescendantsInstances = {player.Character, camera, char}
-		raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
-		raycastParams.IgnoreWater = true
+		local rp = RaycastParams.new()
+		rp.FilterDescendantsInstances = {lp.Character, cam, ch}
+		rp.FilterType = Enum.RaycastFilterType.Blacklist
+		rp.IgnoreWater = true
 
-		local raycastResult = workspace:Raycast(rayorigin, raydir, raycastParams)
-		if raycastResult then
-			local hitPart = raycastResult.Instance
-			if hitPart and not hitPart:IsDescendantOf(char) then
+		local rr = workspace:Raycast(ro, rd, rp)
+		if rr then
+			local hp = rr.Instance
+			if hp and not hp:IsDescendantOf(ch) then
 				return false
 			end
 		end
@@ -150,346 +118,350 @@ local function getclosestvisibleenemypart()
 		return true
 	end
 
-	local function isPartVisible(targetPart, char)
-		if not targetPart then return false end
-		local screenpos, onscreen = camera:WorldToViewportPoint(targetPart.Position)
-		if not onscreen then return false end
-		return isVisible(targetPart, char)
+	local function pvis(tp, ch)
+		if not tp then return false end
+		local sp, os = cam:WorldToViewportPoint(tp.Position)
+		if not os then return false end
+		return vis(tp, ch)
 	end
 
-	if lockedTarget and lockedTarget.Parent then
-		local humanoid = lockedTarget.Parent:FindFirstChildOfClass("Humanoid")
-		if humanoid and humanoid.Health > 0 and isPartVisible(lockedTarget, lockedTarget.Parent) then
-			local dist = (lockedTarget.Position - mypos).Magnitude
-			if dist <= 500 then
-				return lockedTarget
+	if lt and lt.Parent then
+		local h = lt.Parent:FindFirstChildOfClass("Humanoid")
+		if h and h.Health > 0 and pvis(lt, lt.Parent) then
+			local d = (lt.Position - mp).Magnitude
+			if d <= 500 then
+				return lt
 			end
 		end
 	end
 
-	lockedTarget = nil
+	lt = nil
 
-	local bestTarget = nil
-	local closestDistance = math.huge
+	local bt = nil
+	local cd = math.huge
 
-	for _, p in ipairs(players:GetPlayers()) do
-		if p == player then continue end
+	for _, p in ipairs(plr:GetPlayers()) do
+		if p == lp then continue end
 
-		local char = p.Character
-		if not char then continue end
+		local ch = p.Character
+		if not ch then continue end
 
-		local humanoid = char:FindFirstChildOfClass("Humanoid")
-		local hrp = char:FindFirstChild("HumanoidRootPart") or char:FindFirstChild("UpperTorso")
-		local head = char:FindFirstChild("Head")
+		local h = ch:FindFirstChildOfClass("Humanoid")
+		local hrp = ch:FindFirstChild("HumanoidRootPart") or ch:FindFirstChild("UpperTorso")
+		local hd = ch:FindFirstChild("Head")
 
-		if not humanoid or humanoid.Health <= 0 or not hrp then continue end
-		if teamcheck and p.Team and p.Team == player.Team then continue end
-		if char:FindFirstChildOfClass("ForceField") then continue end
+		if not h or h.Health <= 0 or not hrp then continue end
+		if tc and p.Team and p.Team == lp.Team then continue end
+		if ch:FindFirstChildOfClass("ForceField") then continue end
 
-		local dist = (hrp.Position - mypos).Magnitude
-		if dist > 500 then continue end
+		local d = (hrp.Position - mp).Magnitude
+		if d > 500 then continue end
 
-		local targetPart
-		if head and isPartVisible(head, char) then
-			targetPart = head
-		elseif isPartVisible(hrp, char) then
-			targetPart = hrp
+		local tp
+		if hd and pvis(hd, ch) then
+			tp = hd
+		elseif pvis(hrp, ch) then
+			tp = hrp
 		end
 
-		if targetPart then
-			if dist < closestDistance then
-				closestDistance = dist
-				bestTarget = targetPart
+		if tp then
+			if d < cd then
+				cd = d
+				bt = tp
 			end
 		end
 	end
 
-	lockedTarget = bestTarget
-	return bestTarget
+	lt = bt
+	return bt
 end
 
-local smoothSpeed = 22
-local preLockDelay = 0.15
-local pendingTarget = nil
-local lockStartTime = 0
+local ss = 22
+local pld = 0.15
+local pt = nil
+local lst = 0
 
-runservice.RenderStepped:Connect(function(dt)
-	if toggle then
-		local target = getclosestvisibleenemypart()
+rs.RenderStepped:Connect(function(dt)
+	if tgl then
+		local t = gettgt()
 
-		if target then
-			if target ~= pendingTarget then
-				pendingTarget = target
-				lockStartTime = tick()
+		if t then
+			if t ~= pt then
+				pt = t
+				lst = tick()
 				return
 			end
 
-			if tick() - lockStartTime < preLockDelay then
+			if tick() - lst < pld then
 				return
 			end
 
-			lockedTarget = pendingTarget
+			lt = pt
 
-			local campos = camera.CFrame.Position
-			local newlookvector = (lockedTarget.Position - campos).Unit
-			local newcf = CFrame.new(campos, campos + newlookvector)
+			local cp = cam.CFrame.Position
+			local nlv = (lt.Position - cp).Unit
+			local ncf = CFrame.new(cp, cp + nlv)
 
-			local alpha = math.clamp(dt * smoothSpeed, 0, 1)
-			local easedAlpha
-			if alpha < 0.5 then
-				easedAlpha = 4 * alpha * alpha * alpha
+			local a = math.clamp(dt * ss, 0, 1)
+			local ea
+			if a < 0.5 then
+				ea = 4 * a * a * a
 			else
-				easedAlpha = 1 - (-2 * alpha + 2)^3 / 2
+				ea = 1 - (-2 * a + 2)^3 / 2
 			end
 
-			camera.CFrame = camera.CFrame:Lerp(newcf, easedAlpha)
+			cam.CFrame = cam.CFrame:Lerp(ncf, ea)
 
 		else
-			pendingTarget = nil
-			lockStartTime = 0
-			lockedTarget = nil
-			simulateMouseUp()
+			pt = nil
+			lst = 0
+			lt = nil
+			mup()
 		end
 	end
 end)
 
-local function togglecamlock(state)
-	toggle = state
-	if not state then
-		lockedTarget = nil
-		simulateMouseUp()
+local function tcl(s)
+	tgl = s
+	if not s then
+		lt = nil
+		mup()
 	end
-	if state then makecircle() else removecircle() end
+	if s then mcirc() else rcirc() end
 end
 
-local triggerDelay = 0.3
-local timeOnCrosshair = 0
-local isShooting = false
+local td = 0.3
+local toc = 0
+local iss = false
 
-runservice.RenderStepped:Connect(function(dt)
-	if not triggerEnabled then 
-		timeOnCrosshair = 0
-		if isShooting then
-			simulateMouseUp()
-			isShooting = false
+rs.RenderStepped:Connect(function(dt)
+	if not te then 
+		toc = 0
+		if iss then
+			mup()
+			iss = false
 		end
 		return 
 	end
 
-	local shouldShoot = false
+	local ss = false
 
-	if lockedTarget and lockedTarget.Parent and lockedTarget.Position then
-		if isOnCrosshair(lockedTarget.Position) then
-			shouldShoot = true
+	if lt and lt.Parent and lt.Position then
+		if onch(lt.Position) then
+			ss = true
 		end
 	end
 
-	if shouldShoot then
-		timeOnCrosshair = timeOnCrosshair + dt
+	if ss then
+		toc = toc + dt
 
-		if timeOnCrosshair >= triggerDelay and not isShooting then
-			simulateMouseDown()
-			isShooting = true
+		if toc >= td and not iss then
+			mdown()
+			iss = true
 		end
 	else
-		timeOnCrosshair = 0
-		if isShooting then
-			simulateMouseUp()
-			isShooting = false
+		toc = 0
+		if iss then
+			mup()
+			iss = false
 		end
 	end
 end)
 
-local function toggletriggerbot(state)
-	triggerEnabled = state
-end
-
-local esptargets = {}
-local espenabled = false
-
-local function makebox(plr)
-	if plr == player then return end
-
-	local char = plr.Character
-	if not char then return end
-
-	if esptargets[plr] then
-		esptargets[plr].ScreenGui:Destroy()
-	end
-
-	local sc = Instance.new("ScreenGui")
-	sc.ResetOnSpawn = false
-	sc.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-	sc.IgnoreGuiInset = true
-	sc.Parent = gethui() or game:GetService("CoreGui")
-
-	local boxFrame = Instance.new("Frame")
-	boxFrame.BackgroundTransparency = 1
-	boxFrame.Size = UDim2.new(0, 100, 0, 200)
-	boxFrame.Position = UDim2.new(0, 0, 0, 0)
-	boxFrame.Visible = false
-	boxFrame.Parent = sc
-
-	local boxStroke = Instance.new("UIStroke")
-	boxStroke.Thickness = 2
-	boxStroke.Transparency = 0
-	boxStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-	boxStroke.Parent = boxFrame
-
-	if plr.Team then
-		boxStroke.Color = plr.Team.TeamColor.Color
-	else
-		boxStroke.Color = Color3.fromRGB(255, 255, 255)
-	end
-
-	esptargets[plr] = {
-		ScreenGui = sc,
-		BoxFrame = boxFrame,
-		BoxStroke = boxStroke,
-	}
-end
-
-local function noesp(plr)
-	if esptargets[plr] then
-		esptargets[plr].ScreenGui:Destroy()
-		esptargets[plr] = nil
-	end
-end
-
-local function updateBoxESP(plr)
-	if not espenabled or plr == player then return end
-
-	local data = esptargets[plr]
-	if not data then return end
-
-	local char = plr.Character
-	if not char then
-		noesp(plr)
-		return
-	end
-
-	local hrp = char:FindFirstChild("HumanoidRootPart")
-	if not hrp then
-		noesp(plr)
-		return
-	end
-
-	local cf, size = char:GetBoundingBox()
-
-	local corners = {}
-	for x = -0.5, 0.5, 1 do
-		for y = -0.5, 0.5, 1 do
-			for z = -0.5, 0.5, 1 do
-				table.insert(corners, (cf.Position + (cf.RightVector * size.X * x) + (cf.UpVector * size.Y * y) + (cf.LookVector * size.Z * z)))
-			end
-		end
-	end
-
-	local minX, minY, maxX, maxY
-	local onscreen = false
-	for _, corner in ipairs(corners) do
-		local screenPos, onScreen = camera:WorldToViewportPoint(corner)
-		if onScreen then
-			onscreen = true
-			if not minX or screenPos.X < minX then minX = screenPos.X end
-			if not maxX or screenPos.X > maxX then maxX = screenPos.X end
-			if not minY or screenPos.Y < minY then minY = screenPos.Y end
-			if not maxY or screenPos.Y > maxY then maxY = screenPos.Y end
-		end
-	end
-
-	if not onscreen or not minX then
-		data.BoxFrame.Visible = false
-		return
-	end
-
-	data.BoxFrame.Visible = true
-
-	local boxWidth = maxX - minX
-	local boxHeight = maxY - minY
-	local centerX = (minX + maxX) / 2
-	local centerY = (minY + maxY) / 2
-
-	data.BoxFrame.Size = UDim2.new(0, boxWidth, 0, boxHeight)
-	data.BoxFrame.Position = UDim2.new(0, centerX - boxWidth / 2, 0, centerY - boxHeight / 2)
-
-	if plr.Team then
-		data.BoxStroke.Color = plr.Team.TeamColor.Color
-	else
-		data.BoxStroke.Color = Color3.fromRGB(255, 255, 255)
-	end
-end
-
-local function updesp()
-	for _, plr in ipairs(players:GetPlayers()) do
-		if plr ~= player then
-			if espenabled then
-				if not esptargets[plr] then
-					makebox(plr)
-				end
-				updateBoxESP(plr)
-			else
-				noesp(plr)
-			end
-		end
-	end
-end
-
-local function toggleesp(state)
-	espenabled = state
-	if not espenabled then
-		for plr in pairs(esptargets) do
-			noesp(plr)
-		end
-	else
-		for _, plr in ipairs(players:GetPlayers()) do
-			if plr ~= player and plr.Character then
-				makebox(plr)
-			end
-		end
-	end
-end
-
-players.PlayerAdded:Connect(function(plr)
-	plr.CharacterAdded:Connect(function()
-		if espenabled then
-			makebox(plr)
-		end
-	end)
-end)
-
-players.PlayerRemoving:Connect(noesp)
-runservice.RenderStepped:Connect(updesp)
-
-local testsound
-
-local function playtest()
-	local a = "https://files.catbox.moe/jt5t6y.mp3"
-	local b = "Bomber (Slowed).mp3"
-	local c, fileData = pcall(readfile, b)
-
-	if not c then
-		local audioContent = game:HttpGet(a)
-		writefile(b, audioContent)
-	end
-
-	if not testsound then
-		testsound = Instance.new("Sound")
-		testsound.SoundId = getcustomasset(b)
-		testsound.Volume = 1
-		testsound.Parent = workspace
-		testsound:Play()
-		testsound.Looped = true
-	end
-end
-
-function stoptest()
-	if testsound then testsound:Destroy() testsound = nil end
+local function ttb(s)
+	te = s
 end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-function clik() 
+local et = {}
+local ee = false
+
+local function mbox(p)
+	if p == lp then return end
+
+	local c = p.Character
+	if not c then return end
+
+	if et[p] then
+		et[p].sg:Destroy()
+	end
+
+	local sg = Instance.new("ScreenGui")
+	sg.ResetOnSpawn = false
+	sg.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+	sg.IgnoreGuiInset = true
+	sg.Parent = gethui() or game:GetService("CoreGui")
+
+	local bf = Instance.new("Frame")
+	bf.BackgroundTransparency = 1
+	bf.Size = UDim2.new(0, 100, 0, 200)
+	bf.Position = UDim2.new(0, 0, 0, 0)
+	bf.Visible = false
+	bf.Parent = sg
+
+	local bs = Instance.new("UIStroke")
+	bs.Thickness = 2
+	bs.Transparency = 0
+	bs.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	bs.Parent = bf
+
+	if p.Team then
+		bs.Color = p.Team.TeamColor.Color
+	else
+		bs.Color = Color3.fromRGB(255, 255, 255)
+	end
+
+	et[p] = {
+		sg = sg,
+		bf = bf,
+		bs = bs,
+	}
+end
+
+local function resp(p)
+	if et[p] then
+		et[p].sg:Destroy()
+		et[p] = nil
+	end
+end
+
+local function uesp(p)
+	if not ee or p == lp then return end
+
+	local d = et[p]
+	if not d then return end
+
+	local c = p.Character
+	if not c then
+		resp(p)
+		return
+	end
+
+	local hrp = c:FindFirstChild("HumanoidRootPart")
+	if not hrp then
+		resp(p)
+		return
+	end
+
+	local cf, sz = c:GetBoundingBox()
+
+	local crn = {}
+	for x = -0.5, 0.5, 1 do
+		for y = -0.5, 0.5, 1 do
+			for z = -0.5, 0.5, 1 do
+				table.insert(crn, (cf.Position + (cf.RightVector * sz.X * x) + (cf.UpVector * sz.Y * y) + (cf.LookVector * sz.Z * z)))
+			end
+		end
+	end
+
+	local mnx, mny, mxx, mxy
+	local os = false
+	for _, cr in ipairs(crn) do
+		local sp, osr = cam:WorldToViewportPoint(cr)
+		if osr then
+			os = true
+			if not mnx or sp.X < mnx then mnx = sp.X end
+			if not mxx or sp.X > mxx then mxx = sp.X end
+			if not mny or sp.Y < mny then mny = sp.Y end
+			if not mxy or sp.Y > mxy then mxy = sp.Y end
+		end
+	end
+
+	if not os or not mnx then
+		d.bf.Visible = false
+		return
+	end
+
+	d.bf.Visible = true
+
+	local bw = mxx - mnx
+	local bh = mxy - mny
+	local cx = (mnx + mxx) / 2
+	local cy = (mny + mxy) / 2
+
+	d.bf.Size = UDim2.new(0, bw, 0, bh)
+	d.bf.Position = UDim2.new(0, cx - bw / 2, 0, cy - bh / 2)
+
+	if p.Team then
+		d.bs.Color = p.Team.TeamColor.Color
+	else
+		d.bs.Color = Color3.fromRGB(255, 255, 255)
+	end
+end
+
+local function ue()
+	for _, p in ipairs(plr:GetPlayers()) do
+		if p ~= lp then
+			if ee then
+				if not et[p] then
+					mbox(p)
+				end
+				uesp(p)
+			else
+				resp(p)
+			end
+		end
+	end
+end
+
+local function tes(s)
+	ee = s
+	if not ee then
+		for p in pairs(et) do
+			resp(p)
+		end
+	else
+		for _, p in ipairs(plr:GetPlayers()) do
+			if p ~= lp and p.Character then
+				mbox(p)
+			end
+		end
+	end
+end
+
+plr.PlayerAdded:Connect(function(p)
+	p.CharacterAdded:Connect(function()
+		if ee then
+			mbox(p)
+		end
+	end)
+end)
+
+plr.PlayerRemoving:Connect(resp)
+rs.RenderStepped:Connect(ue)
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+local ts
+
+local function ptst()
+	local a = "https://files.catbox.moe/jt5t6y.mp3"
+	local b = "Bomber (Slowed).mp3"
+	local c, fd = pcall(readfile, b)
+
+	if not c then
+		local ac = game:HttpGet(a)
+		writefile(b, ac)
+	end
+
+	if not ts then
+		ts = Instance.new("Sound")
+		ts.SoundId = getcustomasset(b)
+		ts.Volume = 1
+		ts.Parent = workspace
+		ts:Play()
+		ts.Looped = true
+	end
+end
+
+function stst()
+	if ts then ts:Destroy() ts = nil end
+end
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+function clk() 
 	task.spawn(function()
 		local s = Instance.new("Sound") 
 		s.SoundId = "rbxassetid://87152549167464"
@@ -500,39 +472,37 @@ function clik()
 	end)
 end
 
-local function repos(ui, row, col, totalRows, totalCols)
-	local buttonWidth = 90
-	local buttonHeight = 55
-	local spacing = 10
+local function rp(ui, r, c, tr, tc)
+	local bw = 90
+	local bh = 55
+	local sp = 10
 
-	local totalWidth = (buttonWidth * totalCols) + (spacing * (totalCols - 1))
-	local totalHeight = (buttonHeight * totalRows) + (spacing * (totalRows - 1))
+	local tw = (bw * tc) + (sp * (tc - 1))
+	local th = (bh * tr) + (sp * (tr - 1))
 
-	local sw, sh = camera.ViewportSize.X, camera.ViewportSize.Y
-	local startX = (sw - totalWidth) / 2
-	local startY = (sh - totalHeight) / 2 - 56
+	local sw, sh = cam.ViewportSize.X, cam.ViewportSize.Y
+	local sx = (sw - tw) / 2
+	local sy = (sh - th) / 2 - 56
 
-	local x = startX + (col - 1) * (buttonWidth + spacing)
-	local y = startY + (row - 1) * (buttonHeight + spacing)
+	local x = sx + (c - 1) * (bw + sp)
+	local y = sy + (r - 1) * (bh + sp)
 
 	ui.Position = UDim2.new(0, x, 0, y)
 end
 
-local screenGui = Instance.new("ScreenGui")
-screenGui.ResetOnSpawn = false
-screenGui.Parent = gethui() or game:GetService("CoreGui")
-if screenGui.Parent:FindFirstChild("Stupid Rushed Script") then screenGui.Parent:FindFirstChild("Stupid Rushed Script"):Destroy() end
-screenGui.Name = "Stupid Rushed Script"
+local sg = Instance.new("ScreenGui")
+sg.ResetOnSpawn = false
+sg.Parent = gethui() or game:GetService("CoreGui")
+if sg.Parent:FindFirstChild("Stupid Rushed Script") then sg.Parent:FindFirstChild("Stupid Rushed Script"):Destroy() end
+sg.Name = "Stupid Rushed Script"
 
--------------------------------------------------------------------------------------------------------------------------------
-
-local function maketoggle(keybind, key, text, initialState, callback, row, col, totalRows, totalCols)
-	local toggled = initialState or false
+local function mtg(kb, k, t, is, cb, r, c, tr, tc)
+	local tg = is or false
 
 	local btn = Instance.new("TextButton")
 	btn.Size = UDim2.new(0, 90, 0, 55)
 	btn.TextStrokeTransparency = 1
-	repos(btn, row, col, totalRows, totalCols)
+	rp(btn, r, c, tr, tc)
 	btn.BackgroundTransparency = 0.3
 	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
 	btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -544,41 +514,41 @@ local function maketoggle(keybind, key, text, initialState, callback, row, col, 
 	btn.Active = true
 	btn.Draggable = true
 	btn.TextWrapped = true
-	btn.Text = text
-	btn.Parent = screenGui
+	btn.Text = t
+	btn.Parent = sg
 
-	local stroke = Instance.new("UIStroke")
-	stroke.Thickness = 1
-	stroke.Color = Color3.new(1, 1, 1)
-	stroke.Parent = btn
-	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	local strk = Instance.new("UIStroke")
+	strk.Thickness = 1
+	strk.Color = Color3.new(1, 1, 1)
+	strk.Parent = btn
+	strk.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
-	local function updvisual()
-		if toggled then
+	local function uv()
+		if tg then
 			btn.TextColor3 = Color3.fromRGB(0, 255, 0)
-			stroke.Color = Color3.fromRGB(0, 255, 0)
+			strk.Color = Color3.fromRGB(0, 255, 0)
 		else
 			btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-			stroke.Color = Color3.fromRGB(255, 255, 255)
+			strk.Color = Color3.fromRGB(255, 255, 255)
 		end
 	end
 
-	updvisual()
+	uv()
 
-	local function toggleButton()
-		clik()
-		toggled = not toggled
-		updvisual()
-		if callback then callback(toggled) end
+	local function tbtn()
+		clk()
+		tg = not tg
+		uv()
+		if cb then cb(tg) end
 	end
 
-	btn.MouseButton1Click:Connect(toggleButton)
+	btn.MouseButton1Click:Connect(tbtn)
 
-	if keybind and key then
-		game["UserInputService"].InputBegan:Connect(function(input, gp)
+	if kb and k then
+		game["UserInputService"].InputBegan:Connect(function(i, gp)
 			if gp then return end
-			if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode[key] then
-				toggleButton()
+			if i.UserInputType == Enum.UserInputType.Keyboard and i.KeyCode == Enum.KeyCode[k] then
+				tbtn()
 			end
 		end)
 	end
@@ -588,37 +558,37 @@ end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-local buttons = {
-	{keybind = true, key = "R", type = "toggle", text = "Toggle Camlock [R]", callback = function(s) togglecamlock(s) end},
-	{keybind = false, key = nil, type = "toggle", text = "Toggle ESP", callback = function(s) toggleesp(s) end},
-	{keybind = false, key = nil, type = "toggle", text = "Toggle No Team Check", callback = function(s) teamcheck = not s end},
-	{keybind = true, key = "Z", type = "toggle", text = "Toggle Trigger Bot [Z]", callback = function(s) toggletriggerbot(s) end}
+local btns = {
+	{kb = true, k = "R", typ = "tg", t = "Toggle Camlock [R]", cb = function(s) tcl(s) end},
+	{kb = false, k = nil, typ = "tg", t = "Toggle ESP", cb = function(s) tes(s) end},
+	{kb = false, k = nil, typ = "tg", t = "Toggle No Team Check", cb = function(s) tc = not s end},
+	{kb = true, k = "Z", typ = "tg", t = "Toggle Trigger Bot [Z]", cb = function(s) ttb(s) end}
 }
 
-if testing == true then
-	table.insert(buttons, {keybind = true, key = nil, type = "toggle", text = "Toggle Test", callback = function(s) if s then playtest() else stoptest() end end})
+if test == true then
+	table.insert(btns, {kb = true, k = nil, typ = "tg", t = "Toggle Test", cb = function(s) if s then ptst() else stst() end end})
 end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-local maxcolumns = 5
-local maxbuttonspercolumn = 8
-local totalbuttons = #buttons
+local mc = 5
+local mbpc = 8
+local tb = #btns
 
-local columns = math.min(maxbuttonspercolumn, math.ceil(totalbuttons / maxcolumns))
-local rows = math.ceil(totalbuttons / columns)
+local cols = math.min(mbpc, math.ceil(tb / mc))
+local rows = math.ceil(tb / cols)
 
-local buttonindex = 1
-for col = 1, columns do
+local bi = 1
+for col = 1, cols do
 	for row = 1, rows do
-		if buttonindex > totalbuttons then break end
+		if bi > tb then break end
 
-		local buttondata = buttons[buttonindex]
-		if buttondata.type == "toggle" then
-			maketoggle(buttondata.keybind, buttondata.key, buttondata.text, false, buttondata.callback, row, col, rows, columns)
+		local bd = btns[bi]
+		if bd.typ == "tg" then
+			mtg(bd.kb, bd.k, bd.t, false, bd.cb, row, col, rows, cols)
 		end
 
-		buttonindex = buttonindex + 1
+		bi = bi + 1
 	end
 end
 
