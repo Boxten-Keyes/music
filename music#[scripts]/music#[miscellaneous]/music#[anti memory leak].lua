@@ -89,7 +89,7 @@ end
 local sg = Instance.new("ScreenGui")
 sg.ResetOnSpawn = false
 sg.Parent = gethui() or cgui
-if sg.Parent:FindFirstChild("Stupid Rushed Script") then sg.Parent:FindFirstChild("skidded from ksu"):Destroy() end
+if sg.Parent:FindFirstChild("skidded from ksu") then sg.Parent:FindFirstChild("skidded from ksu"):Destroy() end
 sg.Name = "skidded from ksu"
 
 local function mtg(kb, k, t, is, cb, r, c, tr, tc)
