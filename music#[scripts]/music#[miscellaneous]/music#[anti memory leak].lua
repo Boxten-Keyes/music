@@ -7,6 +7,7 @@ if not game:IsLoaded() then game.Loaded:Wait() end
 local plr = game:GetService("Players")
 local rs = game:GetService("RunService")
 local cgui = game:GetService("CoreGui")
+local cam = workspace.CurrentCamera
 local thresh = 4000 -- enable and then re-disable 3D rendering when memory exceeds this threshold
 
 -------------------------------------------------------------------------------------------------------------------------------
@@ -25,7 +26,7 @@ local function taml(state)
 		end
 		return
 	else
-		RunService:Set3dRenderingEnabled(false)
+		rs:Set3dRenderingEnabled(false)
 	end
 
 	local ps = cgui:WaitForChild("RobloxGui"):WaitForChild("PerformanceStats")
