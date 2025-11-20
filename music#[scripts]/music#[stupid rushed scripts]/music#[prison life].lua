@@ -192,7 +192,7 @@ local function gettgt()
 		if ch:FindFirstChildOfClass("ForceField") then continue end
 
 		local d = (hrp.Position - mp).Magnitude
-		if d > 700 then continue end
+		if d > 900 then continue end
 
 		local tp
 		if hd and pvis(hd, ch) then
