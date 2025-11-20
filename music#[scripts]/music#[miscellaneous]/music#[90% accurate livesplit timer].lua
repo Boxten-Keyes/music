@@ -7,7 +7,7 @@ if not game:IsLoaded() then game["Loaded"]:Wait() end
 local gui = Instance.new("ScreenGui")
 gui.Name = "LiveSplit"
 gui.ResetOnSpawn = false
-if game["Run Service"]:IsStudio() then gui["Parent"]= game["Players"]["LocalPlayer"]:WaitForChild("PlayerGui") else gui["Parent"] = gethui and gethui() or game["CoreGui"] end
+if game["Run Service"]:IsStudio() then gui["Parent"] = game["Players"]["LocalPlayer"]:WaitForChild("PlayerGui") else gui["Parent"] = gethui and gethui() or game["CoreGui"] end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
