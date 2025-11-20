@@ -1,6 +1,9 @@
+-------------------------------------------------------------------------------------------------------------------------------
+
 local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
+-------------------------------------------------------------------------------------------------------------------------------
 
 local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = gethui and gethui() or game:GetService("CoreGui")
@@ -19,6 +22,7 @@ local function makeKey(name, xOffset, yOffset, width, height)
 	btnFrame.Size = UDim2.new(0, width, 0, height)
 	btnFrame.Position = UDim2.new(0, xOffset, 0, yOffset)
 	btnFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	btnFrame.BackgroundTransparency = 0.65
 	btnFrame.Parent = frame
 
 	local stroke = Instance.new("UIStroke")
@@ -49,6 +53,8 @@ local function makeKey(name, xOffset, yOffset, width, height)
 	return btnFrame, textLabel
 end
 
+-------------------------------------------------------------------------------------------------------------------------------
+
 local W, WLabel = makeKey("W", 60, 0, 50, 50)
 local A, ALabel = makeKey("A", 0, 60, 50, 50)
 local S, SLabel = makeKey("S", 60, 60, 50, 50)
@@ -60,6 +66,8 @@ local Space, SpaceLabel = makeKey("SPACE", 0, 120, 170, 50)
 local LClick, LClickLabel = makeKey("L\nC", 180, 60, 21, 110)
 local RClick, RClickLabel = makeKey("R\nC", 212, 60, 21, 110)
 
+-------------------------------------------------------------------------------------------------------------------------------
+
 local keys = {
 	W = W, A = A, S = S, D = D,
 	LeftShift = Shift, RightShift = Shift,
@@ -67,6 +75,8 @@ local keys = {
 	MouseButton1 = LClick,
 	MouseButton2 = RClick
 }
+
+-------------------------------------------------------------------------------------------------------------------------------
 
 local pressedColor = Color3.fromRGB(0, 255, 0)
 local normalColor = Color3.fromRGB(0, 0, 0)
@@ -82,6 +92,8 @@ local function releaseKey(key)
 	key.a.Color = Color3.new(1, 1, 1)
 	key.b.TextColor3 = Color3.new(1, 1, 1)
 end
+
+-------------------------------------------------------------------------------------------------------------------------------
 
 UserInputService.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.Keyboard then
@@ -108,3 +120,5 @@ UserInputService.InputEnded:Connect(function(input)
 		releaseKey(keys.MouseButton2)
 	end
 end)
+
+-------------------------------------------------------------------------------------------------------------------------------
