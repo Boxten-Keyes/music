@@ -5,14 +5,12 @@ local TweenService = game:GetService("TweenService")
 local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 
--- Dance animations
 local dances = {
     "rbxassetid://182491037",
     "rbxassetid://182491277",
     "rbxassetid://182491368"
 }
 
--- GUI
 local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
@@ -26,7 +24,6 @@ toggleButton.Parent = screenGui
 toggleButton.Active = true
 toggleButton.Draggable = true
 
--- State
 local enabled = false
 local spinning = false
 local currentAnimTrack
@@ -77,7 +74,6 @@ local function spinCharacter()
     spinning = true
     spinConnection = RunService.Heartbeat:Connect(function(dt)
         if spinning then
-            -- Slower spin speed (90 degrees per second instead of 180)
             hrp.CFrame = hrp.CFrame * CFrame.Angles(0, math.rad(100 * dt), 0)
         end
     end)
@@ -87,19 +83,16 @@ local function getRandomPosition(character)
     local hrp = character:FindFirstChild("HumanoidRootPart")
     if not hrp then return nil end
     
-    -- Get a completely random direction and distance
     local angle = math.random() * 2 * math.pi
-    local distance = math.random(6, 26) -- Walk 10-30 studs away
+    local distance = math.random(6, 26)
     local offset = Vector3.new(math.cos(angle) * distance, 0, math.sin(angle) * distance)
     
-    -- Raycast to ensure we're not walking into walls
     local raycastParams = RaycastParams.new()
     raycastParams.FilterDescendantsInstances = {character}
     raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
     
     local raycastResult = workspace:Raycast(hrp.Position, offset, raycastParams)
     if raycastResult then
-        -- If we hit something, walk to the hit position minus a small buffer
         return raycastResult.Position - offset.Unit * 2
     end
     
@@ -117,7 +110,6 @@ local function walkToRandomPoint()
     local hrp = character and character:FindFirstChild("HumanoidRootPart")
     if not humanoid or not hrp then return end
 
-    -- Walk in 3 different directions
     for i = 1, math.random(4, 8) do
         if not enabled or stopLoop then break end
 
@@ -146,7 +138,7 @@ local function idleBotLoop()
     while enabled and not stopLoop do
         spinCharacter()
         playRandomDance()
-        task.wait(math.random(5, 10)) -- Idle time
+        task.wait(math.random(3, 10))
         if not enabled or stopLoop then break end
         walkToRandomPoint()
     end
