@@ -16,6 +16,7 @@ local test = false
 
 local tgl = false
 local circ = nil
+local circconn = nil
 
 local function mcirc()
 	if circ then circ:Destroy() end
@@ -23,7 +24,6 @@ local function mcirc()
 	circ = Instance.new("Frame")
 	circ.AnchorPoint = Vector2.new(0.5, 0.5)
 	circ.Size = mob and UDim2.new(0, 221, 0, 221) or UDim2.new(0, 421, 0, 421)
-	circ.Position = UDim2.new(0, 0, 0, 0)
 	circ.BackgroundTransparency = 1
 	circ.ZIndex = 10
 	circ.Parent = gethui() or game:GetService("CoreGui")
@@ -38,11 +38,23 @@ local function mcirc()
 	strk.Color = Color3.fromRGB(255, 255, 255)
 	strk.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 	strk.Parent = circ
+
+	circconn = rs.RenderStepped:Connect(function()
+		if circ then
+			local mpos = ui:GetMouseLocation()
+			circ.Position = UDim2.fromOffset(mpos.X, mpos.Y)
+		end
+	end)
 end
 
 local function rcirc()
 	if circ then circ:Destroy() end
 	circ = nil
+
+	if circconn then
+		circconn:Disconnect()
+		circconn = nil
+	end
 end
 
 -------------------------------------------------------------------------------------------------------------------------------
@@ -251,9 +263,69 @@ rs.RenderStepped:Connect(function(dt)
 	end
 end)
 
-function ttb(s)
+local function ttb(s)
 	te = s
 	if not s then mup(); iss = false; toc = 0 end
+end
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+local function gtgtincirc()
+    if not circ then return nil end
+    
+    local circleRadius = circ.AbsoluteSize.X / 2
+    local circlePos = circ.AbsolutePosition + (circ.AbsoluteSize / 2)
+
+    for _, p in ipairs(plr:GetPlayers()) do
+        if p ~= lp then
+            local ch = p.Character
+            if ch then
+                local hrp = ch:FindFirstChild("HumanoidRootPart") or ch:FindFirstChild("UpperTorso")
+                local hum = ch:FindFirstChildOfClass("Humanoid")
+
+                if hrp and hum and hum.Health > 0 then
+                    local sp, onScreen = cam:WorldToViewportPoint(hrp.Position)
+                    if onScreen then
+                        local dist = (Vector2.new(sp.X, sp.Y) - Vector2.new(circlePos.X, circlePos.Y)).Magnitude
+                        if dist <= circleRadius then
+                            return hrp
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    return nil
+end
+
+local function clktgt()
+    local target = gtgtincirc()
+    if not target then return end
+
+    local sp, onScreen = cam:WorldToViewportPoint(target.Position)
+    if not onScreen then return end
+
+    vim:SendMouseButtonEvent(sp.X, sp.Y, 0, true, game, 0)
+    task.wait()
+    vim:SendMouseButtonEvent(sp.X, sp.Y, 0, false, game, 0)
+end
+
+local ale = false
+
+if not mob then
+	ui.InputBegan:Connect(function(i, g)
+		if not ale then return end
+    	if g then return end
+    	if i.UserInputType == Enum.UserInputType.MouseButton1 then
+        	clktgt()
+    	end
+	end)
+else
+	ui.TouchTap:Connect(function()
+		if not ale then return end
+    	clktgt()
+	end)
 end
 
 -------------------------------------------------------------------------------------------------------------------------------
@@ -537,7 +609,7 @@ local function mtg(kb, k, t, is, cb, r, c, tr, tc)
 	btn.MouseButton1Click:Connect(tbtn)
 
 	if kb and k then
-		game["UserInputService"].InputBegan:Connect(function(i, gp)
+		ui.InputBegan:Connect(function(i, gp)
 			if gp then return end
 			if i.UserInputType == Enum.UserInputType.Keyboard and i.KeyCode == Enum.KeyCode[k] then
 				tbtn()
@@ -552,6 +624,7 @@ end
 
 local btns = {
 	{kb = true, k = "Q", typ = "tg", t = "Toggle Camlock [Q]", cb = function(s) tcl(s) end},
+	{kb = true, k = "T", typ = "tg", t = "Toggle Aimlock [T]", cb = function(s) ale = s end},
 	{kb = false, k = nil, typ = "tg", t = "Toggle ESP", cb = function(s) tes(s) end},
 	{kb = false, k = nil, typ = "tg", t = "Toggle No Team Check", cb = function(s) tc = not s end},
 	{kb = true, k = "Z", typ = "tg", t = "Toggle Trigger Bot [Z]", cb = function(s) ttb(s) end}
