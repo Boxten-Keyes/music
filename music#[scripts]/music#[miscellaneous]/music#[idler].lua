@@ -1,3 +1,9 @@
+-------------------------------------------------------------------------------------------------------------------------------
+
+if not game:IsLoaded() then game.Loaded:Wait() end
+
+-------------------------------------------------------------------------------------------------------------------------------
+
 local Players = game:GetService("Players")
 local PathfindingService = game:GetService("PathfindingService")
 local RunService = game:GetService("RunService")
@@ -5,24 +11,13 @@ local TweenService = game:GetService("TweenService")
 local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 
+-------------------------------------------------------------------------------------------------------------------------------
+
 local dances = {
     "rbxassetid://182491037",
     "rbxassetid://182491277",
     "rbxassetid://182491368"
 }
-
-local screenGui = Instance.new("ScreenGui")
-screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
-
-local toggleButton = Instance.new("TextButton")
-toggleButton.Size = UDim2.new(0, 120, 0, 50)
-toggleButton.Position = UDim2.new(0.5, -60, 0.5, 0)
-toggleButton.Text = "Idle Bot OFF"
-toggleButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-toggleButton.Parent = screenGui
-toggleButton.Active = true
-toggleButton.Draggable = true
 
 local enabled = false
 local spinning = false
@@ -30,7 +25,7 @@ local currentAnimTrack
 local stopLoop = false
 local spinConnection
 
-local function stopEverything()
+local function stopall()
     stopLoop = true
     spinning = false
     if spinConnection then
@@ -47,7 +42,7 @@ local function stopEverything()
     end
 end
 
-local function playRandomDance()
+local function dance()
     if not LocalPlayer.Character then return end
     local humanoid = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
     if humanoid then
@@ -63,7 +58,7 @@ local function playRandomDance()
     end
 end
 
-local function spinCharacter()
+local function spin()
     local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
     if not hrp then return end
     
@@ -79,7 +74,7 @@ local function spinCharacter()
     end)
 end
 
-local function getRandomPosition(character)
+local function getrandompos(character)
     local hrp = character:FindFirstChild("HumanoidRootPart")
     if not hrp then return nil end
     
@@ -99,7 +94,7 @@ local function getRandomPosition(character)
     return hrp.Position + offset
 end
 
-local function walkToRandomPoint()
+local function walktorandompoint()
     spinning = false
     if currentAnimTrack then
         currentAnimTrack:Stop()
@@ -113,7 +108,7 @@ local function walkToRandomPoint()
     for i = 1, math.random(4, 8) do
         if not enabled or stopLoop then break end
 
-        local targetPos = getRandomPosition(character)
+        local targetPos = getrandompos(character)
         if not targetPos then return end
 
         local path = PathfindingService:CreatePath()
@@ -133,23 +128,150 @@ local function walkToRandomPoint()
     end
 end
 
-local function idleBotLoop()
+local function idleloop()
     stopLoop = false
     while enabled and not stopLoop do
-        spinCharacter()
-        playRandomDance()
+        spin()
+        dance()
         task.wait(math.random(3, 10))
         if not enabled or stopLoop then break end
-        walkToRandomPoint()
+        walktorandompoint()
     end
 end
 
-toggleButton.MouseButton1Click:Connect(function()
-    enabled = not enabled
-    toggleButton.Text = enabled and "Idle Bot ON" or "Idle Bot OFF"
+function toggleidler(state)
+    enabled = state
     if enabled then
-        task.spawn(idleBotLoop)
+        task.spawn(idleloop)
     else
-        stopEverything()
+        stopall()
     end
 end)
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+function clk() 
+	task.spawn(function()
+		local s = Instance.new("Sound") 
+		s.SoundId = "rbxassetid://87152549167464"
+		s.Parent = workspace
+		s.Volume = 1.2 
+		s.TimePosition = 0.1 
+		s:Play() 
+	end)
+end
+
+local function rp(ui, r, c, tr, tc)
+	local bw = 90
+	local bh = 55
+	local sp = 10
+
+	local tw = (bw * tc) + (sp * (tc - 1))
+	local th = (bh * tr) + (sp * (tr - 1))
+
+	local sw, sh = cam.ViewportSize.X, cam.ViewportSize.Y
+	local sx = (sw - tw) / 2
+	local sy = (sh - th) / 2 - 56
+
+	local x = sx + (c - 1) * (bw + sp)
+	local y = sy + (r - 1) * (bh + sp)
+
+	ui.Position = UDim2.new(0, x, 0, y)
+end
+
+local sg = Instance.new("ScreenGui")
+sg.ResetOnSpawn = false
+sg.Parent = gethui() or cgui
+if sg.Parent:FindFirstChild("skidded from ksu") then sg.Parent:FindFirstChild("skidded from ksu"):Destroy() end
+sg.Name = "skidded from ksu"
+
+local function mtg(kb, k, t, is, cb, r, c, tr, tc)
+	local tg = is or false
+
+	local btn = Instance.new("TextButton")
+	btn.Size = UDim2.new(0, 90, 0, 55)
+	btn.TextStrokeTransparency = 1
+	rp(btn, r, c, tr, tc)
+	btn.BackgroundTransparency = 0.3
+	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	btn.Font = Enum.Font.Code
+	btn.BorderSizePixel = 0
+	btn.TextSize = 13
+	btn.TextXAlignment = Enum.TextXAlignment.Center
+	btn.TextYAlignment = Enum.TextYAlignment.Center
+	btn.Active = true
+	btn.Draggable = true
+	btn.TextWrapped = true
+	btn.Text = t
+	btn.Parent = sg
+
+	local strk = Instance.new("UIStroke")
+	strk.Thickness = 1
+	strk.Color = Color3.new(1, 1, 1)
+	strk.Parent = btn
+	strk.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+	local function uv()
+		if tg then
+			btn.TextColor3 = Color3.fromRGB(0, 255, 0)
+			strk.Color = Color3.fromRGB(0, 255, 0)
+		else
+			btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+			strk.Color = Color3.fromRGB(255, 255, 255)
+		end
+	end
+
+	uv()
+
+	local function tbtn()
+		clk()
+		tg = not tg
+		uv()
+		if cb then cb(tg) end
+	end
+
+	btn.MouseButton1Click:Connect(tbtn)
+
+	if kb and k then
+		game["UserInputService"].InputBegan:Connect(function(i, gp)
+			if gp then return end
+			if i.UserInputType == Enum.UserInputType.Keyboard and i.KeyCode == Enum.KeyCode[k] then
+				tbtn()
+			end
+		end)
+	end
+
+	return btn
+end
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+local btns = {
+	{kb = false, k = nil, typ = "tg", t = "Toggle Dynamic Anti-AFK", cb = function(s) toggleidler(s) end}
+}
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+local mc = 5
+local mbpc = 8
+local tb = #btns
+
+local cols = math.min(mbpc, math.ceil(tb / mc))
+local rows = math.ceil(tb / cols)
+
+local bi = 1
+for col = 1, cols do
+	for row = 1, rows do
+		if bi > tb then break end
+
+		local bd = btns[bi]
+		if bd.typ == "tg" then
+			mtg(bd.kb, bd.k, bd.t, false, bd.cb, row, col, rows, cols)
+		end
+
+		bi = bi + 1
+	end
+end
+
+-------------------------------------------------------------------------------------------------------------------------------
