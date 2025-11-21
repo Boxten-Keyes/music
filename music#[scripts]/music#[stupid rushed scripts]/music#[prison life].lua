@@ -12,6 +12,8 @@ local ui = game:GetService("UserInputService")
 local mob = ui.TouchEnabled
 local test = false
 
+-------------------------------------------------------------------------------------------------------------------------------
+
 local sg = Instance.new("ScreenGui")
 sg.ResetOnSpawn = false
 sg.Parent = gethui() or game:GetService("CoreGui")
@@ -22,7 +24,6 @@ sg.Name = "Stupid Rushed Script"
 
 local tgl = false
 local circ = nil
-local circconn = nil
 
 local function mcirc()
 	task.spawn(function()
@@ -51,16 +52,12 @@ local function mcirc()
 		strk.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 		strk.Parent = circ
 
-		circconn = rs.RenderStepped:Connect(function()
-			if not circ then return end
+		local cs = circ.AbsoluteSize
 
-			local cs = circ.AbsoluteSize
+		local centerX = (cam.ViewportSize.X - cs.X) / 2
+		local centerY = (cam.ViewportSize.Y - cs.Y) / 2 - 56
 
-			local centerX = (cam.ViewportSize.X - cs.X) / 2
-			local centerY = (cam.ViewportSize.Y - cs.Y) / 2 - 56
-
-			circ.Position = UDim2.fromOffset(centerX + cs.X/2, centerY + cs.Y/2)
-		end)
+		circ.Position = UDim2.fromOffset(centerX + cs.X/2, centerY + cs.Y/2)
 	end)
 end
 
@@ -68,11 +65,6 @@ local function rcirc()
 	if circ then 
 		circ:Destroy()
 		circ = nil
-	end
-
-	if circconn then
-		circconn:Disconnect()
-		circconn = nil
 	end
 end
 
