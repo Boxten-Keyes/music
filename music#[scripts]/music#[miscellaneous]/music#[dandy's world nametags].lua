@@ -18,8 +18,6 @@ local function nametags(player)
 		
 		local humanoid = character:FindFirstChildOfClass("Humanoid")
 		if humanoid then humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None end
-		if humanoid then humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None end
-		if humanoid then humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None end
 
 		local nametag = Instance.new("BillboardGui")
 		nametag["Size"] = UDim2.new(3, 0, 3, 0)
@@ -66,17 +64,9 @@ local function nametags(player)
 		displayname["TextScaled"] = true
 		displayname["Parent"] = frame
 
-		if player["MembershipType"] == Enum.MembershipType.Premium then
-			displayname["Text"] = premiumbadge .. player["DisplayName"]
-		end
-
-		if player["HasVerifiedBadge"] then
-			displayname["Text"] = player["DisplayName"] .. verifiedbadge
-		end
-
-		if player["MembershipType"] == Enum.MembershipType.Premium and player["HasVerifiedBadge"] then
-			displayname["Text"] = premiumbadge .. player["DisplayName"] .. verifiedbadge
-		end
+		if player["MembershipType"] == Enum.MembershipType.Premium then displayname["Text"] = premiumbadge .. player["DisplayName"] end
+		if player["HasVerifiedBadge"] then displayname["Text"] = player["DisplayName"] .. verifiedbadge end
+		if player["MembershipType"] == Enum.MembershipType.Premium and player["HasVerifiedBadge"] then displayname["Text"] = premiumbadge .. player["DisplayName"] .. verifiedbadge end
 
 		local line = Instance.new("Frame")
 		line["Size"] = UDim2.new(1.3, 0, 0.025, 0)
@@ -92,11 +82,9 @@ local function nametags(player)
 	end
 
 	player.CharacterAdded:Connect(oncharacteradded)
-	if humanoid then humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None end
 	
 	if player.Character then
 		oncharacteradded(player.Character)
-		if humanoid then humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None end
 	end
 end
 
