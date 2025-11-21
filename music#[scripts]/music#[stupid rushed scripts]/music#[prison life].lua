@@ -658,3 +658,19 @@ for col = 1, cols do
 end
 
 -------------------------------------------------------------------------------------------------------------------------------
+
+local args = {
+	{
+		{
+			vector.create(845.0360717773438, 101.48975372314453, 2314.55615234375),
+			vector.create(806.1001586914062, 101.76509094238281, 2321.431396484375),
+			workspace:WaitForChild("Model"):WaitForChild("part")
+		}
+	}
+}
+game:GetService("ReplicatedStorage"):WaitForChild("GunRemotes"):WaitForChild("ShootEvent"):FireServer(unpack(args))
+
+local args = {
+	Instance.new("Model", nil)
+}
+game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("GiverPressed"):FireServer(unpack(args))
