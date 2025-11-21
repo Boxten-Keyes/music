@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------------------------------------------
 
-if not game:IsLoaded() then game.Loaded:Wait() end
+if not game:IsLoaded() then game.Loaded:Wait() end task.wait(1)
 
 -------------------------------------------------------------------------------------------------------------------------------
 
@@ -10,13 +10,14 @@ local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
+local cam = workspace.CurrentCamera
 
 -------------------------------------------------------------------------------------------------------------------------------
 
 local dances = {
-    "rbxassetid://182491037",
-    "rbxassetid://182491277",
-    "rbxassetid://182491368"
+	"rbxassetid://182491037",
+	"rbxassetid://182491277",
+	"rbxassetid://182491368"
 }
 
 local enabled = false
@@ -26,127 +27,127 @@ local stopLoop = false
 local spinConnection
 
 local function stopall()
-    stopLoop = true
-    spinning = false
-    if spinConnection then
-        spinConnection:Disconnect()
-        spinConnection = nil
-    end
-    if currentAnimTrack then
-        currentAnimTrack:Stop()
-        currentAnimTrack = nil
-    end
-    local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-    if hrp then
-        hrp.Orientation = Vector3.new(0, hrp.Orientation.Y, 0)
-    end
+	stopLoop = true
+	spinning = false
+	if spinConnection then
+		spinConnection:Disconnect()
+		spinConnection = nil
+	end
+	if currentAnimTrack then
+		currentAnimTrack:Stop()
+		currentAnimTrack = nil
+	end
+	local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+	if hrp then
+		hrp.Orientation = Vector3.new(0, hrp.Orientation.Y, 0)
+	end
 end
 
 local function dance()
-    if not LocalPlayer.Character then return end
-    local humanoid = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-    if humanoid then
-        if currentAnimTrack then
-            currentAnimTrack:Stop()
-        end
-        local anim = Instance.new("Animation")
-        anim.AnimationId = dances[math.random(#dances)]
-        currentAnimTrack = humanoid:LoadAnimation(anim)
-        currentAnimTrack.Priority = Enum.AnimationPriority.Action
-        currentAnimTrack:AdjustWeight(999)
-        currentAnimTrack:Play()
-    end
+	if not LocalPlayer.Character then return end
+	local humanoid = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+	if humanoid then
+		if currentAnimTrack then
+			currentAnimTrack:Stop()
+		end
+		local anim = Instance.new("Animation")
+		anim.AnimationId = dances[math.random(#dances)]
+		currentAnimTrack = humanoid:LoadAnimation(anim)
+		currentAnimTrack.Priority = Enum.AnimationPriority.Action
+		currentAnimTrack:AdjustWeight(999)
+		currentAnimTrack:Play()
+	end
 end
 
 local function spin()
-    local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-    if not hrp then return end
-    
-    if spinConnection then
-        spinConnection:Disconnect()
-    end
-    
-    spinning = true
-    spinConnection = RunService.Heartbeat:Connect(function(dt)
-        if spinning then
-            hrp.CFrame = hrp.CFrame * CFrame.Angles(0, math.rad(100 * dt), 0)
-        end
-    end)
+	local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+	if not hrp then return end
+
+	if spinConnection then
+		spinConnection:Disconnect()
+	end
+
+	spinning = true
+	spinConnection = RunService.Heartbeat:Connect(function(dt)
+		if spinning then
+			hrp.CFrame = hrp.CFrame * CFrame.Angles(0, math.rad(100 * dt), 0)
+		end
+	end)
 end
 
 local function getrandompos(character)
-    local hrp = character:FindFirstChild("HumanoidRootPart")
-    if not hrp then return nil end
-    
-    local angle = math.random() * 2 * math.pi
-    local distance = math.random(6, 26)
-    local offset = Vector3.new(math.cos(angle) * distance, 0, math.sin(angle) * distance)
-    
-    local raycastParams = RaycastParams.new()
-    raycastParams.FilterDescendantsInstances = {character}
-    raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
-    
-    local raycastResult = workspace:Raycast(hrp.Position, offset, raycastParams)
-    if raycastResult then
-        return raycastResult.Position - offset.Unit * 2
-    end
-    
-    return hrp.Position + offset
+	local hrp = character:FindFirstChild("HumanoidRootPart")
+	if not hrp then return nil end
+
+	local angle = math.random() * 2 * math.pi
+	local distance = math.random(6, 26)
+	local offset = Vector3.new(math.cos(angle) * distance, 0, math.sin(angle) * distance)
+
+	local raycastParams = RaycastParams.new()
+	raycastParams.FilterDescendantsInstances = {character}
+	raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+
+	local raycastResult = workspace:Raycast(hrp.Position, offset, raycastParams)
+	if raycastResult then
+		return raycastResult.Position - offset.Unit * 2
+	end
+
+	return hrp.Position + offset
 end
 
 local function walktorandompoint()
-    spinning = false
-    if currentAnimTrack then
-        currentAnimTrack:Stop()
-    end
+	spinning = false
+	if currentAnimTrack then
+		currentAnimTrack:Stop()
+	end
 
-    local character = LocalPlayer.Character
-    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-    local hrp = character and character:FindFirstChild("HumanoidRootPart")
-    if not humanoid or not hrp then return end
+	local character = LocalPlayer.Character
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	local hrp = character and character:FindFirstChild("HumanoidRootPart")
+	if not humanoid or not hrp then return end
 
-    for i = 1, math.random(4, 8) do
-        if not enabled or stopLoop then break end
+	for i = 1, math.random(4, 8) do
+		if not enabled or stopLoop then break end
 
-        local targetPos = getrandompos(character)
-        if not targetPos then return end
+		local targetPos = getrandompos(character)
+		if not targetPos then return end
 
-        local path = PathfindingService:CreatePath()
-        path:ComputeAsync(hrp.Position, targetPos)
-        
-        if path.Status == Enum.PathStatus.Success then
-            local waypoints = path:GetWaypoints()
-            for _, waypoint in ipairs(waypoints) do
-                if not enabled or stopLoop then break end
-                humanoid:MoveTo(waypoint.Position)
-                if waypoint.Action == Enum.PathWaypointAction.Jump then
-                    humanoid.Jump = true
-                end
-                humanoid.MoveToFinished:Wait()
-            end
-        end
-    end
+		local path = PathfindingService:CreatePath()
+		path:ComputeAsync(hrp.Position, targetPos)
+
+		if path.Status == Enum.PathStatus.Success then
+			local waypoints = path:GetWaypoints()
+			for _, waypoint in ipairs(waypoints) do
+				if not enabled or stopLoop then break end
+				humanoid:MoveTo(waypoint.Position)
+				if waypoint.Action == Enum.PathWaypointAction.Jump then
+					humanoid.Jump = true
+				end
+				humanoid.MoveToFinished:Wait()
+			end
+		end
+	end
 end
 
 local function idleloop()
-    stopLoop = false
-    while enabled and not stopLoop do
-        spin()
-        dance()
-        task.wait(math.random(3, 10))
-        if not enabled or stopLoop then break end
-        walktorandompoint()
-    end
+	stopLoop = false
+	while enabled and not stopLoop do
+		spin()
+		dance()
+		task.wait(math.random(3, 10))
+		if not enabled or stopLoop then break end
+		walktorandompoint()
+	end
 end
 
 function toggleidler(state)
-    enabled = state
-    if enabled then
-        task.spawn(idleloop)
-    else
-        stopall()
-    end
-end)
+	enabled = state
+	if enabled then
+		task.spawn(idleloop)
+	else
+		stopall()
+	end
+end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
