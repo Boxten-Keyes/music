@@ -270,17 +270,18 @@ local function spcl()
 		clc:Disconnect()
 		clc = nil
 	end
+	lt = nil
 end
 
 local function tcl(s)
+	mup()
 	tgl = s
 	if s then
 		stcl()
 	else
 		spcl()
-		lt = nil
-		mup()
 	end
+	mup()
 end
 
 local td = 0.3
@@ -293,13 +294,23 @@ local function sttb()
 		if not te then
 			toc = 0
 			if iss then 
-				mup() 
-				iss = false 
+				mup()
+				iss = false
 			end
 			return
 		end
 
-		local hit = lt and lt.Parent and onch(lt.Position)
+		local tgt = gettgt()
+		if not tgt then
+			toc = 0
+			if iss then
+				mup()
+				iss = false
+			end
+			return
+		end
+
+		local hit = onch(tgt.Position)
 
 		if mob then
 			if hit then
@@ -310,31 +321,37 @@ local function sttb()
 				end
 			else
 				toc = 0
-				if iss then 
-					mup() 
-					iss = false 
+				if iss then
+					mup()
+					iss = false
 				end
 			end
 			return
 		end
 
 		if hit then
-			mdown()
-			mup()
+			mdown() mup()
 		end
 	end)
 end
 
+local function sptb()
+	iss = false
+	toc = 0 
+	if tbc then
+		tbc:Disconnect()
+	end
+end
+
 local function ttb(s)
+	mup()
 	te = s
 	if not s then 
-		mup(); 
-		iss = false; 
-		toc = 0 
-		if tbc then
-			tbc:Disconnect()
-		end
+		sptb()
+	else
+		sttb()
 	end
+	mup()
 end
 
 -------------------------------------------------------------------------------------------------------------------------------
