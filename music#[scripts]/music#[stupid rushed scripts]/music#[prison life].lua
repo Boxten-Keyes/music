@@ -19,46 +19,47 @@ local circ = nil
 local circconn = nil
 
 local function mcirc()
-	if circ then 
-		circ:Destroy() 
-		circ = nil
-	end
-
-	circ = Instance.new("Frame")
-	circ.AnchorPoint = Vector2.new(0.5, 0.5)
-	circ.Size = mob and UDim2.new(0, 221, 0, 221) or UDim2.new(0, 421, 0, 421)
-	circ.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	circ.BackgroundTransparency = 1
-	circ.BorderSizePixel = 0
-	circ.ZIndex = 10
-	circ.Parent = gethui() or game:GetService("CoreGui")
-
-	local crn = Instance.new("UICorner")
-	crn.CornerRadius = UDim.new(1, 0)
-	crn.Parent = circ
-
-	local strk = Instance.new("UIStroke")
-	strk.Thickness = 1
-	strk.Transparency = 0
-	strk.Color = Color3.fromRGB(255, 255, 255)
-	strk.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-	strk.Parent = circ
-
-	circconn = rs.RenderStepped:Connect(function()
-		if circ then
-			local mpos
-			if mob then
-				local touch = ui:GetTouchInputs()
-				if #touch > 0 then
-					mpos = touch[1].Position
-				else
-					mpos = Vector2.new(cam.ViewportSize.X/2, cam.ViewportSize.Y/2)
-				end
-			else
-				mpos = ui:GetMouseLocation()
-			end
-			circ.Position = UDim2.fromOffset(mpos.X, mpos.Y)
+	task.spawn(function()
+		if circ then 
+			circ:Destroy() 
+			circ = nil
 		end
+
+		circ = Instance.new("Frame")
+		circ.AnchorPoint = Vector2.new(0.5, 0.5)
+		circ.Size = mob and UDim2.new(0, 221, 0, 221) or UDim2.new(0, 421, 0, 421)
+		circ.BackgroundTransparency = 1
+		circ.BorderSizePixel = 0
+		circ.ZIndex = 10
+		circ.Parent = gethui() or game:GetService("CoreGui")
+
+		local crn = Instance.new("UICorner")
+		crn.CornerRadius = UDim.new(1, 0)
+		crn.Parent = circ
+
+		local strk = Instance.new("UIStroke")
+		strk.Thickness = 1
+		strk.Transparency = 0
+		strk.Color = Color3.fromRGB(255, 255, 255)
+		strk.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+		strk.Parent = circ
+
+		circconn = rs.RenderStepped:Connect(function()
+			if circ then
+				local mpos
+				if mob then
+					local touchPositions = ui:GetTouches()
+					if #touchPositions > 0 then
+						mpos = touchPositions[1].Position
+					else
+						mpos = Vector2.new(cam.ViewportSize.X/2, cam.ViewportSize.Y/2)
+					end
+				else
+					mpos = ui:GetMouseLocation()
+				end
+				circ.Position = UDim2.fromOffset(mpos.X, mpos.Y)
+			end
+		end)
 	end)
 end
 
@@ -320,80 +321,24 @@ end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-local function gtgtincirc()
-	if not circ then return nil end
+local function fire()
+	local args = {
+		Instance.new("Model", nil)
+	}
+	game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("GiverPressed"):FireServer(unpack(args))
+end
 
-	local circleRadius = circ.AbsoluteSize.X / 2
-	local circlePos = circ.AbsolutePosition + (circ.AbsoluteSize / 2)
+local ia = false
 
-	for _, p in ipairs(plr:GetPlayers()) do
-		if p ~= lp then
-			local ch = p.Character
-			if ch then
-				local hrp = ch:FindFirstChild("HumanoidRootPart") or ch:FindFirstChild("UpperTorso")
-				local hum = ch:FindFirstChildOfClass("Humanoid")
-
-				if hrp and hum and hum.Health > 0 then
-					local sp, onScreen = cam:WorldToViewportPoint(hrp.Position)
-					if onScreen then
-						local dist = (Vector2.new(sp.X, sp.Y) - Vector2.new(circlePos.X, circlePos.Y)).Magnitude
-						if dist <= circleRadius then
-							return hrp
-						end
-					end
-				end
-			end
+local function ia(s)
+	if s then 
+		while ia do
+			fire() task.wait()
+			if not ia then break end
 		end
+	else
+		ia = false
 	end
-
-	return nil
-end
-
-local function tgtincirc(t)
-	if not (circ and t) then return false end
-
-	local circleRadius = circ.AbsoluteSize.X / 2
-	local circlePos = circ.AbsolutePosition + (circ.AbsoluteSize / 2)
-
-	local sp, onScreen = cam:WorldToViewportPoint(t.Position)
-	if not onScreen then return false end
-
-	local dist = (Vector2.new(sp.X, sp.Y) - Vector2.new(circlePos.X, circlePos.Y)).Magnitude
-	return dist <= circleRadius
-end
-
-local function clktgt()
-	local t = gettgt()
-	if not t then return end
-
-	if not tgtincirc(t) then
-		return
-	end
-
-	local sp, onScreen = cam:WorldToViewportPoint(t.Position)
-	if not onScreen then return end
-
-	mup()
-	task.wait()
-	mdown()
-end
-
-local ale = false
-
-if not mob then
-	ui.InputBegan:Connect(function(i, g)
-		if not ale then return end
-		if g then return end
-
-		if i.UserInputType == Enum.UserInputType.MouseButton1 then
-			clktgt()
-		end
-	end)
-else
-	ui.TouchTap:Connect(function()
-		if not ale then return end
-		clktgt()
-	end)
 end
 
 -------------------------------------------------------------------------------------------------------------------------------
@@ -565,6 +510,11 @@ rs.RenderStepped:Connect(ue)
 
 -------------------------------------------------------------------------------------------------------------------------------
 
+local function tobase(cf) box["humanoid root part"].CFrame = CFrame.new(-976, 108, 2055) end
+local function tocell(cf) box["humanoid root part"].CFrame = CFrame.new(965, 101, 2483) end
+
+-------------------------------------------------------------------------------------------------------------------------------
+
 local ts
 
 local function ptst()
@@ -693,7 +643,7 @@ end
 local btns = {
 	{kb = true, k = "Z", typ = "tg", t = "Toggle Aim Circle", cb = function(s) if s then mcirc() else rcirc() end end},
 	{kb = true, k = "Q", typ = "tg", t = "Toggle Camlock [Q]", cb = function(s) tcl(s) end},
-	{kb = true, k = "T", typ = "tg", t = "Toggle Aimlock [T]", cb = function(s) ale = s end},
+	{kb = true, k = "T", typ = "tg", t = "Toggle Item Aura", cb = function(s) ia(s) end},
 	{kb = false, k = nil, typ = "tg", t = "Toggle ESP", cb = function(s) tes(s) end},
 	{kb = false, k = nil, typ = "tg", t = "Toggle No Team Check", cb = function(s) tc = not s end},
 	{kb = true, k = "Z", typ = "tg", t = "Toggle Trigger Bot [Z]", cb = function(s) ttb(s) end}
@@ -727,19 +677,3 @@ for col = 1, cols do
 end
 
 -------------------------------------------------------------------------------------------------------------------------------
-
-local args = {
-	{
-		{
-			vector.create(845.0360717773438, 101.48975372314453, 2314.55615234375),
-			vector.create(806.1001586914062, 101.76509094238281, 2321.431396484375),
-			workspace:WaitForChild("Model"):WaitForChild("part")
-		}
-	}
-}
-game:GetService("ReplicatedStorage"):WaitForChild("GunRemotes"):WaitForChild("ShootEvent"):FireServer(unpack(args))
-
-local args = {
-	Instance.new("Model", nil)
-}
-game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("GiverPressed"):FireServer(unpack(args))
