@@ -35,6 +35,7 @@ local function mcirc()
 		circ.AnchorPoint = Vector2.new(0.5, 0.5)
 		circ.Size = mob and UDim2.new(0, 221, 0, 221) or UDim2.new(0, 421, 0, 421)
 		circ.BackgroundTransparency = 0
+		circ.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 		circ.BorderSizePixel = 0
 		circ.ZIndex = 10
 		circ.Parent = sg
@@ -51,15 +52,14 @@ local function mcirc()
 		strk.Parent = circ
 
 		circconn = rs.RenderStepped:Connect(function()
-			if circ then
-				local mpos
-				if mob then
-					mpos = Vector2.new(cam.ViewportSize.X/2, cam.ViewportSize.Y/20)
-				else
-					mpos = ui:GetMouseLocation()
-				end
-				circ.Position = UDim2.fromOffset(mpos.X, mpos.Y)
-			end
+			if not circ then return end
+
+			local cs = circ.AbsoluteSize
+
+			local centerX = (cam.ViewportSize.X - cs.X) / 2
+			local centerY = (cam.ViewportSize.Y - cs.Y) / 2
+
+			circ.Position = UDim2.fromOffset(centerX + cs.X/2, centerY + cs.Y/2)
 		end)
 	end)
 end
