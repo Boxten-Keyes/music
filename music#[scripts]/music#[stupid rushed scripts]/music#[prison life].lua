@@ -505,8 +505,8 @@ rs.RenderStepped:Connect(ue)
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-local function tobase(cf) box["humanoid root part"].CFrame = CFrame.new(-976, 108, 2055) end
-local function tocell(cf) box["humanoid root part"].CFrame = CFrame.new(965, 101, 2483) end
+local function tobase(cf) lp.Character.HumanoidRootPart.CFrame = CFrame.new(-976, 108, 2055) end
+local function tocell(cf) lp.Character.HumanoidRootPart.CFrame = CFrame.new(965, 101, 2483) end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
