@@ -12,6 +12,12 @@ local ui = game:GetService("UserInputService")
 local mob = ui.TouchEnabled
 local test = false
 
+local sg = Instance.new("ScreenGui")
+sg.ResetOnSpawn = false
+sg.Parent = gethui() or game:GetService("CoreGui")
+if sg.Parent:FindFirstChild("Stupid Rushed Script") then sg.Parent:FindFirstChild("Stupid Rushed Script"):Destroy() end
+sg.Name = "Stupid Rushed Script"
+
 -------------------------------------------------------------------------------------------------------------------------------
 
 local tgl = false
@@ -31,7 +37,7 @@ local function mcirc()
 		circ.BackgroundTransparency = 0
 		circ.BorderSizePixel = 0
 		circ.ZIndex = 10
-		circ.Parent = gethui() or game:GetService("CoreGui")
+		circ.Parent = sg
 
 		local crn = Instance.new("UICorner")
 		crn.CornerRadius = UDim.new(1, 0)
@@ -606,12 +612,6 @@ local function rp(ui, r, c, tr, tc)
 
 	ui.Position = UDim2.new(0, x, 0, y)
 end
-
-local sg = Instance.new("ScreenGui")
-sg.ResetOnSpawn = false
-sg.Parent = gethui() or game:GetService("CoreGui")
-if sg.Parent:FindFirstChild("Stupid Rushed Script") then sg.Parent:FindFirstChild("Stupid Rushed Script"):Destroy() end
-sg.Name = "Stupid Rushed Script"
 
 -------------------------------------------------------------------------------------------------------------------------------
 
