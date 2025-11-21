@@ -14,28 +14,33 @@ local test = false
 
 -------------------------------------------------------------------------------------------------------------------------------
 
+local sg = Instance.new("ScreenGui")
+sg.ResetOnSpawn = false
+sg.Parent = gethui() or game:GetService("CoreGui")
+if sg.Parent:FindFirstChild("Stupid Rushed Script") then sg.Parent:FindFirstChild("Stupid Rushed Script"):Destroy() end
+sg.Name = "Stupid Rushed Script"
+
+-------------------------------------------------------------------------------------------------------------------------------
+
 local tgl = false
 local circ = nil
 
 local function mcirc()
 	if circ then circ:Destroy() end
 
-	local sg = lp:FindFirstChildOfClass("PlayerGui")
-	if not sg then return end
-	local g = sg:FindFirstChild("GUI")
-	if not g then return end
-	local ch = g:FindFirstChild("Crosshairs")
-	if not ch then return end
-	local dot = ch:FindFirstChild("Crosshair"):FindFirstChild("Dot")
-	if not dot then return end
-
 	circ = Instance.new("Frame")
 	circ.AnchorPoint = Vector2.new(0.5, 0.5)
 	circ.Size = mob and UDim2.new(0, 221, 0, 221) or UDim2.new(0, 421, 0, 421)
-	circ.Position = dot.Position
 	circ.BackgroundTransparency = 1
-	circ.ZIndex = dot.ZIndex - 1
-	circ.Parent = dot
+	circ.ZIndex = 10
+	circ.Parent = sg
+	
+	local cs = circ.AbsoluteSize
+
+	local centerX = (cam.ViewportSize.X - cs.X) / 2
+	local centerY = (cam.ViewportSize.Y - cs.Y) / 2 - 56
+
+	circ.Position = UDim2.fromOffset(centerX + cs.X/2, centerY + cs.Y/2)
 
 	local crn = Instance.new("UICorner")
 	crn.CornerRadius = UDim.new(1, 0)
@@ -472,12 +477,6 @@ local function rp(ui, r, c, tr, tc)
 
 	ui.Position = UDim2.new(0, x, 0, y)
 end
-
-local sg = Instance.new("ScreenGui")
-sg.ResetOnSpawn = false
-sg.Parent = gethui() or game:GetService("CoreGui")
-if sg.Parent:FindFirstChild("Stupid Rushed Script") then sg.Parent:FindFirstChild("Stupid Rushed Script"):Destroy() end
-sg.Name = "Stupid Rushed Script"
 
 local function mtg(kb, k, t, is, cb, r, c, tr, tc)
 	local tg = is or false
