@@ -1,8 +1,13 @@
 -------------------------------------------------------------------------------------------------------------------------------
 
+if not game:IsLoaded() then game.Loaded:Wait() end
+
+-------------------------------------------------------------------------------------------------------------------------------
+
 local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
+
 -------------------------------------------------------------------------------------------------------------------------------
 
 local screenGui = Instance.new("ScreenGui")
@@ -10,8 +15,9 @@ screenGui.Parent = gethui and gethui() or game:GetService("CoreGui")
 screenGui.ResetOnSpawn = false
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 150, 0, 150)
-frame.Position = UDim2.new(0, 50, 0, 350)
+frame.Size = UDim2.new(0, 233, 0, 170)
+frame.AnchorPoint = Vector2.new(0, 1)
+frame.Position = UDim2.new(0, 10, 1, -10)
 frame.BackgroundTransparency = 1
 frame.Active = true
 frame.Draggable = true
@@ -26,7 +32,6 @@ local function makeKey(name, xOffset, yOffset, width, height)
 	btnFrame.Parent = frame
 
 	local stroke = Instance.new("UIStroke")
-	stroke.Name = "a"
 	stroke.Thickness = 1
 	stroke.Color = Color3.new(1, 1, 1)
 	stroke.Parent = btnFrame
@@ -34,7 +39,6 @@ local function makeKey(name, xOffset, yOffset, width, height)
 
 	local textLabel = Instance.new("TextLabel")
 	textLabel.Size = UDim2.new(1, 0, 1, 0)
-	textLabel.Name = "b"
 	textLabel.Position = UDim2.new(0, 0, 0, 0)
 	textLabel.BackgroundTransparency = 1
 	textLabel.Text = name
@@ -55,6 +59,8 @@ end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
+local Tab, Tablabel = makeKey("TAB", 0, 0, 50, 50)
+
 local W, WLabel = makeKey("W", 60, 0, 50, 50)
 local A, ALabel = makeKey("A", 0, 60, 50, 50)
 local S, SLabel = makeKey("S", 60, 60, 50, 50)
@@ -69,6 +75,7 @@ local RClick, RClickLabel = makeKey("R\nC", 212, 60, 21, 110)
 -------------------------------------------------------------------------------------------------------------------------------
 
 local keys = {
+	Tab = Tab,
 	W = W, A = A, S = S, D = D,
 	LeftShift = Shift, RightShift = Shift,
 	Space = Space,
@@ -78,19 +85,20 @@ local keys = {
 
 -------------------------------------------------------------------------------------------------------------------------------
 
-local pressedColor = Color3.fromRGB(0, 255, 0)
+local pressedColors = {
+	Color3.fromRGB(170, 20, 255),
+	Color3.fromRGB(0, 210, 255)
+}
+
 local normalColor = Color3.fromRGB(0, 0, 0)
 
 local function pressKey(key)
-	key.BackgroundColor3 = pressedColor
-	key.a.Color = normalColor
-	key.b.TextColor3 = normalColor
+	local randomColor = pressedColors[math.random(1, #pressedColors)]
+	key.BackgroundColor3 = randomColor
 end
 
 local function releaseKey(key)
 	key.BackgroundColor3 = normalColor
-	key.a.Color = Color3.new(1, 1, 1)
-	key.b.TextColor3 = Color3.new(1, 1, 1)
 end
 
 -------------------------------------------------------------------------------------------------------------------------------
