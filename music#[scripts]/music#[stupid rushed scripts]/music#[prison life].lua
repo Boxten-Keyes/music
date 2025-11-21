@@ -19,12 +19,17 @@ local circ = nil
 local circconn = nil
 
 local function mcirc()
-	if circ then circ:Destroy() end
+	if circ then 
+		circ:Destroy() 
+		circ = nil
+	end
 
 	circ = Instance.new("Frame")
 	circ.AnchorPoint = Vector2.new(0.5, 0.5)
 	circ.Size = mob and UDim2.new(0, 221, 0, 221) or UDim2.new(0, 421, 0, 421)
-	circ.BackgroundTransparency = 0.65
+	circ.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	circ.BackgroundTransparency = 1
+	circ.BorderSizePixel = 0
 	circ.ZIndex = 10
 	circ.Parent = gethui() or game:GetService("CoreGui")
 
@@ -41,15 +46,27 @@ local function mcirc()
 
 	circconn = rs.RenderStepped:Connect(function()
 		if circ then
-			local mpos = ui:GetMouseLocation()
+			local mpos
+			if mob then
+				local touch = ui:GetTouchInputs()
+				if #touch > 0 then
+					mpos = touch[1].Position
+				else
+					mpos = Vector2.new(cam.ViewportSize.X/2, cam.ViewportSize.Y/2)
+				end
+			else
+				mpos = ui:GetMouseLocation()
+			end
 			circ.Position = UDim2.fromOffset(mpos.X, mpos.Y)
 		end
 	end)
 end
 
 local function rcirc()
-	if circ then circ:Destroy() end
-	circ = nil
+	if circ then 
+		circ:Destroy()
+		circ = nil
+	end
 
 	if circconn then
 		circconn:Disconnect()
@@ -84,7 +101,8 @@ local function mdown()
 end
 
 local function mup()
-	if hon then task.wait()
+	if hon then 
+		task.wait()
 		vim:SendMouseButtonEvent(cam.ViewportSize.X/2, cam.ViewportSize.Y/2, 0, false, game, 0) 
 		hon = false 
 	end
@@ -218,7 +236,7 @@ local pld = 0.15
 local pt = nil
 local lst = 0
 
-rs.RenderStepped:Connect(function(dt)
+local aimbotConnection = rs.RenderStepped:Connect(function(dt)
 	if not tgl then return end
 	local t = gettgt()
 	if not t then pt, lst, lt = nil, 0, nil; mup(); return end
@@ -243,6 +261,9 @@ local function tcl(s)
 	if not s then
 		lt = nil
 		mup()
+		if aimbotConnection then
+			aimbotConnection:Disconnect()
+		end
 	end
 end
 
@@ -250,10 +271,13 @@ local td = 0.3
 local toc = 0
 local iss = false
 
-rs.RenderStepped:Connect(function(dt)
+local triggerbotConnection = rs.RenderStepped:Connect(function(dt)
 	if not te then
 		toc = 0
-		if iss then mup() iss = false end
+		if iss then 
+			mup() 
+			iss = false 
+		end
 		return
 	end
 
@@ -268,9 +292,11 @@ rs.RenderStepped:Connect(function(dt)
 			end
 		else
 			toc = 0
-			if iss then mup() iss = false end
+			if iss then 
+				mup() 
+				iss = false 
+			end
 		end
-
 		return
 	end
 
@@ -282,26 +308,17 @@ end)
 
 local function ttb(s)
 	te = s
-	if not s then mup(); iss = false; toc = 0 end
+	if not s then 
+		mup(); 
+		iss = false; 
+		toc = 0 
+		if triggerbotConnection then
+			triggerbotConnection:Disconnect()
+		end
+	end
 end
 
 -------------------------------------------------------------------------------------------------------------------------------
-
-local ShootRemote = game:GetService("ReplicatedStorage"):WaitForChild("GunRemotes"):WaitForChild("ShootEvent")
-
-local function fireshot(targetPos)
-	local args = {
-		{
-			{
-				vector.create(targetPos.X, targetPos.Y, targetPos.Z),
-				vector.create(0, 0, 0), -- ignored starting point (not used)
-				workspace:WaitForChild("Model"):WaitForChild("part")
-			}
-		}
-	}
-
-	ShootRemote:FireServer(unpack(args))
-end
 
 local function gtgtincirc()
 	if not circ then return nil end
@@ -356,9 +373,9 @@ local function clktgt()
 	local sp, onScreen = cam:WorldToViewportPoint(t.Position)
 	if not onScreen then return end
 
-	vim:SendMouseButtonEvent(sp.X, sp.Y, 0, true, game, 0)
+	mup()
 	task.wait()
-	vim:SendMouseButtonEvent(sp.X, sp.Y, 0, false, game, 0)
+	mdown()
 end
 
 local ale = false
@@ -367,20 +384,15 @@ if not mob then
 	ui.InputBegan:Connect(function(i, g)
 		if not ale then return end
 		if g then return end
+
 		if i.UserInputType == Enum.UserInputType.MouseButton1 then
-			local tgt = gtgtincirc()
-			if tgt then
-				fireshot(tgt.Position)
-			end
+			clktgt()
 		end
 	end)
 else
 	ui.TouchTap:Connect(function()
 		if not ale then return end
-		local tgt = gtgtincirc()
-		if tgt then
-			fireshot(tgt.Position)
-		end
+		clktgt()
 	end)
 end
 
