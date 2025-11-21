@@ -83,6 +83,8 @@ local function onch(wp)
 	return d.Magnitude <= 3
 end
 
+function missing(t, f, fb) if type(f) == t then return f end return fb end cloneref = missing("function", cloneref, function(...) return ... end)
+
 local te = false
 local lt = nil
 local hon = false
@@ -231,76 +233,97 @@ local ss = 22
 local pld = 0.15
 local pt = nil
 local lst = 0
+local clc = nil
 
-local aimbotConnection = rs.RenderStepped:Connect(function(dt)
-	if not tgl then return end
-	local t = gettgt()
-	if not t then pt, lst, lt = nil, 0, nil; mup(); return end
+local function stcl()
+	if clc then return end
 
-	if t ~= pt then
-		pt, lst = t, tick()
-		return
+	clc = rs.RenderStepped:Connect(function(dt)
+		if not tgl then return end
+
+		local t = gettgt()
+		if not t then
+			pt, lst, lt = nil, 0, nil
+			mup()
+			return
+		end
+
+		if t ~= pt then
+			pt, lst = t, tick()
+			return
+		end
+		if tick() - lst < pld then return end
+
+		local cp = cam.CFrame.Position
+		local dir = (t.Position - cp).Unit
+		local targetCF = CFrame.new(cp, cp + dir)
+
+		local a = math.clamp(dt * ss, 0, 1)
+		local ea = a < 0.5 and 4*a*a*a or 1 - ((-2*a+2)^3)/2
+
+		cam.CFrame = cam.CFrame:Lerp(targetCF, ea)
+	end)
+end
+
+local function spcl()
+	if clc then
+		clc:Disconnect()
+		clc = nil
 	end
-	if tick() - lst < pld then return end
-
-	local cp = cam.CFrame.Position
-	local dir = (t.Position - cp).Unit
-	local targetCF = CFrame.new(cp, cp + dir)
-
-	local a = math.clamp(dt * ss, 0, 1)
-	local ea = a < 0.5 and 4*a*a*a or 1 - ((-2*a+2)^3)/2
-	cam.CFrame = cam.CFrame:Lerp(targetCF, ea)
-end)
+end
 
 local function tcl(s)
 	tgl = s
-	if not s then
+	if s then
+		stcl()
+	else
+		spcl()
 		lt = nil
 		mup()
-		if aimbotConnection then
-			aimbotConnection:Disconnect()
-		end
 	end
 end
 
 local td = 0.3
 local toc = 0
 local iss = false
+local tbc
 
-local triggerbotConnection = rs.RenderStepped:Connect(function(dt)
-	if not te then
-		toc = 0
-		if iss then 
-			mup() 
-			iss = false 
-		end
-		return
-	end
-
-	local hit = lt and lt.Parent and onch(lt.Position)
-
-	if mob then
-		if hit then
-			toc += dt
-			if toc >= td and not iss then
-				mdown()
-				iss = true
-			end
-		else
+local function sttb()
+	tbc = rs.RenderStepped:Connect(function(dt)
+		if not te then
 			toc = 0
 			if iss then 
 				mup() 
 				iss = false 
 			end
+			return
 		end
-		return
-	end
 
-	if hit then
-		mdown()
-		mup()
-	end
-end)
+		local hit = lt and lt.Parent and onch(lt.Position)
+
+		if mob then
+			if hit then
+				toc += dt
+				if toc >= td and not iss then
+					mdown()
+					iss = true
+				end
+			else
+				toc = 0
+				if iss then 
+					mup() 
+					iss = false 
+				end
+			end
+			return
+		end
+
+		if hit then
+			mdown()
+			mup()
+		end
+	end)
+end
 
 local function ttb(s)
 	te = s
@@ -308,8 +331,8 @@ local function ttb(s)
 		mup(); 
 		iss = false; 
 		toc = 0 
-		if triggerbotConnection then
-			triggerbotConnection:Disconnect()
+		if tbc then
+			tbc:Disconnect()
 		end
 	end
 end
