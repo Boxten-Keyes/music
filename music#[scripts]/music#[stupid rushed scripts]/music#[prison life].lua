@@ -677,8 +677,8 @@ local btns = {
 	{kb = false, k = nil, typ = "tg", t = "Toggle ESP", cb = function(s) tes(s) end},
 	{kb = false, k = nil, typ = "tg", t = "Toggle No Team Check", cb = function(s) tc = not s end},
 	{kb = true, k = "Z", typ = "tg", t = "Toggle Trigger Bot [Z]", cb = function(s) ttb(s) end},
-	{kb = false, k = nil, typ = "b", t = "Teleport To Cell", cb = function(s) tc = not s end},
-	{kb = false, k = nil, typ = "b", t = "Teleport To Criminal Base", cb = function(s) tc = not s end},
+	{kb = false, k = nil, typ = "btn", t = "Teleport To Cell", cb = function(s) tc = not s end},
+	{kb = false, k = nil, typ = "btn", t = "Teleport To Criminal Base", cb = function(s) tc = not s end},
 }
 
 if test == true then
