@@ -701,7 +701,7 @@ for col = 1, cols do
 
 		local bd = btns[bi]
 		if bd.type == "btn" then
-			mbtn(bd.text, bd.callback, row, col, rows, columns)
+			mbtn(bd.text, bd.callback, row, col, rows, cols)
 		elseif bd.typ == "tg" then
 			mtg(bd.kb, bd.k, bd.t, false, bd.cb, row, col, rows, cols)
 		end
