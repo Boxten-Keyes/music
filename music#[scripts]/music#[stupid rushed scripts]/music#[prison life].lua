@@ -28,7 +28,7 @@ local function mcirc()
 		circ = Instance.new("Frame")
 		circ.AnchorPoint = Vector2.new(0.5, 0.5)
 		circ.Size = mob and UDim2.new(0, 221, 0, 221) or UDim2.new(0, 421, 0, 421)
-		circ.BackgroundTransparency = 1
+		circ.BackgroundTransparency = 0
 		circ.BorderSizePixel = 0
 		circ.ZIndex = 10
 		circ.Parent = gethui() or game:GetService("CoreGui")
