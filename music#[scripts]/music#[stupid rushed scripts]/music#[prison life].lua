@@ -112,6 +112,22 @@ local function mup()
 	end
 end
 
+local function incirc(wp)
+	local sp, os = cam:WorldToViewportPoint(wp)
+	if not os then return false end
+
+	local cx = cam.ViewportSize.X / 2
+	local cy = cam.ViewportSize.Y / 2 - 56
+
+	local dx = sp.X - cx
+	local dy = sp.Y - cy
+	local dist = (dx*dx + dy*dy)^0.5
+
+	local rad = mob and 221/2 or 421/2
+
+	return dist <= rad
+end
+
 local function gettgt()
 	local c = lp.Character
 	if not c or not c:FindFirstChild("HumanoidRootPart") then 
@@ -223,7 +239,7 @@ local function gettgt()
 			tp = hrp
 		end
 
-		if tp then
+		if tp and incirc(tp.Position) then
 			if d < cd then
 				cd = d
 				bt = tp
