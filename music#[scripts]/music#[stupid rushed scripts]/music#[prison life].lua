@@ -573,6 +573,41 @@ sg.Parent = gethui() or game:GetService("CoreGui")
 if sg.Parent:FindFirstChild("Stupid Rushed Script") then sg.Parent:FindFirstChild("Stupid Rushed Script"):Destroy() end
 sg.Name = "Stupid Rushed Script"
 
+-------------------------------------------------------------------------------------------------------------------------------
+
+local function mbtn(t, cb, r, c, tr, tc)
+	local btn = Instance.new("TextButton")
+	btn.Size = UDim2.new(0, 90, 0, 55)
+	btn.TextStrokeTransparency = 1
+	rp(btn, r, c, tr, tc)
+	btn.BackgroundTransparency = 0.3
+	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	btn.Font = Enum.Font.Code
+	btn.BorderSizePixel = 0
+	btn.TextSize = 13
+	btn.TextXAlignment = Enum.TextXAlignment.Center
+	btn.TextYAlignment = Enum.TextYAlignment.Center
+	btn.Active = true
+	btn.Draggable = true
+	btn.TextWrapped = true
+	btn.Text = t
+	btn.Parent = sg
+
+	local stroke = Instance.new("UIStroke")
+	stroke.Thickness = 1
+	stroke.Color = Color3.new(1, 1, 1)
+	stroke.Parent = btn
+	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+	btn.MouseButton1Click:Connect(function()
+		clk()
+		if cb then cb() end
+	end)
+
+	return btn
+end
+
 local function mtg(kb, k, t, is, cb, r, c, tr, tc)
 	local tg = is or false
 
@@ -641,7 +676,9 @@ local btns = {
 	{kb = true, k = "T", typ = "tg", t = "Toggle Item Aura", cb = function(s) ia(s) end},
 	{kb = false, k = nil, typ = "tg", t = "Toggle ESP", cb = function(s) tes(s) end},
 	{kb = false, k = nil, typ = "tg", t = "Toggle No Team Check", cb = function(s) tc = not s end},
-	{kb = true, k = "Z", typ = "tg", t = "Toggle Trigger Bot [Z]", cb = function(s) ttb(s) end}
+	{kb = true, k = "Z", typ = "tg", t = "Toggle Trigger Bot [Z]", cb = function(s) ttb(s) end},
+	{kb = false, k = nil, typ = "b", t = "Teleport To Cell", cb = function(s) tc = not s end},
+	{kb = false, k = nil, typ = "b", t = "Teleport To Criminal Base", cb = function(s) tc = not s end},
 }
 
 if test == true then
@@ -663,7 +700,9 @@ for col = 1, cols do
 		if bi > tb then break end
 
 		local bd = btns[bi]
-		if bd.typ == "tg" then
+		if bd.type == "btn" then
+			mbtn(bd.text, bd.callback, row, col, rows, columns)
+		elseif bd.typ == "tg" then
 			mtg(bd.kb, bd.k, bd.t, false, bd.cb, row, col, rows, cols)
 		end
 
