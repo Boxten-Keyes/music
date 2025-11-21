@@ -677,8 +677,8 @@ local btns = {
 	{kb = false, k = nil, typ = "tg", t = "Toggle ESP", cb = function(s) tes(s) end},
 	{kb = false, k = nil, typ = "tg", t = "Toggle No Team Check", cb = function(s) tc = not s end},
 	{kb = true, k = "Z", typ = "tg", t = "Toggle Trigger Bot [Z]", cb = function(s) ttb(s) end},
-	{kb = false, k = nil, typ = "btn", t = "Teleport To Cell", cb = function(s) tocell() end},
-	{kb = false, k = nil, typ = "btn", t = "Teleport To Criminal Base", cb = function(s) tobase() end},
+	{kb = false, k = nil, typ = "btn", t = "Teleport To Cell", cb = function() tocell() end},
+	{kb = false, k = nil, typ = "btn", t = "Teleport To Criminal Base", cb = function() tobase() end},
 }
 
 if test == true then
@@ -700,8 +700,8 @@ for col = 1, cols do
 		if bi > tb then break end
 
 		local bd = btns[bi]
-		if bd.type == "btn" then
-			mbtn(bd.text, bd.callback, row, col, rows, cols)
+		if bd.typ == "btn" then
+			mbtn(bd.t, bd.cb, row, col, rows, cols)
 		elseif bd.typ == "tg" then
 			mtg(bd.kb, bd.k, bd.t, false, bd.cb, row, col, rows, cols)
 		end
