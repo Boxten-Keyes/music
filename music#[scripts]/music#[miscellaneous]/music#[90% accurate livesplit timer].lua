@@ -1,13 +1,13 @@
 ----------------------------------------------------------------------------------------------------------------------------
 
-if not game:IsLoaded() then game["Loaded"]:Wait() end
+if not game:IsLoaded() then game.Loaded:Wait() end task.wait(1)
 
 -------------------------------------------------------------------------------------------------------------------------------
 
 local gui = Instance.new("ScreenGui")
 gui.Name = "LiveSplit"
 gui.ResetOnSpawn = false
-if game["Run Service"]:IsStudio() then gui["Parent"] = game["Players"]["LocalPlayer"]:WaitForChild("PlayerGui") else gui["Parent"] = gethui and gethui() or game["CoreGui"] end
+if game["Run Service"]:IsStudio() then gui["Parent"]= game["Players"]["LocalPlayer"]:WaitForChild("PlayerGui") else gui["Parent"] = gethui and gethui() or game["CoreGui"] end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
@@ -72,37 +72,6 @@ ctrlbtn.TextXAlignment = Enum.TextXAlignment.Left
 ctrlbtn.Text = "│ [T] START"
 ctrlbtn.Parent = mainframe
 
-local idletime = 3
-
-function fadeout()
-	game["TweenService"]:Create(resetbtn, TweenInfo.new(0.5), {TextTransparency = 1}):Play()
-	game["TweenService"]:Create(ctrlbtn, TweenInfo.new(0.5), {TextTransparency = 1}):Play()
-end
-
-function fadein()
-	game["TweenService"]:Create(resetbtn, TweenInfo.new(0.1), {TextTransparency = 0}):Play()
-	game["TweenService"]:Create(ctrlbtn, TweenInfo.new(0.1), {TextTransparency = 0}):Play()
-end
-
-local lastinteraction = tick()
-local faded = false
-
-mainframe.MouseEnter:Connect(function() lastinteraction = tick() if faded then faded = false fadein() end end)
-mainframe.MouseLeave:Connect(function() lastinteraction = tick() end)
-
-resetbtn.MouseEnter:Connect(function() lastinteraction = tick() if faded then faded = false fadein() end end)
-resetbtn.MouseLeave:Connect(function() lastinteraction = tick() end)
-
-ctrlbtn.MouseEnter:Connect(function() lastinteraction = tick() if faded then faded = false fadein() end end)
-ctrlbtn.MouseLeave:Connect(function() lastinteraction = tick() end)
-
-game["Run Service"].Heartbeat:Connect(function()
-	if not faded and tick() - lastinteraction >= idletime then
-		faded = true
-		fadeout()
-	end
-end)
-
 -------------------------------------------------------------------------------------------------------------------------------
 
 local greengrad, graygrad, bluegrad, greengrad2, graygrad2, bluegrad2 = nil
@@ -136,18 +105,18 @@ function gren()
 
 	greengrad = Instance.new("UIGradient")
 	greengrad.Color = ColorSequence.new {
-		ColorSequenceKeypoint.new(0, Color3.fromRGB(152, 226, 168)),
-		ColorSequenceKeypoint.new(0.5, Color3.fromRGB(89, 166, 100)),
-		ColorSequenceKeypoint.new(1, Color3.fromRGB(89, 166, 100)),
+		ColorSequenceKeypoint.new(0, Color3.fromRGB(152, 236, 168)),
+		ColorSequenceKeypoint.new(0.5, Color3.fromRGB(89, 176, 100)),
+		ColorSequenceKeypoint.new(1, Color3.fromRGB(89, 176, 100)),
 	}
 	greengrad.Rotation = 90
 	greengrad.Parent = smalltime
 
 	greengrad2 = Instance.new("UIGradient")
 	greengrad2.Color = ColorSequence.new {
-		ColorSequenceKeypoint.new(0, Color3.fromRGB(152, 226, 168)),
-		ColorSequenceKeypoint.new(0.5, Color3.fromRGB(89, 166, 100)),
-		ColorSequenceKeypoint.new(1, Color3.fromRGB(89, 166, 100)),
+		ColorSequenceKeypoint.new(0, Color3.fromRGB(152, 236, 168)),
+		ColorSequenceKeypoint.new(0.5, Color3.fromRGB(89, 176, 100)),
+		ColorSequenceKeypoint.new(1, Color3.fromRGB(89, 176, 100)),
 	}
 	greengrad2.Rotation = 90
 	greengrad2.Parent = bigtime
@@ -216,25 +185,16 @@ local starttime, elapsed = 0, 0
 local connection
 
 function updatetime(seconds)
-	local d = math.floor(seconds / 86400)
-	local h = math.floor((seconds % 86400) / 3600)
-	local m = math.floor((seconds % 3600) / 60)
+	local m = math.floor(seconds / 60)
 	local s = math.floor(seconds % 60)
 	local ms = math.floor((seconds - math.floor(seconds)) * 100)
 
-	local parts = {}
-
-	if d > 0 then
-		table.insert(parts, tostring(d))
-	end
-	if h > 0 or d > 0 then
-		table.insert(parts, string.format("%d", h))
+	if m == 0 then
+		bigtime.Text = string.format("%d:%02d", m, s)
+	else
+		bigtime.Text = string.format("%d:%02d", m, s)
 	end
 
-	table.insert(parts, string.format("%d", m))
-	table.insert(parts, string.format("%02d", s))
-
-	bigtime.Text = table.concat(parts, ":")
 	smalltime.Text = string.format(".%02d", ms)
 end
 
