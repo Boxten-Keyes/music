@@ -48,12 +48,7 @@ local function mcirc()
 			if circ then
 				local mpos
 				if mob then
-					local touchPositions = ui:GetTouches()
-					if #touchPositions > 0 then
-						mpos = touchPositions[1].Position
-					else
-						mpos = Vector2.new(cam.ViewportSize.X/2, cam.ViewportSize.Y/2)
-					end
+					mpos = Vector2.new(cam.ViewportSize.X/2, cam.ViewportSize.Y/2)
 				else
 					mpos = ui:GetMouseLocation()
 				end
