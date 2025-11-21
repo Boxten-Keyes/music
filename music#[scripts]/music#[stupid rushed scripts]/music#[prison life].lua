@@ -24,7 +24,7 @@ local function mcirc()
 	circ = Instance.new("Frame")
 	circ.AnchorPoint = Vector2.new(0.5, 0.5)
 	circ.Size = mob and UDim2.new(0, 221, 0, 221) or UDim2.new(0, 421, 0, 421)
-	circ.BackgroundTransparency = 1
+	circ.BackgroundTransparency = 0.65
 	circ.ZIndex = 10
 	circ.Parent = gethui() or game:GetService("CoreGui")
 
@@ -244,7 +244,6 @@ local function tcl(s)
 		lt = nil
 		mup()
 	end
-	if s then mcirc() else rcirc() end
 end
 
 local td = 0.3
@@ -252,14 +251,32 @@ local toc = 0
 local iss = false
 
 rs.RenderStepped:Connect(function(dt)
-	if not te then toc = 0 if iss then mup() iss = false end return end
-	local hit = lt and lt.Parent and onch(lt.Position)
-	if hit then
-		toc += dt
-		if toc >= td and not iss then mdown() iss = true end
-	else
+	if not te then
 		toc = 0
 		if iss then mup() iss = false end
+		return
+	end
+
+	local hit = lt and lt.Parent and onch(lt.Position)
+
+	if mob then
+		if hit then
+			toc += dt
+			if toc >= td and not iss then
+				mdown()
+				iss = true
+			end
+		else
+			toc = 0
+			if iss then mup() iss = false end
+		end
+
+		return
+	end
+
+	if hit then
+		mdown()
+		mup()
 	end
 end)
 
@@ -270,45 +287,78 @@ end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
+local ShootRemote = game:GetService("ReplicatedStorage"):WaitForChild("GunRemotes"):WaitForChild("ShootEvent")
+
+local function fireshot(targetPos)
+	local args = {
+		{
+			{
+				vector.create(targetPos.X, targetPos.Y, targetPos.Z),
+				vector.create(0, 0, 0), -- ignored starting point (not used)
+				workspace:WaitForChild("Model"):WaitForChild("part")
+			}
+		}
+	}
+
+	ShootRemote:FireServer(unpack(args))
+end
+
 local function gtgtincirc()
-    if not circ then return nil end
-    
-    local circleRadius = circ.AbsoluteSize.X / 2
-    local circlePos = circ.AbsolutePosition + (circ.AbsoluteSize / 2)
+	if not circ then return nil end
 
-    for _, p in ipairs(plr:GetPlayers()) do
-        if p ~= lp then
-            local ch = p.Character
-            if ch then
-                local hrp = ch:FindFirstChild("HumanoidRootPart") or ch:FindFirstChild("UpperTorso")
-                local hum = ch:FindFirstChildOfClass("Humanoid")
+	local circleRadius = circ.AbsoluteSize.X / 2
+	local circlePos = circ.AbsolutePosition + (circ.AbsoluteSize / 2)
 
-                if hrp and hum and hum.Health > 0 then
-                    local sp, onScreen = cam:WorldToViewportPoint(hrp.Position)
-                    if onScreen then
-                        local dist = (Vector2.new(sp.X, sp.Y) - Vector2.new(circlePos.X, circlePos.Y)).Magnitude
-                        if dist <= circleRadius then
-                            return hrp
-                        end
-                    end
-                end
-            end
-        end
-    end
+	for _, p in ipairs(plr:GetPlayers()) do
+		if p ~= lp then
+			local ch = p.Character
+			if ch then
+				local hrp = ch:FindFirstChild("HumanoidRootPart") or ch:FindFirstChild("UpperTorso")
+				local hum = ch:FindFirstChildOfClass("Humanoid")
 
-    return nil
+				if hrp and hum and hum.Health > 0 then
+					local sp, onScreen = cam:WorldToViewportPoint(hrp.Position)
+					if onScreen then
+						local dist = (Vector2.new(sp.X, sp.Y) - Vector2.new(circlePos.X, circlePos.Y)).Magnitude
+						if dist <= circleRadius then
+							return hrp
+						end
+					end
+				end
+			end
+		end
+	end
+
+	return nil
+end
+
+local function tgtincirc(t)
+	if not (circ and t) then return false end
+
+	local circleRadius = circ.AbsoluteSize.X / 2
+	local circlePos = circ.AbsolutePosition + (circ.AbsoluteSize / 2)
+
+	local sp, onScreen = cam:WorldToViewportPoint(t.Position)
+	if not onScreen then return false end
+
+	local dist = (Vector2.new(sp.X, sp.Y) - Vector2.new(circlePos.X, circlePos.Y)).Magnitude
+	return dist <= circleRadius
 end
 
 local function clktgt()
-    local target = gtgtincirc()
-    if not target then return end
+	local t = gettgt()
+	if not t then return end
 
-    local sp, onScreen = cam:WorldToViewportPoint(target.Position)
-    if not onScreen then return end
+	if not tgtincirc(t) then
+		return
+	end
 
-    vim:SendMouseButtonEvent(sp.X, sp.Y, 0, true, game, 0)
-    task.wait()
-    vim:SendMouseButtonEvent(sp.X, sp.Y, 0, false, game, 0)
+	local sp, onScreen = cam:WorldToViewportPoint(t.Position)
+	if not onScreen then return end
+
+	vim:SendMouseButtonEvent(sp.X, sp.Y, 0, true, game, 0)
+	task.wait()
+	vim:SendMouseButtonEvent(sp.X, sp.Y, 0, false, game, 0)
 end
 
 local ale = false
@@ -316,15 +366,21 @@ local ale = false
 if not mob then
 	ui.InputBegan:Connect(function(i, g)
 		if not ale then return end
-    	if g then return end
-    	if i.UserInputType == Enum.UserInputType.MouseButton1 then
-        	clktgt()
-    	end
+		if g then return end
+		if i.UserInputType == Enum.UserInputType.MouseButton1 then
+			local tgt = gtgtincirc()
+			if tgt then
+				fireshot(tgt.Position)
+			end
+		end
 	end)
 else
 	ui.TouchTap:Connect(function()
 		if not ale then return end
-    	clktgt()
+		local tgt = gtgtincirc()
+		if tgt then
+			fireshot(tgt.Position)
+		end
 	end)
 end
 
@@ -623,6 +679,7 @@ end
 -------------------------------------------------------------------------------------------------------------------------------
 
 local btns = {
+	{kb = true, k = "Z", typ = "tg", t = "Toggle Aim Circle", cb = function(s) if s then mcirc() else rcirc() end end},
 	{kb = true, k = "Q", typ = "tg", t = "Toggle Camlock [Q]", cb = function(s) tcl(s) end},
 	{kb = true, k = "T", typ = "tg", t = "Toggle Aimlock [T]", cb = function(s) ale = s end},
 	{kb = false, k = nil, typ = "tg", t = "Toggle ESP", cb = function(s) tes(s) end},
