@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------------------------------------------
 
-if not game:IsLoaded() then game["Loaded"]:Wait() end
+if not game:IsLoaded() then game["Loaded"]:Wait() end task.wait(1)
 
 -------------------------------------------------------------------------------------------------------------------------------
 
@@ -10,89 +10,6 @@ local runservice = game["Run Service"]
 local userinputservice = game["UserInputService"]
 local mouse = player:GetMouse()
 local camera = workspace["CurrentCamera"]
-
--------------------------------------------------------------------------------------------------------------------------------
-
-local screengui = Instance.new("ScreenGui")
-screengui["ResetOnSpawn"] = false
-if runservice:IsStudio() then screengui["Parent"] = player:WaitForChild("PlayerGui") else screengui["Parent"] = gethui and gethui() or game:GetService("CoreGui") end
-
-function repos(ui, w, h)
-	local sw, sh = camera["ViewportSize"]["X"], camera["ViewportSize"]["Y"]
-	local cx, cy = (sw - w) / 2, (sh - h) / 2 - 56
-	ui["Position"] = UDim2.new(0, cx, 0, cy)
-end
-
-local button = Instance.new("TextButton")
-button["Size"] = UDim2.new(0, 46, 0, 46)
-repos(button, 48, 48)
-button["Text"] = "F:X"
-button["BackgroundColor3"] = Color3.fromRGB(0, 0, 0)
-button["TextColor3"] = Color3.new(1, 1, 1)
-button["TextSize"] = 20
-button["BorderSizePixel"] = 0
-button["Font"] = Enum.Font.RobotoMono
-button["TextWrapped"] = true
-button["Active"] = true
-button["Draggable"] = true
-button["Parent"] = screengui
-button["ZIndex"] = 3
-
-local buttonpad = Instance.new("UIPadding")
-buttonpad["PaddingTop"] = UDim.new(0, -2)
-buttonpad["Parent"] = button
-
-local buttonbor = Instance.new("Frame")
-buttonbor["Size"] = UDim2.new(0, 48, 0, 48)
-buttonbor["Position"] = UDim2.new(0, -1, 0, 1)
-buttonbor["BorderSizePixel"] = 1
-buttonbor["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
-buttonbor["BorderColor3"] = Color3.new(0, 0, 0)
-buttonbor["Parent"] = button
-buttonbor["ZIndex"] = 2
-
-function addgradient()
-	local gradient = Instance.new("UIGradient")	
-	if not flytoggle then 
-		gradient.Color = ColorSequence.new {
-			ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)),
-			ColorSequenceKeypoint.new(0.5, Color3.new(0, 0, 0)),
-			ColorSequenceKeypoint.new(1, Color3.new(1, 1, 1))
-		}
-	else
-		gradient.Color = ColorSequence.new {
-			ColorSequenceKeypoint.new(0, Color3.new(0, 0, 0)),
-			ColorSequenceKeypoint.new(0.5, Color3.new(1, 1, 1)),
-			ColorSequenceKeypoint.new(1, Color3.new(0, 0, 0))
-		}
-	end
-	gradient.Parent = buttonbor
-
-	local rotationSpeed = 1
-	task.spawn(
-		function()
-			while true do
-				gradient.Rotation = (gradient.Rotation + rotationSpeed) % 360
-				task.wait(0.03)
-			end
-		end
-	)
-end
-
-addgradient()
-
-local clik = Instance.new("Sound")
-clik["SoundId"] = "rbxassetid://226892749"
-clik["Parent"] = workspace
-clik["Name"] = "canttouchthis"
-clik["Volume"] = 0.4
-
-function playclicksound()
-	local newsound = clik:Clone()
-	newsound["Parent"] = clik["Parent"]
-	newsound:Play()
-	newsound["Ended"]:Connect(function() newsound:Destroy() end)
-end
 
 -------------------------------------------------------------------------------------------------------------------------------
 
@@ -332,7 +249,7 @@ local function rp(ui, r, c, tr, tc)
 	local tw = (bw * tc) + (sp * (tc - 1))
 	local th = (bh * tr) + (sp * (tr - 1))
 
-	local sw, sh = cam.ViewportSize.X, cam.ViewportSize.Y
+	local sw, sh = camera.ViewportSize.X, camera.ViewportSize.Y
 	local sx = (sw - tw) / 2
 	local sy = (sh - th) / 2 - 56
 
@@ -411,7 +328,7 @@ end
 -------------------------------------------------------------------------------------------------------------------------------
 
 local btns = {
-	{kb = true, k = "E", typ = "tg", t = "Toggle Flight", cb = function() flytoggle = not flytoggle if flytoggle then startflying() else stopflying() resetanims() end end}
+	{kb = true, k = "E", typ = "tg", t = "Toggle Flight [E]", cb = function() flytoggle = not flytoggle if flytoggle then startflying() else stopflying() resetanims() end end}
 }
 
 -------------------------------------------------------------------------------------------------------------------------------
