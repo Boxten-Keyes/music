@@ -202,43 +202,23 @@ local pt = nil
 local lst = 0
 
 rs.RenderStepped:Connect(function(dt)
-	if tgl then
-		local t = gettgt()
+	if not tgl then return end
+	local t = gettgt()
+	if not t then pt, lst, lt = nil, 0, nil; mup(); return end
 
-		if t then
-			if t ~= pt then
-				pt = t
-				lst = tick()
-				return
-			end
-
-			if tick() - lst < pld then
-				return
-			end
-
-			lt = pt
-
-			local cp = cam.CFrame.Position
-			local nlv = (lt.Position - cp).Unit
-			local ncf = CFrame.new(cp, cp + nlv)
-
-			local a = math.clamp(dt * ss, 0, 1)
-			local ea
-			if a < 0.5 then
-				ea = 4 * a * a * a
-			else
-				ea = 1 - (-2 * a + 2)^3 / 2
-			end
-
-			cam.CFrame = cam.CFrame:Lerp(ncf, ea)
-
-		else
-			pt = nil
-			lst = 0
-			lt = nil
-			mup()
-		end
+	if t ~= pt then
+		pt, lst = t, tick()
+		return
 	end
+	if tick() - lst < pld then return end
+
+	local cp = cam.CFrame.Position
+	local dir = (t.Position - cp).Unit
+	local targetCF = CFrame.new(cp, cp + dir)
+
+	local a = math.clamp(dt * ss, 0, 1)
+	local ea = a < 0.5 and 4*a*a*a or 1 - ((-2*a+2)^3)/2
+	cam.CFrame = cam.CFrame:Lerp(targetCF, ea)
 end)
 
 local function tcl(s)
@@ -247,7 +227,6 @@ local function tcl(s)
 		lt = nil
 		mup()
 	end
-	if s then mcirc() else rcirc() end
 end
 
 local td = 0.3
@@ -255,41 +234,25 @@ local toc = 0
 local iss = false
 
 rs.RenderStepped:Connect(function(dt)
-	if not te then 
-		toc = 0
-		if iss then
-			mup()
-			iss = false
-		end
-		return 
-	end
-
-	local ss = false
-
-	if lt and lt.Parent and lt.Position then
-		if onch(lt.Position) then
-			ss = true
-		end
-	end
-
-	if ss then
-		toc = toc + dt
-
-		if toc >= td and not iss then
-			mdown()
-			iss = true
-		end
+	if not te then toc = 0 if iss then mup() iss = false end return end
+	local hit = lt and lt.Parent and onch(lt.Position)
+	if hit then
+		toc += dt
+		if toc >= td and not iss then mdown() iss = true end
 	else
 		toc = 0
-		if iss then
-			mup()
-			iss = false
-		end
+		if iss then mup() iss = false end
 	end
 end)
 
-local function ttb(s)
+function tcl(s)
+	tgl = s
+	if not s then lt, pt = nil, nil; mup() end
+end
+
+function ttb(s)
 	te = s
+	if not s then mup(); iss = false; toc = 0 end
 end
 
 -------------------------------------------------------------------------------------------------------------------------------
@@ -579,6 +542,7 @@ end
 -------------------------------------------------------------------------------------------------------------------------------
 
 local btns = {
+	{kb = true, k = "R", typ = "tg", t = "Toggle Aim Circle", cb = function(s) if s then mcirc() else rcirc() end end},
 	{kb = true, k = "R", typ = "tg", t = "Toggle Camlock [R]", cb = function(s) tcl(s) end},
 	{kb = false, k = nil, typ = "tg", t = "Toggle ESP", cb = function(s) tes(s) end},
 	{kb = false, k = nil, typ = "tg", t = "Toggle No Team Check", cb = function(s) tc = not s end},
