@@ -34,7 +34,7 @@ local function mcirc()
 		circ = Instance.new("Frame")
 		circ.AnchorPoint = Vector2.new(0.5, 0.5)
 		circ.Size = mob and UDim2.new(0, 221, 0, 221) or UDim2.new(0, 421, 0, 421)
-		circ.BackgroundTransparency = 0
+		circ.BackgroundTransparency = 1
 		circ.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 		circ.BorderSizePixel = 0
 		circ.ZIndex = 10
@@ -57,7 +57,7 @@ local function mcirc()
 			local cs = circ.AbsoluteSize
 
 			local centerX = (cam.ViewportSize.X - cs.X) / 2
-			local centerY = (cam.ViewportSize.Y - cs.Y) / 2
+			local centerY = (cam.ViewportSize.Y - cs.Y) / 2 - 56
 
 			circ.Position = UDim2.fromOffset(centerX + cs.X/2, centerY + cs.Y/2)
 		end)
