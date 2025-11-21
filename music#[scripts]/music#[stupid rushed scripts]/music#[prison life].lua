@@ -54,7 +54,7 @@ local function mcirc()
 			if circ then
 				local mpos
 				if mob then
-					mpos = Vector2.new(cam.ViewportSize.X/2, cam.ViewportSize.Y/2)
+					mpos = Vector2.new(cam.ViewportSize.X/2, cam.ViewportSize.Y/20)
 				else
 					mpos = ui:GetMouseLocation()
 				end
