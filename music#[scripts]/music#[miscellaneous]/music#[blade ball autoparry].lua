@@ -1,8 +1,10 @@
 loadstring(game:HttpGet("https://scriptblox.com/raw/UPD-Blade-Ball-op-autoparry-with-visualizer-8652"))()
 
+function missing(t, f, fb) if type(f) == t then return f end return fb end cloneref = missing("function", cloneref, function(...) return ... end)
+
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
-local VirtualInputManager = game:GetService("VirtualInputManager")
+local VirtualInputManager = cloneref(game:GetService("VirtualInputManager"))
 
 local Player = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
@@ -89,7 +91,6 @@ RunService.PreSimulation:Connect(function()
 			Parried = true
 			Cooldown = tick()
 
-			-- reset parry after cooldown
 			task.delay(1, function()
 				Parried = false
 			end)
