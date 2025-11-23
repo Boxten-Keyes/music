@@ -106,31 +106,35 @@ runs.PreSimulation:Connect(function()
 	local Character = plr.Character
 	local HRP = Character and Character:FindFirstChild("HumanoidRootPart")
 
-	if not Ball then return end
+	if not Ball or not HRP then return end
 
-	if not IsBallComingTowardPlayer(Ball, HRP) then return end
+	if Ball:GetAttribute("target") ~= plr.Name or Parried then return end
 
-	local ballSpeed = Ball.zoomies.VectorVelocity.Magnitude
-	local timeToImpact = GetTimeToImpact(Ball, HRP)
-	local Distance = (HRP.Position - Ball.Position).Magnitude
-	local dynamicTiming = GetParryTiming(ballSpeed)
+	local ballVel = Ball.zoomies.VectorVelocity
+	if ballVel.Magnitude < 5 then return end
 
-	if Ball:GetAttribute("target") == plr.Name and not Parried then
-		if timeToImpact <= dynamicTiming and Distance < 60 then
-			local blockButton = plr:WaitForChild("PlayerGui"):FindFirstChild("Hotbar")
-			blockButton = blockButton and blockButton:FindFirstChild("Block")
+	local dirToPlayer = (HRP.Position - Ball.Position).Unit
+	local alignment = ballVel.Unit:Dot(dirToPlayer)
 
-			if blockButton and blockButton:IsA("GuiButton") then
-				pressbtn(blockButton)
-			end
+	if alignment < 0.55 then return end
+	local predictedPos = Ball.Position + ballVel * 0.08
+	local predictedDistance = (predictedPos - HRP.Position).Magnitude
 
-			Parried = true
-			Cooldown = tick()
+	local requiredDist = math.clamp(ballVel.Magnitude * 0.22, 18, 45)
 
-			task.delay(1, function()
-				Parried = false
-			end)
+	if predictedDistance <= requiredDist then
+		local blockButton = plr:WaitForChild("PlayerGui"):FindFirstChild("Hotbar")
+		blockButton = blockButton and blockButton:FindFirstChild("Block")
+
+		if blockButton and blockButton:IsA("GuiButton") then
+			pressbtn(blockButton)
 		end
+
+		Parried = true
+
+		task.delay(0.8, function()
+			Parried = false
+		end)
 	end
 end)
 
