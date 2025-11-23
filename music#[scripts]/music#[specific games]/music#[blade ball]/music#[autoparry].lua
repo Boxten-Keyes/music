@@ -78,15 +78,15 @@ end
 
 local function GetParryTiming(ballSpeed)
 	if ballSpeed > 150 then
-		return 0.5
+		return 0.85
 	elseif ballSpeed > 100 then
-		return 0.45
+		return 0.8
 	elseif ballSpeed > 70 then
-		return 0.4
+		return 0.75
 	elseif ballSpeed > 40 then
-		return 0.35
+		return 0.7
 	else
-		return 0.3
+		return 0.65
 	end
 end
 
