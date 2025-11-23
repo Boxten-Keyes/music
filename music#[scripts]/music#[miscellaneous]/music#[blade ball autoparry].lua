@@ -1,11 +1,30 @@
+-------------------------------------------------------------------------------------------------------------------------------
+
+if not game:IsLoaded() then game.Loaded:Wait() end task.wait(1)
+
+-------------------------------------------------------------------------------------------------------------------------------
+
 function missing(t, f, fb) if type(f) == t then return f end return fb end cloneref = missing("function", cloneref, function(...) return ... end)
 
-local RunService = game:GetService("RunService")
-local Players = game:GetService("Players")
-local VirtualInputManager = cloneref(game:GetService("VirtualInputManager"))
+local runs = game:GetService("RunService")
+local plrs = game:GetService("Players")
+local vim = cloneref(game:GetService("VirtualInputManager"))
+local plr = plrs.LocalPlayer
 
-local Player = Players.LocalPlayer
-local Camera = workspace.CurrentCamera
+-------------------------------------------------------------------------------------------------------------------------------
+
+local function pressbtn(guiButton)
+	local pos = guiButton.AbsolutePosition
+	local size = guiButton.AbsoluteSize
+
+	local x = pos.X + size.X/2
+	local y = pos.Y + size.Y/2
+
+	vim:SendMouseButtonEvent(x, y, 0, true, game, 1)
+	vim:SendMouseButtonEvent(x, y, 0, false, game, 1)
+end
+
+-------------------------------------------------------------------------------------------------------------------------------
 
 local Cooldown = tick()
 local Parried = false
@@ -14,17 +33,6 @@ local EmoteActive = false
 
 local TARGET_POSITION = Vector3.new(-280, 124, 152)
 local MAX_DISTANCE = 100
-
-local function pressButton(guiButton)
-	local pos = guiButton.AbsolutePosition
-	local size = guiButton.AbsoluteSize
-
-	local x = pos.X + size.X/2
-	local y = pos.Y + size.Y/2
-
-	VirtualInputManager:SendMouseButtonEvent(x, y, 0, true, game, 1)
-	VirtualInputManager:SendMouseButtonEvent(x, y, 0, false, game, 1)
-end
 
 local function GetBall()
 	for _, Ball in ipairs(workspace.Balls:GetChildren()) do
@@ -54,7 +62,7 @@ local function StopEmote()
 end
 
 local function CheckDistanceAndPlayEmote()
-	local Character = Player.Character
+	local Character = plr.Character
 	local HRP = Character and Character:FindFirstChild("HumanoidRootPart")
 
 	if not HRP then return end
@@ -70,7 +78,7 @@ local function CheckDistanceAndPlayEmote()
 		game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CustomEmote"):FireServer(unpack(args))
 		EmoteActive = true
 
-		local waitTime = math.random(7, 10) / 10
+		local waitTime = math.random(7, 12) / 10
 		task.delay(waitTime, function()
 			if EmoteActive then
 				local args = {
@@ -112,13 +120,31 @@ local function GetTimeToImpact(Ball, HRP)
 	return math.huge
 end
 
-Player.CharacterAdded:Connect(function()
+local function GetParryTiming(ballSpeed)
+	if ballSpeed > 150 then
+		return 0.5
+	elseif ballSpeed > 100 then
+		return 0.45
+	elseif ballSpeed > 70 then
+		return 0.4
+	elseif ballSpeed > 40 then
+		return 0.35
+	else
+		return 0.3
+	end
+end
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+plr.CharacterAdded:Connect(function()
 	StopEmote()
 end)
 
-Player.CharacterRemoving:Connect(function()
+plr.CharacterRemoving:Connect(function()
 	StopEmote()
 end)
+
+-------------------------------------------------------------------------------------------------------------------------------
 
 workspace.Balls.ChildAdded:Connect(function()
 	local Ball = GetBall()
@@ -129,9 +155,9 @@ workspace.Balls.ChildAdded:Connect(function()
 	end)
 end)
 
-RunService.PreSimulation:Connect(function()
+runs.PreSimulation:Connect(function()
 	local Ball = GetBall()
-	local Character = Player.Character
+	local Character = plr.Character
 	local HRP = Character and Character:FindFirstChild("HumanoidRootPart")
 
 	if not HRP then 
@@ -145,16 +171,18 @@ RunService.PreSimulation:Connect(function()
 
 	if not IsBallComingTowardPlayer(Ball, HRP) then return end
 
+	local ballSpeed = Ball.zoomies.VectorVelocity.Magnitude
 	local timeToImpact = GetTimeToImpact(Ball, HRP)
 	local Distance = (HRP.Position - Ball.Position).Magnitude
+	local dynamicTiming = GetParryTiming(ballSpeed)
 
-	if Ball:GetAttribute("target") == Player.Name and not Parried then
-		if timeToImpact <= 0.4 and Distance < 50 then
-			local blockButton = Player:WaitForChild("PlayerGui"):FindFirstChild("Hotbar")
+	if Ball:GetAttribute("target") == plr.Name and not Parried then
+		if timeToImpact <= dynamicTiming and Distance < 60 then
+			local blockButton = plr:WaitForChild("PlayerGui"):FindFirstChild("Hotbar")
 			blockButton = blockButton and blockButton:FindFirstChild("Block")
 
 			if blockButton and blockButton:IsA("GuiButton") then
-				pressButton(blockButton)
+				pressbtn(blockButton)
 			end
 
 			Parried = true
@@ -167,7 +195,11 @@ RunService.PreSimulation:Connect(function()
 	end
 end)
 
+-------------------------------------------------------------------------------------------------------------------------------
+
 while true do
 	task.wait()
 	CheckDistanceAndPlayEmote()
 end
+
+-------------------------------------------------------------------------------------------------------------------------------
