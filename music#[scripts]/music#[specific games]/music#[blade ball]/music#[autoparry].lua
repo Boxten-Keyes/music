@@ -8,7 +8,7 @@ function missing(t, f, fb) if type(f) == t then return f end return fb end clone
 
 local runs = game:GetService("RunService")
 local plrs = game:GetService("Players")
-local vim = cloneref(game:GetService("VirtualInputManager"))
+local vim = game:GetService("VirtualInputManager")
 local plr = plrs.LocalPlayer
 
 -------------------------------------------------------------------------------------------------------------------------------
