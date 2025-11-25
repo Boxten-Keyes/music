@@ -64,16 +64,16 @@ local prefix = "-"
 -- Settings
 local settings = {
 	-- When a player dies, it tells you
-	killfeed = true,
+	killfeed = false,
 
 	-- Respawn in the same place upon arrest, and make you a criminal if you were one
-	antiarrest = true,
+	antiarrest = false,
 
 	-- Remove tased effects
-	antitase = true,
+	antitase = false,
 
 	-- Respawn in your previous position if you die
-	autorespawn = true,
+	autorespawn = false,
 
 	-- Auto guns
 	autoguns = false,
@@ -108,10 +108,10 @@ local settings = {
 	aatype = "Both", -- what players it can arrest
 
 	-- Stop tases from disabling the reset button
-	enablere = true,
+	enablere = false,
 
 	-- Auto anti-jump removal
-	aajr = true,
+	aajr = false,
 
 	-- Auto break toilets when you have a hammer
 	abtoilets = false,
@@ -127,7 +127,7 @@ local settings = {
 }
 
 -- ESP toggle
-getgenv().esp = false
+getgenv().esp = true
 
 -- arrest aura wl
 aa_wl = {"ScriptingProgrammer", "kohlslitedev"}
