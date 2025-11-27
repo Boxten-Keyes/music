@@ -76,21 +76,6 @@ local te = false
 local lt = nil
 local hon = false
 local tc = true
-local vim = cloneref(game:GetService("VirtualInputManager"))
-
-local function mdown()
-	if not hon then 
-		vim:SendMouseButtonEvent(cam.ViewportSize.X/2, cam.ViewportSize.Y/2, 0, true, game, 0) 
-		hon = true 
-	end
-end
-
-local function mup()
-	if hon then task.wait()
-		vim:SendMouseButtonEvent(cam.ViewportSize.X/2, cam.ViewportSize.Y/2, 0, false, game, 0) 
-		hon = false 
-	end
-end
 
 local function gettgt()
 	local c = lp.Character
@@ -209,7 +194,7 @@ local lst = 0
 rs.RenderStepped:Connect(function(dt)
 	if not tgl then return end
 	local t = gettgt()
-	if not t then pt, lst, lt = nil, 0, nil; mup(); return end
+	if not t then pt, lst, lt = nil, 0, nil; return end
 
 	if t ~= pt then
 		pt, lst = t, tick()
@@ -230,34 +215,7 @@ local function tcl(s)
 	tgl = s
 	if not s then
 		lt = nil
-		mup()
 	end
-end
-
-local td = 0.3
-local toc = 0
-local iss = false
-
-rs.RenderStepped:Connect(function(dt)
-	if not te then toc = 0 if iss then mup() iss = false end return end
-	local hit = lt and lt.Parent and onch(lt.Position)
-	if hit then
-		toc += dt
-		if toc >= td and not iss then mdown() iss = true end
-	else
-		toc = 0
-		if iss then mup() iss = false end
-	end
-end)
-
-function tcl(s)
-	tgl = s
-	if not s then lt, pt = nil, nil; mup() end
-end
-
-function ttb(s)
-	te = s
-	if not s then mup(); iss = false; toc = 0 end
 end
 
 -------------------------------------------------------------------------------------------------------------------------------
@@ -545,7 +503,6 @@ local btns = {
 	{kb = true, k = "R", typ = "tg", t = "Toggle Camlock [R]", cb = function(s) tcl(s) end},
 	{kb = false, k = nil, typ = "tg", t = "Toggle ESP", cb = function(s) tes(s) end},
 	{kb = false, k = nil, typ = "tg", t = "Toggle No Team Check", cb = function(s) tc = not s end},
-	{kb = true, k = "Z", typ = "tg", t = "Toggle Trigger Bot [Z]", cb = function(s) ttb(s) end}
 }
 
 if test == true then
