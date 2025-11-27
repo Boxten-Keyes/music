@@ -87,22 +87,6 @@ local te = false
 local lt = nil
 local hon = false
 local tc = true
-local vim = game:GetService("VirtualInputManager")
-
-local function mdown()
-	if not hon then 
-		vim:SendMouseButtonEvent(cam.ViewportSize.X/2, cam.ViewportSize.Y/2, 0, true, game, 0) 
-		hon = true 
-	end
-end
-
-local function mup()
-	if hon then 
-		task.wait()
-		vim:SendMouseButtonEvent(cam.ViewportSize.X/2, cam.ViewportSize.Y/2, 0, false, game, 0) 
-		hon = false 
-	end
-end
 
 local function incirc(wp)
 	local sp, os = cam:WorldToViewportPoint(wp)
@@ -258,7 +242,6 @@ local function stcl()
 		local t = gettgt()
 		if not t then
 			pt, lst, lt = nil, 0, nil
-			mup()
 			return
 		end
 
@@ -288,14 +271,12 @@ local function spcl()
 end
 
 local function tcl(s)
-	mup()
 	tgl = s
 	if s then
 		stcl()
 	else
 		spcl()
 	end
-	mup()
 end
 
 -------------------------------------------------------------------------------------------------------------------------------
