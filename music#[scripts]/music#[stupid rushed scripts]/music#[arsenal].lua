@@ -34,7 +34,7 @@ local function mcirc()
 	circ.BackgroundTransparency = 1
 	circ.ZIndex = 10
 	circ.Parent = sg
-	
+
 	local cs = circ.AbsoluteSize
 
 	local centerX = (cam.ViewportSize.X - cs.X) / 2
@@ -499,7 +499,7 @@ end
 -------------------------------------------------------------------------------------------------------------------------------
 
 local btns = {
-	{kb = true, k = "R", typ = "tg", t = "Toggle Aim Circle", cb = function(s) if s then mcirc() else rcirc() end end},
+	{kb = false, k = nil, typ = "tg", t = "Toggle Aim Circle", cb = function(s) if s then mcirc() else rcirc() end end},
 	{kb = true, k = "R", typ = "tg", t = "Toggle Camlock [R]", cb = function(s) tcl(s) end},
 	{kb = false, k = nil, typ = "tg", t = "Toggle ESP", cb = function(s) tes(s) end},
 	{kb = false, k = nil, typ = "tg", t = "Toggle No Team Check", cb = function(s) tc = not s end},
