@@ -3578,46 +3578,69 @@ function Library:CreateWindow(...)
 	return Window;
 end;
 
--- Create a toggle button that stays visible even when UI is hidden
-local ToggleButtonOuter = Library:Create('Frame', {
+-- Create ImageButton for toggle
+local ToggleImageButton = Library:Create('ImageButton', {
 	BackgroundColor3 = Color3.new(0, 0, 0),
 	BorderColor3 = Color3.new(0, 0, 0),
-	Position = UDim2.new(0, 10, 0, 10), -- Top-left corner
+	Position = UDim2.new(0, 10, 0, 10),
 	Size = UDim2.new(0, 50, 0, 50),
-	ZIndex = 1000, -- High ZIndex so it's always on top
+	ZIndex = 1000,
+	Image = "rbxassetid://1234567890", -- Default image when UI is visible
+	ScaleType = Enum.ScaleType.Fit,
 	Parent = ScreenGui,
 })
 
-local ToggleButtonInner = Library:Create('Frame', {
-	BackgroundColor3 = Library.MainColor,
-	BorderColor3 = Library.OutlineColor,
-	BorderMode = Enum.BorderMode.Inset,
-	Size = UDim2.new(1, 0, 1, 0),
-	ZIndex = 1001,
-	Parent = ToggleButtonOuter,
-})
+-- Store UI state for image switching
+local UIVisible = true
 
-local ToggleButtonLabel = Library:CreateLabel({
-	Size = UDim2.new(1, 0, 1, 0),
-	TextSize = 14,
-	Text = "Toggle UI",
-	ZIndex = 1002,
-	Parent = ToggleButtonInner,
-})
+-- Function to update button image based on UI state
+local function UpdateToggleImage()
+	if UIVisible then
+		-- Image when UI is visible (eye open or similar)
+		ToggleImageButton.Image = "rbxassetid://6031280882" -- Example: Eye icon
+	else
+		-- Image when UI is hidden (eye closed or similar)
+		ToggleImageButton.Image = "rbxassetid://6031280782" -- Example: Closed eye icon
+	end
+end
 
--- Make it draggable
-Library:MakeDraggable(ToggleButtonOuter)
+-- Initial image
+UpdateToggleImage()
 
--- Add click functionality
-ToggleButtonOuter.MouseButton1Click:Connect(function()
+-- Make draggable
+Library:MakeDraggable(ToggleImageButton)
+
+-- Toggle functionality
+ToggleImageButton.MouseButton1Click:Connect(function()
 	Library:Toggle()
+	UIVisible = not UIVisible
+	UpdateToggleImage()
 end)
 
--- Add highlight effect
-Library:OnHighlight(ToggleButtonOuter, ToggleButtonOuter,
+-- Add hover effect
+Library:OnHighlight(ToggleImageButton, ToggleImageButton,
 	{ BorderColor3 = 'AccentColor' },
 	{ BorderColor3 = 'Black' }
 )
+
+-- Optional: Add tooltip
+Library:AddToolTip("Click to show/hide UI", ToggleImageButton)
+
+-- Optional: Listen to UI toggle events to update button state
+-- This ensures the button image stays in sync even if UI is toggled via keyboard
+local function OnUIToggled()
+	UIVisible = not UIVisible
+	UpdateToggleImage()
+end
+
+-- You'll need to track when Library:Toggle() is called
+-- Since Library:Toggle doesn't have an event, we can wrap it
+local originalToggle = Library.Toggle
+Library.Toggle = function(...)
+	originalToggle(...)
+	UIVisible = not UIVisible
+	UpdateToggleImage()
+end
 
 local function OnPlayerChange()
 	local PlayerList = GetPlayersString();
