@@ -161,25 +161,6 @@ function Library:CreateLabel(Properties, IsHud)
 	return Library:Create(_Instance, Properties);
 end;
 
-function Library:CreateImageButton(Properties, IsHud)
-	local _Instance = Library:Create('ImageButton', {
-		BackgroundTransparency = 1;
-		BorderColor3 = Color3.new(0, 0, 0);
-		AutoButtonColor = false; -- Disable default Roblox button color changes
-		ImageColor3 = Color3.fromRGB(255, 255, 255); -- Default white color
-		ScaleType = Enum.ScaleType.Stretch;
-		Size = UDim2.new(0, 20, 0, 20); -- Default size
-	});
-
-	-- Apply default styling similar to other UI elements
-	Library:AddToRegistry(_Instance, {
-		BorderColor3 = 'Black';
-		ImageColor3 = 'FontColor'; -- Makes image color match font color by default
-	}, IsHud);
-
-	return Library:Create(_Instance, Properties);
-end;
-
 function Library:MakeDraggable(Instance, Cutoff)
 	Instance.Active = true
 
@@ -3616,9 +3597,10 @@ local ToggleButtonInner = Library:Create('Frame', {
 	Parent = ToggleButtonOuter,
 })
 
-local ToggleButtonLabel = Library:CreateImageButton({
+local ToggleButtonLabel = Library:CreateLabel({
 	Size = UDim2.new(1, 0, 1, 0),
-	Image = "rbxassetid://137161593028585",
+	TextSize = 14,
+	Text = "Toggle UI",
 	ZIndex = 1002,
 	Parent = ToggleButtonInner,
 })
@@ -3627,10 +3609,8 @@ local ToggleButtonLabel = Library:CreateImageButton({
 Library:MakeDraggable(ToggleButtonOuter)
 
 -- Add click functionality
-ToggleButtonOuter.InputBegan:Connect(function(Input)
-	if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
-		Library:Toggle()
-	end
+ToggleButtonOuter.MouseButton1Click:Connect(function()
+	Library:Toggle()
 end)
 
 -- Add highlight effect
