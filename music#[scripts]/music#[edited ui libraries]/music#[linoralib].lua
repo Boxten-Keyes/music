@@ -161,34 +161,6 @@ function Library:CreateLabel(Properties, IsHud)
 	return Library:Create(_Instance, Properties);
 end;
 
-function Library:MakeDraggable(Instance, Cutoff)
-	Instance.Active = true;
-
-	Instance.InputBegan:Connect(function(Input)
-		if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-			local ObjPos = Vector2.new(
-				Mouse.X - Instance.AbsolutePosition.X,
-				Mouse.Y - Instance.AbsolutePosition.Y
-			);
-
-			if ObjPos.Y > (Cutoff or 40) then
-				return;
-			end;
-
-			while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
-				Instance.Position = UDim2.new(
-					0,
-					Mouse.X - ObjPos.X + (Instance.Size.X.Offset * Instance.AnchorPoint.X),
-					0,
-					Mouse.Y - ObjPos.Y + (Instance.Size.Y.Offset * Instance.AnchorPoint.Y)
-				);
-
-				RenderStepped:Wait();
-			end;
-		end;
-	end)
-end;
-
 function Library:AddToolTip(InfoStr, HoverInstance)
 	local X, Y = Library:GetTextBounds(InfoStr, Library.Font, 14);
 	local Tooltip = Library:Create('Frame', {
@@ -2755,9 +2727,6 @@ do
 
 	Library.Watermark = WatermarkOuter;
 	Library.WatermarkText = WatermarkLabel;
-	Library:MakeDraggable(Library.Watermark);
-
-
 
 	local KeybindOuter = Library:Create('Frame', {
 		AnchorPoint = Vector2.new(0, 0.5);
@@ -2826,7 +2795,6 @@ do
 
 	Library.KeybindFrame = KeybindOuter;
 	Library.KeybindContainer = KeybindContainer;
-	Library:MakeDraggable(KeybindOuter);
 end;
 
 function Library:SetWatermarkVisibility(Bool)
@@ -2965,12 +2933,11 @@ function Library:CreateWindow(...)
 		BorderSizePixel = 0;
 		Position = Config.Position,
 		Size = Config.Size,
+		Draggable = true,
 		Visible = false;
 		ZIndex = 1;
 		Parent = ScreenGui;
 	});
-
-	Library:MakeDraggable(Outer, 25);
 
 	local Inner = Library:Create('Frame', {
 		BackgroundColor3 = Library.MainColor;
