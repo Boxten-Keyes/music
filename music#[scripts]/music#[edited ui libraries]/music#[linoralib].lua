@@ -162,13 +162,14 @@ function Library:CreateLabel(Properties, IsHud)
 end;
 
 function Library:MakeDraggable(Instance)
+	print("drag")
 	local buttondragtgl = false
 	local draggingui = false
 	local dragged = false
 
 	local dragger = Instance
 
-	if userinputservice.TouchEnabled then
+	if InputService.TouchEnabled then
 		local dragspeed = 0.15
 		local dragstart
 		local startpos
