@@ -162,11 +162,11 @@ function Library:CreateLabel(Properties, IsHud)
 end;
 
 function Library:MakeDraggable(Instance)
-	print("drag")
+	print("drag 2")
 	local buttondragtgl = false
 	local draggingui = false
 	local dragged = false
-
+	
 	local dragger = Instance
 
 	if InputService.TouchEnabled then
@@ -188,10 +188,9 @@ function Library:MakeDraggable(Instance)
 		end
 
 		local dragthreshold = 15
-		local buttondragtgl = false
-		local draggingui = false
 
 		dragger.InputBegan:Connect(function(input)
+			if Library:MouseIsOverOpenedFrame() then return end
 			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 				if dragginginput then return end
 				buttondragtgl = true
@@ -246,6 +245,7 @@ function Library:MakeDraggable(Instance)
 			local dragThreshold = 15
 
 			dragger.InputBegan:Connect(function(input)
+				if Library:MouseIsOverOpenedFrame() then return end
 				if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 					buttondragtgl = true
 					draggingui = false
