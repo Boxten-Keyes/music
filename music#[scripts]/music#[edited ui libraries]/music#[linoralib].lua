@@ -779,7 +779,7 @@ do
 				);
 
 				Button.InputBegan:Connect(function(Input)
-					if Input.UserInputType ~= Enum.UserInputType.MouseButton1 then
+					if Input.UserInputType ~= Enum.UserInputType.MouseButton1 and Input.UserInputType ~= Enum.UserInputType.Touch then
 						return
 					end
 
@@ -917,7 +917,7 @@ do
 		end;
 
 		SatVibMap.InputBegan:Connect(function(Input)
-			if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+			if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
 				while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
 					local MinX = SatVibMap.AbsolutePosition.X;
 					local MaxX = MinX + SatVibMap.AbsoluteSize.X;
@@ -939,7 +939,7 @@ do
 		end);
 
 		HueSelectorInner.InputBegan:Connect(function(Input)
-			if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+			if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
 				while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
 					local MinY = HueSelectorInner.AbsolutePosition.Y;
 					local MaxY = MinY + HueSelectorInner.AbsoluteSize.Y;
@@ -956,7 +956,7 @@ do
 		end);
 
 		DisplayFrame.InputBegan:Connect(function(Input)
-			if Input.UserInputType == Enum.UserInputType.MouseButton1 and not Library:MouseIsOverOpenedFrame() then
+			if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch and not Library:MouseIsOverOpenedFrame() then
 				if PickerFrameOuter.Visible then
 					ColorPicker:Hide()
 				else
@@ -971,7 +971,7 @@ do
 
 		if TransparencyBoxInner then
 			TransparencyBoxInner.InputBegan:Connect(function(Input)
-				if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+				if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
 					while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
 						local MinX = TransparencyBoxInner.AbsolutePosition.X;
 						local MaxX = MinX + TransparencyBoxInner.AbsoluteSize.X;
@@ -990,7 +990,7 @@ do
 		end;
 
 		Library:GiveSignal(InputService.InputBegan:Connect(function(Input)
-			if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+			if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
 				local AbsPos, AbsSize = PickerFrameOuter.AbsolutePosition, PickerFrameOuter.AbsoluteSize;
 
 				if Mouse.X < AbsPos.X or Mouse.X > AbsPos.X + AbsSize.X
@@ -1151,7 +1151,7 @@ do
 			end;
 
 			Label.InputBegan:Connect(function(Input)
-				if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+				if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
 					ModeButton:Select();
 					Library:AttemptSave();
 				end;
@@ -1247,7 +1247,7 @@ do
 		local Picking = false;
 
 		PickOuter.InputBegan:Connect(function(Input)
-			if Input.UserInputType == Enum.UserInputType.MouseButton1 and not Library:MouseIsOverOpenedFrame() then
+			if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch and not Library:MouseIsOverOpenedFrame() then
 				Picking = true;
 
 				DisplayLabel.Text = '';
@@ -1322,7 +1322,7 @@ do
 				KeyPicker:Update();
 			end;
 
-			if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+			if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
 				local AbsPos, AbsSize = ModeSelectOuter.AbsolutePosition, ModeSelectOuter.AbsoluteSize;
 
 				if Mouse.X < AbsPos.X or Mouse.X > AbsPos.X + AbsSize.X
@@ -1519,7 +1519,7 @@ do
 					return false
 				end
 
-				if Input.UserInputType ~= Enum.UserInputType.MouseButton1 then
+				if Input.UserInputType ~= Enum.UserInputType.MouseButton1 or Input.UserInputType ~= Enum.UserInputType.Touch then
 					return false
 				end
 
@@ -1944,7 +1944,7 @@ do
 		end;
 
 		ToggleRegion.InputBegan:Connect(function(Input)
-			if Input.UserInputType == Enum.UserInputType.MouseButton1 and not Library:MouseIsOverOpenedFrame() then
+			if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch and not Library:MouseIsOverOpenedFrame() then
 				Toggle:SetValue(not Toggle.Value) -- Why was it not like this from the start?
 				Library:AttemptSave();
 			end;
@@ -2131,7 +2131,7 @@ do
 		end;
 
 		SliderInner.InputBegan:Connect(function(Input)
-			if Input.UserInputType == Enum.UserInputType.MouseButton1 and not Library:MouseIsOverOpenedFrame() then
+			if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch and not Library:MouseIsOverOpenedFrame() then
 				local mPos = Mouse.X;
 				local gPos = Fill.Size.X.Offset;
 				local Diff = mPos - (Fill.AbsolutePosition.X + gPos);
@@ -2447,7 +2447,7 @@ do
 				end;
 
 				ButtonLabel.InputBegan:Connect(function(Input)
-					if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+					if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
 						local Try = not Selected;
 
 						if Dropdown:GetActiveValues() == 1 and (not Try) and (not Info.AllowNull) then
@@ -2548,7 +2548,7 @@ do
 		end;
 
 		DropdownOuter.InputBegan:Connect(function(Input)
-			if Input.UserInputType == Enum.UserInputType.MouseButton1 and not Library:MouseIsOverOpenedFrame() then
+			if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch and not Library:MouseIsOverOpenedFrame() then
 				if ListOuter.Visible then
 					Dropdown:CloseDropdown();
 				else
@@ -2558,7 +2558,7 @@ do
 		end);
 
 		InputService.InputBegan:Connect(function(Input)
-			if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+			if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
 				local AbsPos, AbsSize = ListOuter.AbsolutePosition, ListOuter.AbsoluteSize;
 
 				if Mouse.X < AbsPos.X or Mouse.X > AbsPos.X + AbsSize.X
@@ -3461,7 +3461,7 @@ function Library:CreateWindow(...)
 				end;
 
 				Button.InputBegan:Connect(function(Input)
-					if Input.UserInputType == Enum.UserInputType.MouseButton1 and not Library:MouseIsOverOpenedFrame() then
+					if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch and not Library:MouseIsOverOpenedFrame() then
 						Tab:Show();
 						Tab:Resize();
 					end;
@@ -3497,7 +3497,7 @@ function Library:CreateWindow(...)
 		end;
 
 		TabButton.InputBegan:Connect(function(Input)
-			if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+			if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
 				Tab:ShowTab();
 			end;
 		end);
@@ -3522,15 +3522,8 @@ function Library:CreateWindow(...)
 
 	local TransparencyCache = {};
 	local Toggled = false;
-	local Fading = false;
 
 	function Library:Toggle()
-		if Fading then
-			return;
-		end;
-
-		local FadeTime = Config.MenuFadeTime;
-		Fading = true;
 		Toggled = (not Toggled);
 		ModalElement.Modal = Toggled;
 
@@ -3539,45 +3532,7 @@ function Library:CreateWindow(...)
 			Outer.Visible = true;
 		end;
 
-		for _, Desc in next, Outer:GetDescendants() do
-			local Properties = {};
-
-			if Desc:IsA('ImageLabel') then
-				table.insert(Properties, 'ImageTransparency');
-				table.insert(Properties, 'BackgroundTransparency');
-			elseif Desc:IsA('TextLabel') or Desc:IsA('TextBox') then
-				table.insert(Properties, 'TextTransparency');
-			elseif Desc:IsA('Frame') or Desc:IsA('ScrollingFrame') then
-				table.insert(Properties, 'BackgroundTransparency');
-			elseif Desc:IsA('UIStroke') then
-				table.insert(Properties, 'Transparency');
-			end;
-
-			local Cache = TransparencyCache[Desc];
-
-			if (not Cache) then
-				Cache = {};
-				TransparencyCache[Desc] = Cache;
-			end;
-
-			for _, Prop in next, Properties do
-				if not Cache[Prop] then
-					Cache[Prop] = Desc[Prop];
-				end;
-
-				if Cache[Prop] == 1 then
-					continue;
-				end;
-
-				TweenService:Create(Desc, TweenInfo.new(FadeTime, Enum.EasingStyle.Linear), { [Prop] = Toggled and Cache[Prop] or 1 }):Play();
-			end;
-		end;
-
-		task.wait(FadeTime);
-
 		Outer.Visible = Toggled;
-
-		Fading = false;
 	end
 
 	Library:GiveSignal(InputService.InputBegan:Connect(function(Input, Processed)
