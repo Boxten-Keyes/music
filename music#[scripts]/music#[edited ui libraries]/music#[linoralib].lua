@@ -161,6 +161,121 @@ function Library:CreateLabel(Properties, IsHud)
 	return Library:Create(_Instance, Properties);
 end;
 
+function Library:MakeDraggable(Instance)
+	local buttondragtgl = false
+	local draggingui = false
+	local dragged = false
+
+	local dragger = Instance
+
+	if userinputservice.TouchEnabled then
+		local dragspeed = 0.15
+		local dragstart
+		local startpos
+		local dragginginput
+
+		local function updatebuttoninput(input)
+			if input ~= dragginginput then return end
+			local delta = input.Position - dragstart
+			local newpos = UDim2.new(
+				startpos.X.Scale,
+				startpos.X.Offset + delta.X,
+				startpos.Y.Scale,
+				startpos.Y.Offset + delta.Y
+			)
+			TweenService:Create(Instance, TweenInfo.new(dragspeed), {Position = newpos}):Play()
+		end
+
+		local dragthreshold = 15
+		local buttondragtgl = false
+		local draggingui = false
+
+		dragger.InputBegan:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+				if dragginginput then return end
+				buttondragtgl = true
+				draggingui = false
+				dragged = false
+				dragstart = input.Position
+				startpos = Instance.Position
+				dragginginput = input
+
+				input.Changed:Connect(function()
+					if input.UserInputState == Enum.UserInputState.End then
+						buttondragtgl = false
+						dragginginput = nil
+					end
+				end)
+			end
+		end)
+
+		InputService.InputChanged:Connect(function(input)
+			if dragginginput and input == dragginginput and buttondragtgl then
+				if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+					local delta = input.Position - dragstart
+					if not draggingui then
+						if math.abs(delta.X) > dragthreshold or math.abs(delta.Y) > dragthreshold then
+							dragged = true
+							draggingui = true
+						end
+					end
+					if draggingui then
+						updatebuttoninput(input)
+					end
+				end
+			end
+		end)
+	else
+		task.spawn(function()
+			local dragSpeed = 0.15
+			local dragStart
+			local startPos
+
+			local function updatebuttoninput(input)
+				local delta = input.Position - dragStart
+				local newPos = UDim2.new(
+					startPos.X.Scale,
+					startPos.X.Offset + delta.X,
+					startPos.Y.Scale,
+					startPos.Y.Offset + delta.Y
+				)
+				TweenService:Create(Instance, TweenInfo.new(dragSpeed), {Position = newPos}):Play()
+			end
+
+			local dragThreshold = 15
+
+			dragger.InputBegan:Connect(function(input)
+				if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+					buttondragtgl = true
+					draggingui = false
+					dragStart = input.Position
+					startPos = Instance.Position
+
+					input.Changed:Connect(function()
+						if input.UserInputState == Enum.UserInputState.End then
+							buttondragtgl = false
+						end
+					end)
+				end
+			end)
+
+			InputService.InputChanged:Connect(function(input)
+				if (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) and buttondragtgl then
+					local delta = input.Position - dragStart
+					if not draggingui then
+						if math.abs(delta.X) > dragThreshold or math.abs(delta.Y) > dragThreshold then
+							draggingui = true
+						end
+					end
+					if draggingui then
+						updatebuttoninput(input)
+					end
+				end
+			end)
+		end)
+	end
+end;
+
 function Library:AddToolTip(InfoStr, HoverInstance)
 	local X, Y = Library:GetTextBounds(InfoStr, Library.Font, 14);
 	local Tooltip = Library:Create('Frame', {
@@ -2727,6 +2842,7 @@ do
 
 	Library.Watermark = WatermarkOuter;
 	Library.WatermarkText = WatermarkLabel;
+	Library:MakeDraggable(Library.Watermark);
 
 	local KeybindOuter = Library:Create('Frame', {
 		AnchorPoint = Vector2.new(0, 0.5);
@@ -2795,6 +2911,7 @@ do
 
 	Library.KeybindFrame = KeybindOuter;
 	Library.KeybindContainer = KeybindContainer;
+	Library:MakeDraggable(KeybindOuter);
 end;
 
 function Library:SetWatermarkVisibility(Bool)
@@ -2933,12 +3050,12 @@ function Library:CreateWindow(...)
 		BorderSizePixel = 0;
 		Position = Config.Position,
 		Size = Config.Size,
-		Draggable = true,
-		Active = true,
 		Visible = false;
 		ZIndex = 1;
 		Parent = ScreenGui;
 	});
+
+	Library:MakeDraggable(Outer);
 
 	local Inner = Library:Create('Frame', {
 		BackgroundColor3 = Library.MainColor;
