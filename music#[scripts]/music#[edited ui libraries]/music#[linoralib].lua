@@ -2934,6 +2934,7 @@ function Library:CreateWindow(...)
 		Position = Config.Position,
 		Size = Config.Size,
 		Draggable = true,
+		Active = true,
 		Visible = false;
 		ZIndex = 1;
 		Parent = ScreenGui;
