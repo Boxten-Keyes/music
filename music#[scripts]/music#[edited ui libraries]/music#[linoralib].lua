@@ -161,6 +161,25 @@ function Library:CreateLabel(Properties, IsHud)
 	return Library:Create(_Instance, Properties);
 end;
 
+function Library:CreateImageButton(Properties, IsHud)
+	local _Instance = Library:Create('ImageButton', {
+		BackgroundTransparency = 1;
+		BorderColor3 = Color3.new(0, 0, 0);
+		AutoButtonColor = false; -- Disable default Roblox button color changes
+		ImageColor3 = Color3.fromRGB(255, 255, 255); -- Default white color
+		ScaleType = Enum.ScaleType.Stretch;
+		Size = UDim2.new(0, 20, 0, 20); -- Default size
+	});
+
+	-- Apply default styling similar to other UI elements
+	Library:AddToRegistry(_Instance, {
+		BorderColor3 = 'Black';
+		ImageColor3 = 'FontColor'; -- Makes image color match font color by default
+	}, IsHud);
+
+	return Library:Create(_Instance, Properties);
+end;
+
 function Library:MakeDraggable(Instance, Cutoff)
 	Instance.Active = true
 
@@ -3583,7 +3602,7 @@ local ToggleButtonOuter = Library:Create('Frame', {
 	BackgroundColor3 = Color3.new(0, 0, 0),
 	BorderColor3 = Color3.new(0, 0, 0),
 	Position = UDim2.new(0, 10, 0, 10), -- Top-left corner
-	Size = UDim2.new(0, 60, 0, 25),
+	Size = UDim2.new(0, 50, 0, 50),
 	ZIndex = 1000, -- High ZIndex so it's always on top
 	Parent = ScreenGui,
 })
@@ -3597,10 +3616,9 @@ local ToggleButtonInner = Library:Create('Frame', {
 	Parent = ToggleButtonOuter,
 })
 
-local ToggleButtonLabel = Library:CreateLabel({
+local ToggleButtonLabel = Library:CreateImageButton({
 	Size = UDim2.new(1, 0, 1, 0),
-	TextSize = 14,
-	Text = "Toggle UI",
+	Image = "rbxassetid://137161593028585",
 	ZIndex = 1002,
 	Parent = ToggleButtonInner,
 })
