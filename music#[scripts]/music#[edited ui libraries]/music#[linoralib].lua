@@ -161,121 +161,52 @@ function Library:CreateLabel(Properties, IsHud)
 	return Library:Create(_Instance, Properties);
 end;
 
-function Library:MakeDraggable(Instance)
-	print("drag 2")
-	local buttondragtgl = false
-	local draggingui = false
-	local dragged = false
-	
-	local dragger = Instance
+function Library:MakeDraggable(Instance, Cutoff)
+	Instance.Active = true
 
-	if InputService.TouchEnabled then
-		local dragspeed = 0.15
-		local dragstart
-		local startpos
-		local dragginginput
-
-		local function updatebuttoninput(input)
-			if input ~= dragginginput then return end
-			local delta = input.Position - dragstart
-			local newpos = UDim2.new(
-				startpos.X.Scale,
-				startpos.X.Offset + delta.X,
-				startpos.Y.Scale,
-				startpos.Y.Offset + delta.Y
-			)
-			TweenService:Create(Instance, TweenInfo.new(dragspeed), {Position = newpos}):Play()
+	Instance.InputBegan:Connect(function(input)
+		if input.UserInputType ~= Enum.UserInputType.MouseButton1
+			and input.UserInputType ~= Enum.UserInputType.Touch then
+			return
 		end
 
-		local dragthreshold = 15
+		local startInput = input
+		local startPos = Instance.Position
 
-		dragger.InputBegan:Connect(function(input)
-			if Library:MouseIsOverOpenedFrame() then return end
-			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-				if dragginginput then return end
-				buttondragtgl = true
-				draggingui = false
-				dragged = false
-				dragstart = input.Position
-				startpos = Instance.Position
-				dragginginput = input
+		local absPos = Instance.AbsolutePosition
+		local inputPos = input.Position
 
-				input.Changed:Connect(function()
-					if input.UserInputState == Enum.UserInputState.End then
-						buttondragtgl = false
-						dragginginput = nil
-					end
-				end)
+		local offset = Vector2.new(
+			inputPos.X - absPos.X,
+			inputPos.Y - absPos.Y
+		)
+
+		if offset.Y > (Cutoff or 40) then
+			return
+		end
+
+		local dragging = true
+
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
 			end
 		end)
 
-		InputService.InputChanged:Connect(function(input)
-			if dragginginput and input == dragginginput and buttondragtgl then
-				if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-					local delta = input.Position - dragstart
-					if not draggingui then
-						if math.abs(delta.X) > dragthreshold or math.abs(delta.Y) > dragthreshold then
-							dragged = true
-							draggingui = true
-						end
-					end
-					if draggingui then
-						updatebuttoninput(input)
-					end
-				end
-			end
-		end)
-	else
-		task.spawn(function()
-			local dragSpeed = 0.15
-			local dragStart
-			local startPos
+		while dragging do
+			local pos = startInput.Position
 
-			local function updatebuttoninput(input)
-				local delta = input.Position - dragStart
-				local newPos = UDim2.new(
-					startPos.X.Scale,
-					startPos.X.Offset + delta.X,
-					startPos.Y.Scale,
-					startPos.Y.Offset + delta.Y
-				)
-				TweenService:Create(Instance, TweenInfo.new(dragSpeed), {Position = newPos}):Play()
-			end
+			Instance.Position = UDim2.new(
+				0,
+				pos.X - offset.X + (Instance.Size.X.Offset * Instance.AnchorPoint.X),
+				0,
+				pos.Y - offset.Y + (Instance.Size.Y.Offset * Instance.AnchorPoint.Y)
+			)
 
-			local dragThreshold = 15
-
-			dragger.InputBegan:Connect(function(input)
-				if Library:MouseIsOverOpenedFrame() then return end
-				if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-					buttondragtgl = true
-					draggingui = false
-					dragStart = input.Position
-					startPos = Instance.Position
-
-					input.Changed:Connect(function()
-						if input.UserInputState == Enum.UserInputState.End then
-							buttondragtgl = false
-						end
-					end)
-				end
-			end)
-
-			InputService.InputChanged:Connect(function(input)
-				if (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) and buttondragtgl then
-					local delta = input.Position - dragStart
-					if not draggingui then
-						if math.abs(delta.X) > dragThreshold or math.abs(delta.Y) > dragThreshold then
-							draggingui = true
-						end
-					end
-					if draggingui then
-						updatebuttoninput(input)
-					end
-				end
-			end)
-		end)
-	end
-end;
+			RenderStepped:Wait()
+		end
+	end)
+end
 
 function Library:AddToolTip(InfoStr, HoverInstance)
 	local X, Y = Library:GetTextBounds(InfoStr, Library.Font, 14);
@@ -3056,7 +2987,7 @@ function Library:CreateWindow(...)
 		Parent = ScreenGui;
 	});
 
-	Library:MakeDraggable(Outer);
+	Library:MakeDraggable(Outer, 25);
 
 	local Inner = Library:Create('Frame', {
 		BackgroundColor3 = Library.MainColor;
