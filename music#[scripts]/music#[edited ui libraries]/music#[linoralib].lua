@@ -134,7 +134,6 @@ end;
 
 function Library:ApplyTextStroke(Inst)
 	Inst.TextStrokeTransparency = 1;
-	Inst.Active = true;
 
 	Library:Create('UIStroke', {
 		Color = Color3.new(0, 0, 0);
@@ -165,48 +164,74 @@ end;
 function Library:MakeDraggable(Instance, Cutoff)
 	Instance.Active = true
 
-	Instance.InputBegan:Connect(function(input)
-		if input.UserInputType ~= Enum.UserInputType.MouseButton1
-			and input.UserInputType ~= Enum.UserInputType.Touch then
-			return
-		end
-
-		local startInput = input
-		local startPos = Instance.Position
-
-		local absPos = Instance.AbsolutePosition
-		local inputPos = input.Position
-
-		local offset = Vector2.new(
-			inputPos.X - absPos.X,
-			inputPos.Y - absPos.Y
-		)
-
-		if offset.Y > (Cutoff or 40) then
-			return
-		end
-
-		local dragging = true
-
-		input.Changed:Connect(function()
-			if input.UserInputState == Enum.UserInputState.End then
-				dragging = false
+	if InputService.TouchEnabled then
+		Instance.InputBegan:Connect(function(input)
+			if input.UserInputType ~= Enum.UserInputType.MouseButton1
+				and input.UserInputType ~= Enum.UserInputType.Touch then
+				return
 			end
-		end)
 
-		while dragging do
-			local pos = startInput.Position
+			local startInput = input
+			local startPos = Instance.Position
 
-			Instance.Position = UDim2.new(
-				0,
-				pos.X - offset.X + (Instance.Size.X.Offset * Instance.AnchorPoint.X),
-				0,
-				pos.Y - offset.Y + (Instance.Size.Y.Offset * Instance.AnchorPoint.Y)
+			local absPos = Instance.AbsolutePosition
+			local inputPos = input.Position
+
+			local offset = Vector2.new(
+				inputPos.X - absPos.X,
+				inputPos.Y - absPos.Y
 			)
 
-			RenderStepped:Wait()
-		end
-	end)
+			if offset.Y > (Cutoff or 40) then
+				return
+			end
+
+			local dragging = true
+
+			input.Changed:Connect(function()
+				if input.UserInputState == Enum.UserInputState.End then
+					dragging = false
+				end
+			end)
+
+			while dragging do
+				local pos = startInput.Position
+
+				Instance.Position = UDim2.new(
+					0,
+					pos.X - offset.X + (Instance.Size.X.Offset * Instance.AnchorPoint.X),
+					0,
+					pos.Y - offset.Y + (Instance.Size.Y.Offset * Instance.AnchorPoint.Y)
+				)
+
+				RenderStepped:Wait()
+			end
+		end)
+	else
+		Instance.InputBegan:Connect(function(Input)
+			if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
+				local ObjPos = Vector2.new(
+					Mouse.X - Instance.AbsolutePosition.X,
+					Mouse.Y - Instance.AbsolutePosition.Y
+				);
+
+				if ObjPos.Y > (Cutoff or 40) then
+					return;
+				end;
+
+				while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
+					Instance.Position = UDim2.new(
+						0,
+						Mouse.X - ObjPos.X + (Instance.Size.X.Offset * Instance.AnchorPoint.X),
+						0,
+						Mouse.Y - ObjPos.Y + (Instance.Size.Y.Offset * Instance.AnchorPoint.Y)
+					);
+
+					RenderStepped:Wait();
+				end;
+			end;
+		end)
+	end
 end
 
 function Library:AddToolTip(InfoStr, HoverInstance)
@@ -3552,6 +3577,49 @@ function Library:CreateWindow(...)
 
 	return Window;
 end;
+
+-- Create a toggle button that stays visible even when UI is hidden
+local ToggleButtonOuter = Library:Create('Frame', {
+	BackgroundColor3 = Color3.new(0, 0, 0),
+	BorderColor3 = Color3.new(0, 0, 0),
+	Position = UDim2.new(0, 10, 0, 10), -- Top-left corner
+	Size = UDim2.new(0, 60, 0, 25),
+	ZIndex = 1000, -- High ZIndex so it's always on top
+	Parent = ScreenGui,
+})
+
+local ToggleButtonInner = Library:Create('Frame', {
+	BackgroundColor3 = Library.MainColor,
+	BorderColor3 = Library.OutlineColor,
+	BorderMode = Enum.BorderMode.Inset,
+	Size = UDim2.new(1, 0, 1, 0),
+	ZIndex = 1001,
+	Parent = ToggleButtonOuter,
+})
+
+local ToggleButtonLabel = Library:CreateLabel({
+	Size = UDim2.new(1, 0, 1, 0),
+	TextSize = 14,
+	Text = "Toggle UI",
+	ZIndex = 1002,
+	Parent = ToggleButtonInner,
+})
+
+-- Make it draggable
+Library:MakeDraggable(ToggleButtonOuter)
+
+-- Add click functionality
+ToggleButtonOuter.InputBegan:Connect(function(Input)
+	if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
+		Library:Toggle()
+	end
+end)
+
+-- Add highlight effect
+Library:OnHighlight(ToggleButtonOuter, ToggleButtonOuter,
+	{ BorderColor3 = 'AccentColor' },
+	{ BorderColor3 = 'Black' }
+)
 
 local function OnPlayerChange()
 	local PlayerList = GetPlayersString();
